@@ -13,6 +13,7 @@ function App() {
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true)
+    // TODO - Handle role based authorization and redirect
     history.push('/admin')
   }
 
@@ -28,18 +29,17 @@ function App() {
 
   return (
     <main>
-      {
-        !isLoggedIn &&
-        <Login loginSuccess={handleLoginSuccess}/>
-      }
-      {
-        isLoggedIn &&
-        <Switch>
-          <Route exact path='/admin' >
-            <Admin />
-          </Route>
-        </Switch>
-      }
+      <Switch>
+        <Route exact path='/' >
+          <Login loginSuccess={handleLoginSuccess}/>
+        </Route>
+        {
+          isLoggedIn &&
+            <Route exact path='/admin' >
+              <Admin />
+            </Route>
+        }
+      </Switch>
     </main>
   );
 }
