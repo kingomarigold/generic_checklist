@@ -10,7 +10,7 @@ const Login = (props) => {
 
   const login = () => {
     // TODO - Connect to server and login.
-    const token='abcdef'
+    const token = 'abcdef'
     localStorage.setItem('token', token)
     props.loginSuccess()
   }
@@ -25,15 +25,15 @@ const Login = (props) => {
         alignItems="center"
       >
         <Grid item>
-          <TextField id="standard-basic" value={userName} label="User Name" onChange={(e) => setUserName(e.target.value)}/>
+          <TextField id="standard-basic" value={userName} label="User Name" onChange={(e) => setUserName(e.target.value)} />
         </Grid>
         <Grid item>
-          <TextField id="standard-basic" value={password} label="Password" type="password" onChange={(e) => setPassword(e.target.value)}/>
+          <TextField id="standard-basic" value={password} label="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
         </Grid>
         <Grid item>
-          <Button style={{marginTop: '10%'}} variant="contained" color="primary" onClick={login}> Login </Button>
+          <Button style={{ marginTop: '10%' }} variant="contained" color="primary" onClick={login}> Login </Button>
         </Grid>
-      </Grid>
+      </Grid>F
     </React.Fragment>
   )
 }
