@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { AppBar, Toolbar } from "@material-ui/core";
 import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
@@ -11,79 +11,94 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 
-class Admin extends Component {
+const Admin = (props) => {
+  const [templates, setTemplates] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [templateName, setTemplateName] = useState('')
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      templates: [],
-      isLoading: false,
-      isError: false,
-      templateName: ''
-    }
-  }
 
-  async componentDidMount() {
-    this.setState({ isLoading: true })
-    const response = await fetch('http://localhost:3000/templates')
-    if (response.ok) {
-      const templates = await response.json()
-      console.log(templates);
-      this.setState({ templates, isLoading: false })
-    } else {
-      this.setState({ isError: true, isLoading: false })
-    }
-  }
-
-  handleInputChange = (event) => {
-
-    this.setState({
-      templateName: event.target.value
-    })
-  }
-  render() {
-    const displayDesktop = () => {
-      return <Toolbar>Hi From Desktop Header</Toolbar>;
-    };
-    return (
-      <div >
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <div style={{ display: 'flex', justifyContent: 'center' }} >
-          <Link to="/section">
-            <Button variant="contained" color="primary" disableElevation>
-              + Add Template
-            </Button>
-          </Link>
-        </div>
-        <TableContainer component={Paper}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell >Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                this.state.templates.map((p, index) => {
-                  return <TableRow key={index}>
-                    <TableCell component="th" scope="row">
-                      {p.id}
-                    </TableCell>
-                    <TableCell >{p.name}</TableCell>
-                  </TableRow>
-                })
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+  const makeApiCall = (url, method, params, headers) => {
+    setIsLoading(true)
+    let  fetcher = method == 'GET' || method == 'HEAD'?fetch(
+      url,
+      {
+        method: method
+      }
+    ):
+    fetch(
+      url,
+      {
+        method: method,
+        body: params
+      }
     )
 
+    return fetcher
+    .then(response => {
+      setIsLoading(false)
+      return response.json()
+    }).
+    catch(err => {
+      setIsLoading(false)
+      console.log('Error occured: ', err)
+    })
+    .then(response => [])
   }
+
+  useEffect(()=> {
+    let params = {}
+    let headers = { token: localStorage.getItem('token') }
+    makeApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
+      'GET',
+      params, headers)
+    .then(json => {
+      console.log(json)
+      setTemplates(json)
+    })
+  }, [])
+
+  const handleInputChange = (event) => {
+    setTemplateName(event.target.value)
+  }
+
+  const displayDesktop = () => {
+    return <Toolbar>Hi From Desktop Header</Toolbar>;
+  };
+
+  return(
+    <div >
+      <div style={{ display: 'flex', justifyContent: 'center' }} >
+        <Link to="/section">
+          <Button variant="contained" color="primary" disableElevation>
+            + Add Template
+          </Button>
+        </Link>
+      </div>
+      <TableContainer component={Paper}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell >Name</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              templates.map((p, index) => {
+                return <TableRow key={index}>
+                  <TableCell component="th" scope="row">
+                    {p.id}
+                  </TableCell>
+                  <TableCell >{p.name}</TableCell>
+                </TableRow>
+              })
+            }
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  )
 }
+
 export default Admin
-//////////////////
