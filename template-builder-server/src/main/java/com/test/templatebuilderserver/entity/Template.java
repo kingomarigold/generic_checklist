@@ -1,5 +1,7 @@
 
-package com.test.entity;
+package com.test.templatebuilderserver.entity;
+
+import java.sql.Clob;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.io.*;
-import java.sql.Clob;
 
 @Entity
 @Table(name = "template")
@@ -18,22 +18,30 @@ public class Template {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int id;
+	private Long id;
 
 	private String name;
 
 	@Lob
-    private Clob type;
+    private Clob data;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	
+	public Template() {
+		super();
+	}
+
+	public Template(String name, Clob type) {
+		super();
+		this.name = name;
+		this.data = type;
+	}
 
 	public String getName() {
 		return name;
@@ -43,15 +51,11 @@ public class Template {
 		this.name = name;
 	}
 
-	public Clob getType() {
-		return type;
+	public Clob getData() {
+		return data;
 	}
 
-	public void setType(Clob type) {
-		this.type = type;
-	}
-
-	{
-		System.out.println("entityy");
+	public void setData(Clob data) {
+		this.data = data;
 	}
 }

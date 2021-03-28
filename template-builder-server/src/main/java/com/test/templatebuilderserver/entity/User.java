@@ -1,4 +1,4 @@
-package com.test.entity;
+package com.test.templatebuilderserver.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,9 +54,5 @@ public class User {
 
 	public void setRole(String role) {
 		this.role = role;
-	}
-
-	{
-		System.out.println("entityy");
 	}
 }
