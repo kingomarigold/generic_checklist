@@ -3,7 +3,7 @@ import { Grid, TextField, Container, Button, Typography } from '@material-ui/cor
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Question from './Question';
 
-export default function Section() {
+const Section = (props) => {
     const [button, setButton] = useState(false);
     const [question, setQuestion] = useState(false);
     const section = [
@@ -53,7 +53,7 @@ export default function Section() {
 
             <Container maxWidth="sm">
                 <Autocomplete
-                    id="free-solo-demo"
+                    id="section-name-complete"
                     freeSolo
                     {...defaultProps}
                     autoComplete
@@ -74,3 +74,5 @@ export default function Section() {
         </Grid>
     );
 }
+
+export default Section
