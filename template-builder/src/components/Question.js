@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddQuestions = (props) => {
+const Question = (props) => {
   const question = [
     { ques: 'What type of clients do you do your best work with?' },
     { ques: 'Do you utilize any particular modalities with clients?' },
@@ -81,7 +81,7 @@ const AddQuestions = (props) => {
   const handleSelect = (e) => {
     console.log("********", e.target.value)
     if (e.target.value) {
-       
+
         setValue(e.target.value)
     }
 }
@@ -125,4 +125,4 @@ const AddQuestions = (props) => {
     </Grid>
   );
 }
-export default AddQuestions;
+export default Question

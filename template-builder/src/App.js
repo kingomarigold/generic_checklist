@@ -2,16 +2,19 @@ import './App.css'
 import 'fontsource-roboto'
 import Login from './components/Login'
 import Admin from './components/Admin'
-import Section from './components/Section/index'
-import AddQuestions from './components/AddQuestions/index'
+import Template from './components/Template'
 import { useState, useEffect } from 'react'
-import { Router, Route, Switch, BrowserRouter, useLocation } from 'react-router-dom'
+import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
+  const history = useHistory()
+
   const handleLoginSuccess = () => {
     setIsLoggedIn(true)
+    // TODO - Change depending on Role
+    history.push('/admin')
   }
 
   useEffect(() => {
@@ -20,7 +23,7 @@ function App() {
     let myToken = localStorage.getItem('token')
     if (myToken) {
       // TODO - Validate token with the server
-      setIsLoggedIn(true)
+      handleLoginSuccess()
     }
   }, [])
 
@@ -34,8 +37,8 @@ function App() {
         isLoggedIn &&
         <BrowserRouter>
           <Switch>
-            <Route exact path='/' component={Admin} />
-            <Route exact path='/section' component={Section} ></Route>
+            <Route exact path='/admin' component={Admin} />
+            <Route exact path='/admin/template' component={Template} ></Route>
           </Switch>
         </BrowserRouter>
       }

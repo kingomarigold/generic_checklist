@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Grid, TextField, Container, Button, Typography } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import AddQuestions from '../AddQuestions';
+import Question from './Question';
 
 export default function Section() {
-
-
     const [button, setButton] = useState(false);
     const [question, setQuestion] = useState(false);
     const section = [
@@ -38,14 +36,12 @@ export default function Section() {
  //   const sectionData=[{"sectionName":"","questions":[]}]
  const [sectionData,setSectionData]=useState({"sectionName":"","questions":[]})
     const handleAddQues=(value)=>{
-        console.log("ADddQues",value.type)
         let temp={...sectionData}
         temp.questions.push(value);
         setSectionData(temp);
     }
 
     const [value, setValue] = useState();
-console.log(">>>",sectionData);
     return (
         <Grid
 
@@ -54,7 +50,7 @@ console.log(">>>",sectionData);
             direction="column"
             style={{ minHeight: "100vh" }}
         >
-           
+
             <Container maxWidth="sm">
                 <Autocomplete
                     id="free-solo-demo"
@@ -65,16 +61,16 @@ console.log(">>>",sectionData);
                     defaultValue={value}
                     onSelect={e => handleSelect(e)}
 
-                    renderInput={(params) => <TextField 
+                    renderInput={(params) => <TextField
                         {...params} label="Section name" margin="normal"
                     />}
                 />
                 {button && <Button variant="contained" color="primary" component="span" href="#contained-buttons" onClick={e => handleQues(e)}>
                     + Add Question </Button>}
-                {question && <AddQuestions handleAddQues={handleAddQues} />}
-             
+                {question && <Question handleAddQues={handleAddQues} />}
+
             </Container>
-            
+
         </Grid>
     );
 }

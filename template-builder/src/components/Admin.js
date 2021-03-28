@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Button from '@material-ui/core/Button';
-import { AppBar, Toolbar } from "@material-ui/core";
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React, { useEffect, useState } from 'react'
+import Button from '@material-ui/core/Button'
+import { AppBar, Toolbar } from "@material-ui/core"
+import Header  from './Header'
+import { useHistory } from 'react-router-dom'
+import Grid from '@material-ui/core/Grid'
+import Templates from './Templates'
 
 
 const Admin = (props) => {
@@ -17,6 +13,7 @@ const Admin = (props) => {
   const [isError, setIsError] = useState(false)
   const [templateName, setTemplateName] = useState('')
 
+  const history = useHistory()
 
   const makeApiCall = (url, method, params, headers) => {
     setIsLoading(true)
@@ -62,42 +59,27 @@ const Admin = (props) => {
     setTemplateName(event.target.value)
   }
 
-  const displayDesktop = () => {
-    return <Toolbar>Hi From Desktop Header</Toolbar>;
-  };
+  const addTemplate = () => {
+    history.push('/admin/template', {name: '', id: '', sections: []})
+  }
 
   return(
-    <div >
-      <div style={{ display: 'flex', justifyContent: 'center' }} >
-        <Link to="/section">
-          <Button variant="contained" color="primary" disableElevation>
-            + Add Template
-          </Button>
-        </Link>
-      </div>
-      <TableContainer component={Paper}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell >Name</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              templates.map((p, index) => {
-                return <TableRow key={index}>
-                  <TableCell component="th" scope="row">
-                    {p.id}
-                  </TableCell>
-                  <TableCell >{p.name}</TableCell>
-                </TableRow>
-              })
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+    <React.Fragment>
+      <Header userName='User'/>
+      <Grid
+        container
+        direction="column"
+        justify="flex-start"
+        alignItems="center"
+      >
+        <Button style={{marginTop: '10px'}} onClick={addTemplate}
+          variant="contained" color="default">Add Template</Button>
+      </Grid>
+      {
+        templates.length > 0 &&
+        <Templates templates={templates}/>
+      }
+    </React.Fragment>
   )
 }
 
