@@ -24,7 +24,7 @@ const Template = (props) => {
         container
         direction="column"
         justify="flex-start"
-        alignItems="flex-start"
+        alignItems="center"
       >
         <EditableText editMode={newTemplate} label="Name"
           value={template.name} onChange={changeName}/>
