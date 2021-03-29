@@ -1,0 +1,4 @@
+.template-name-container {
+  display: flex;
+  flex-direction: row;
+}

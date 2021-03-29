@@ -1,0 +1,32 @@
+server:
+    port: 8090
+
+spring:
+    profiles:
+        active: test
+    datasource:
+        dataSourceClassName: org.h2.jdbcx.JdbcDataSource    
+
+
+        url: jdbc:h2:mem:datax;MODE=MYSQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;
+        username: 
+        password: 
+        driver-class-name: org.h2.Driver
+        platform: h2
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        database: H2
+        openInView: true
+        show_sql: true
+        generate-ddl: true
+        hibernate:
+            ddl-auto: update
+            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+            naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+            show_sql : false
+            format_sql : false
+        properties:
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.hbm2ddl.auto: update

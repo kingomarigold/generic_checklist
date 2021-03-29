@@ -1,0 +1,25 @@
+{
+  "templates": [
+    {
+      "id" : "1",
+      "name" : "The first existing template"
+    },
+    {
+      "id" : "2",
+      "name" : "The second existing template"
+    },
+    {
+      "id" : "3",
+      "name" : "The third existing template"
+    },
+    {
+      "id" : "4",
+      "name" : "The fourth existing template"
+    },
+    {
+      "id" : "5",
+      "name" : "The fifth existing template"
+    }
+  ]
+
+}
