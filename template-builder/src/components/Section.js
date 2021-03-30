@@ -21,7 +21,14 @@ const Section = (props) => {
     props.onChange(props.index, mySection)
   }
 
+  const handleQuestionChange = (index, question) => {
+    let mySection = {...props.section}
+    mySection.questions[index] = question
+    props.onChange(props.index, mySection)
+  }
+
   return (
+    <React.Fragment>
       <Grid
           container
           justify="center"
@@ -29,20 +36,21 @@ const Section = (props) => {
           direction="column"
       >
 
-      <EditableText editMode={newSection} label="Name"
-        value={props.section.name} onChange={changeName}/>
-      <Button onClick={addQuestion}
-                color="primary">Add Question</Button>
-      {
-        props.section.questions &&
-        props.section.questions.map(question => {
-          return (
-            <Question />
-          )
-        })
-      }
+        <EditableText editMode={newSection} label="Name"
+          value={props.section.name} onChange={changeName}/>
+        <Button onClick={addQuestion}
+                  color="primary">Add Question</Button>
+        {
+          props.section.questions &&
+          props.section.questions.map((question, index) => {
+            return (
+              <Question key={index} index={index} question={question} onChange={handleQuestionChange}/>
+            )
+          })
+        }
+    </Grid>
 
-      </Grid>
+    </React.Fragment>
   )
 }
 

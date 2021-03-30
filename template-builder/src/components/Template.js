@@ -86,8 +86,8 @@ const Template = (props) => {
           template.sections &&
           template.sections.map((section,index) => {
             return (
-              <React.Fragment>
-                <Accordion style={{width: '80%', marginTop: '20px'}}>
+              <React.Fragment key={index}>
+                <Accordion defaultExpanded={index === 0} style={{width: '80%', marginTop: '20px'}}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} >
                     <Grid
                       container
