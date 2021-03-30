@@ -6,6 +6,8 @@ import Question from './Question';
 import { useHistory } from 'react-router-dom'
 import Questions from './Questions';
 const Section = (props) => {
+    const url = process.env.REACT_APP__TEMPLATE_URI_SAVE
+  
     const [button, setButton] = useState(false);
     const [disable, setDisable] = useState(false);
     const [submitSection, setSubmitSection] = useState(false);
@@ -59,6 +61,15 @@ const Section = (props) => {
     const [value, setValue] = useState();
     const addTemplate = () => {
         // props.addSec(sectionData);
+        const handleSaveToPC = (jsonData,filename) => {
+            const fileData = JSON.stringify(jsonData);
+        //    const clob = new Clob([fileData], {type: "text/plain"});
+        //    const url = URL.createObjectURL(clob);
+            const link = document.createElement('a');
+            link.download = `${filename}.json`;
+            link.href = url;
+            link.click();
+          }
         history.push('/admin/template', { name: '', id: '', sections: [] })
     }
     return (

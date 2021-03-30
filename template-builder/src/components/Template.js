@@ -1,5 +1,5 @@
 import './Template.css'
-import Grid from '@material-ui/core/Grid'
+import { Grid, TextField, Container, Button, Typography } from '@material-ui/core';
 import React from 'react'
 import Header from './Header'
 import {useState} from 'react'
@@ -13,7 +13,8 @@ import { useHistory } from 'react-router-dom'
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.name === '')
   const [template, setTemplate] = useState(props.location.state)
-
+  
+  const [section, setSection] = useState(false);
   const history = useHistory();
   const changeName = (name) => {
     const myTemplate = {...template}
@@ -22,8 +23,9 @@ const Template = (props) => {
     setTemplate(myTemplate)
   }
 
-  const functionSection = () => {
-    history.push('/admin/template/section', {name: '', id: '', sections: []})
+  const handleSec = () => {
+    setSection(true);
+    //history.push('/admin/template/section', {name: '', id: '', sections: []})
   }
   return (
     <React.Fragment>
@@ -34,11 +36,14 @@ const Template = (props) => {
         justify="flex-start"
         alignItems="center"
       >
+        
         <EditableText editMode={newTemplate} label="Name"
           value={template.name} onChange={changeName}/>
-             <button style={{marginTop: '10px'}} onClick={functionSection}
-                variant="contained" color="default">Add Section</button>
-               
+             <Button variant="contained" color="primary" component="span" href="#contained-buttons" onClick={e => handleSec(e)}>
+                    + Add Section </Button> 
+                    <Container maxWidth="sm">
+                  {section && <Section />}
+                </Container>
         {
           props.sections &&
           props.sections.map(section => {
@@ -53,6 +58,13 @@ const Template = (props) => {
 }
 
 export default Template
+
+
+
+
+
+
+
 /*
 import './Template.css'
 import Grid from '@material-ui/core/Grid'
