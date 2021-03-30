@@ -5,10 +5,17 @@ import Header from './Header'
 import {useState} from 'react'
 import Section from './Section'
 import EditableText from './common/EditableText'
-
+import EditableTextArea from './common/EditableTextArea'
+import Divider from '@material-ui/core/Divider'
 import { useHistory } from 'react-router-dom'
-
-
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import Button from '@material-ui/core/Button'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.name === '')
@@ -22,9 +29,28 @@ const Template = (props) => {
     setTemplate(myTemplate)
   }
 
-  const functionSection = () => {
-    history.push('/admin/template/section', {name: '', id: '', sections: []})
+  const changeDescription = (value) => {
+    const myTemplate = {...template}
+    myTemplate.description = value
+    setNewTemplate(false)
+    setTemplate(myTemplate)
   }
+
+  const addSection = () => {
+    let myTemplate = { ...template }
+    if(!myTemplate.sections) {
+      myTemplate.sections = []
+    }
+    myTemplate.sections.push({name: '', questions: []})
+    setTemplate(myTemplate)
+  }
+
+  const handleSectionChange = (index, section) => {
+    let myTemplate = JSON.parse(JSON.stringify(template))
+    myTemplate.sections[index] = section
+    setTemplate(myTemplate)
+  }
+
   return (
     <React.Fragment>
       <Header userName={props.userName}/>
@@ -34,16 +60,54 @@ const Template = (props) => {
         justify="flex-start"
         alignItems="center"
       >
-        <EditableText editMode={newTemplate} label="Name"
-          value={template.name} onChange={changeName}/>
-             <button style={{marginTop: '10px'}} onClick={functionSection}
-                variant="contained" color="default">Add Section</button>
-               
+        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="center"
+          >
+            <CardContent>
+
+                <EditableText editMode={newTemplate} label="Name"
+                  value={template.name} onChange={changeName} />
+                <EditableTextArea label='Description' value={template.description}
+                    onChange={changeDescription} />
+            </CardContent>
+            <CardActions>
+              <Button size='medium' onClick={addSection}
+                      color="primary">Add Section</Button>
+            </CardActions>
+          </Grid>
+        </Card>
+
+
         {
-          props.sections &&
-          props.sections.map(section => {
+          template.sections &&
+          template.sections.map((section,index) => {
             return (
-              <Section />
+              <React.Fragment>
+                <Accordion style={{width: '80%', marginTop: '20px'}}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} >
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="flex-start"
+                    >
+                      <Grid item>
+                        Section {index+1}
+                      </Grid>
+                      <Grid item>
+                        {section.name}
+                      </Grid>
+                    </Grid>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Section key={index} section={section} index={index} onChange={handleSectionChange}/>
+                  </AccordionDetails>
+                </Accordion>
+              </React.Fragment>
             )
           })
         }
@@ -90,7 +154,7 @@ console.log("props.location.state.name ",props.location.state.name);
         justify="center"
       alignItems="center"
         direction="column"
-        
+
       >
         {
           editableName &&

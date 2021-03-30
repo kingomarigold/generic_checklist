@@ -11,7 +11,6 @@ const Admin = (props) => {
   const [templates, setTemplates] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
-  const [templateName, setTemplateName] = useState('')
 
   const history = useHistory()
 
@@ -55,9 +54,6 @@ const Admin = (props) => {
     })
   }, [])
 
-  const handleInputChange = (event) => {
-    setTemplateName(event.target.value)
-  }
 
   const addTemplate = () => {
     history.push('/admin/template', {name: '', id: '', sections: []})
