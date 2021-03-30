@@ -32,7 +32,7 @@ public class TemplateService {
 	}
 
 	public Template get(Long id) {
-		// TODO Auto-generated method stub
+		
 		Template retVal = null;
 		Optional<com.test.templatebuilderserver.entity.Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
@@ -43,7 +43,7 @@ public class TemplateService {
 	}
 
 	public List getAll() {
-		// TODO Auto-generated method stub
+		
 		return templateRepository.getAll(); 
 	}
 
@@ -54,7 +54,7 @@ public class TemplateService {
 				return stringWriter.toString();
 			}
 		} catch (IOException | SQLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return null;

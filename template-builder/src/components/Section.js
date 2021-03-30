@@ -3,9 +3,16 @@ import { Grid, TextField, Container, Button, Typography } from '@material-ui/cor
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Question from './Question';
 
+import { useHistory } from 'react-router-dom'
+import Questions from './Questions';
 const Section = (props) => {
     const [button, setButton] = useState(false);
+    const [disable, setDisable] = useState(false);
+    const [submitSection, setSubmitSection] = useState(false);
     const [question, setQuestion] = useState(false);
+
+    const history = useHistory()
+
     const section = [
         { title: 'Para' },
         { title: 'wara' },
@@ -20,11 +27,7 @@ const Section = (props) => {
     const flatProps = {
         options: section.map((option) => option.title),
     };
-    const handleQues = (e) => {
-        setQuestion(true);
-    }
     const handleSelect = (e) => {
-        console.log("********", e.target.value)
         if (e.target.value) {
             setButton(true);
             setValue(e.target.value)
@@ -33,15 +36,31 @@ const Section = (props) => {
             setButton(false);
         }
     }
- //   const sectionData=[{"sectionName":"","questions":[]}]
- const [sectionData,setSectionData]=useState({"sectionName":"","questions":[]})
-    const handleAddQues=(value)=>{
-        let temp={...sectionData}
+
+
+    const [sectionData, setSectionData] = useState({ "sectionName": "", "questions": [] })
+
+
+    const handleQues = (e) => {
+        setDisable(true);
+        setQuestion(true);
+        setSubmitSection(true);
+        sectionData.sectionName = value;
+    }
+    const handleAddQues = (value) => {
+
+        let temp = { ...sectionData }
         temp.questions.push(value);
         setSectionData(temp);
+        setQuestion(false);
+        console.log(temp, "00000")
     }
 
     const [value, setValue] = useState();
+    const addTemplate = () => {
+        // props.addSec(sectionData);
+        history.push('/admin/template', { name: '', id: '', sections: [] })
+    }
     return (
         <Grid
 
@@ -60,15 +79,26 @@ const Section = (props) => {
                     includeInputInList
                     defaultValue={value}
                     onSelect={e => handleSelect(e)}
-
-                    renderInput={(params) => <TextField
+                    disabled={disable}
+                    renderInput={(params) => <TextField variant="outlined"
                         {...params} label="Section name" margin="normal"
                     />}
                 />
-                {button && <Button variant="contained" color="primary" component="span" href="#contained-buttons" onClick={e => handleQues(e)}>
-                    + Add Question </Button>}
-                {question && <Question handleAddQues={handleAddQues} />}
 
+                {button && <Grid container justify="flex-end"><Button variant="contained" color="primary" component="span" href="#contained-buttons" onClick={e => handleQues(e)}>
+                    + Add Question </Button> </Grid>}
+                {
+                    sectionData.questions.length > 0 &&
+                    <Questions questions={sectionData.questions} />
+                }
+
+                {question && <Question handleAddQues={handleAddQues} />}
+                <Grid container justify="center">
+                    {submitSection &&
+                        <Button variant="contained" color="primary" component="span" href="#contained-buttons" onClick={addTemplate} onSubmit={() =>
+                            props.addSec(sectionData)}>
+                            Submit </Button>}
+                </Grid>
             </Container>
 
         </Grid>
@@ -76,3 +106,7 @@ const Section = (props) => {
 }
 
 export default Section
+  /*{
+      sectionData.questions.length > 0 &&
+      <Questions questions={sectionData.questions} />
+    }*/

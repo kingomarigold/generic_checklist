@@ -77,7 +77,7 @@ const Admin = (props) => {
       </Grid>
       {
         templates.length > 0 &&
-        <Templates templates={templates}/>
+        <Templates templates={templates} sections={templates}/>
       }
     </React.Fragment>
   )

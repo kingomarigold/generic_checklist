@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import { Grid, TextField, Container, Button, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Grid, TextField, Container, Button, Typography, Select } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
@@ -9,7 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
 
-
+import NativeSelect from '@material-ui/core/NativeSelect';
+import Questions from './Questions';/*
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(3),
@@ -17,8 +18,20 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1, 1, 0, 0),
   },
-}));
+}));*/
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(2),
+    minWidth: 480,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1, 1, 1, 1),
+  },
 
+}));
 const Question = (props) => {
   const question = [
     { ques: 'What type of clients do you do your best work with?' },
@@ -47,82 +60,134 @@ const Question = (props) => {
   const flatProps = {
     options: question.map((option) => option.ques),
   };
-
+  const [quesvalue, setQuesValue] = useState('');
+  const [optionValues, setOptionValues] = useState(false);
+  const [optionval, setOptionVal] = useState('');
 
   const classes = useStyles();
   const [value, setValue] = useState('');
+
+  const [addValue, setAddValue] = useState(false);
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState('Choose wisely');
-  const questionStructure = {
-    "question": '', "type": ""
-  }
+  const [option, setOption] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const handleChange = (event) => {
+    setOption(event.target.value);
+
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const [questionStructure, setQuestionStructure] = useState({ "question": "", "type": "", "option": "No Options" })
+
+  let temp = { ...questionStructure }
   const handleRadioChange = (event) => {
-    console.log(event.target.value,"1111")
     setValue(event.target.value);
     setHelperText(' ');
     setError(false);
-    questionStructure.type = event.target.value;
-    console.log(questionStructure.type,'2222')
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+    if (event.target.value === 'radio' || event.target.value === 'checkbox' || event.target.value === 'dropdown') {
+      temp.type = event.target.value;
+      console.log("OPTions ", event.target.value)
+      setOptionValues(true);
 
-    if (value === 'radio' || value === 'checkbox' || value === 'text' ||
-      value === 'textarea' || value === 'Date' || value === 'dropdown' || value === 'matrix') {
+      console.log("OPTionValues ", optionValues)
+      setQuestionStructure(temp);
+
+
+    }
+    else if (event.target.value === 'text' || event.target.value === 'textarea' || event.target.value === 'Date') {
+      temp.type = event.target.value;
+      setQuestionStructure(temp);
+
+      setOptionValues(false)
       setHelperText('You got it!');
       setError(false);
+      // setAddValue(true)
     }
     else {
+      //  setAddValue(false)
       setHelperText('Please select an option.');
       setError(true);
     }
-  };
-  const handleSelect = (e) => {
-    console.log("********", e.target.value)
-    if (e.target.value) {
 
-        setValue(e.target.value)
+  };
+
+  const handleSelect = (e) => {
+    if (e.target.value) {
+      setQuesValue(e.target.value)
+      temp.question = e.target.value;
+      setQuestionStructure(temp);
+      setAddValue(true)
+
     }
-}
+    else if (e.target.value == "" || e.target.value == null) {
+      setAddValue(false)
+      console.log(addValue)
+    }
+  }
+  const handleOptions = (e) => {
+    setOptionVal(e.target.value)
+    temp.option = e.target.value;
+    setQuestionStructure(temp);
+  }
 
   return (
-    <Grid
-      justify="center"
-      alignItems="center"
-      direction="column"
-      style={{ minHeight: "100vh" }}
-    >
-      <Container maxWidth="sm">
-        <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          defaultValue={value}
-          onSelect={e => handleSelect(e)}
-          options={question.map((option) => option.ques)}
-          renderInput={(params) => (
-            <TextField {...params} label="Questions" margin="normal" variant="outlined" />
-          )}
-        />
+    <React.Fragment>
+
+      <Grid
+        justify="center"
+        alignItems="center"
+        direction="column"
+        style={{ minHeight: "100vh" }}
+      >
+        <Container maxWidth="sm">
+
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            required
+            defaultValue={quesvalue}
+            onSelect={e => handleSelect(e)}
+            options={question.map((option) => option.ques)}
+            renderInput={(params) => (
+              <TextField required {...params} id="standard-required" label="Questions" margin="normal" variant="outlined" />
+            )}
+          />
+
+          <form >
+            <FormControl required component="fieldset" error={error} className={classes.formControl}>
+              <NativeSelect aria-label="quiz" name="quiz" value={value} onChange={e => handleRadioChange(e)}>
+                <option value="select" label="select" />
+                <option value="radio" label="radio" />
+                <option value="checkbox" label="checkbox" />
+                <option value="text" label="Input" />
+                <option value="Date" label="Date" />
+                <option value="dropdown" label="dropdown" />
+                <option value="textarea" label="Textarea" />
+              </NativeSelect>
+              <FormHelperText>{helperText}</FormHelperText>
 
 
-      </Container>
-      <form onSubmit={handleSubmit}>
-        <FormControl component="fieldset" error={error} className={classes.formControl}>
-          <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={e => handleRadioChange(e)}>
-            <FormControlLabel value="radio" control={<Radio />} label="Multiple choice - radio" />
-            <FormControlLabel value="checkbox" control={<Radio />} label="Multiple choice - checkbox" />
-            <FormControlLabel value="text" control={<Radio />} label="Input" />
-            <FormControlLabel value="Date" control={<Radio />} label="Date" />
-            <FormControlLabel value="dropdown" control={<Radio />} label="Select dropdown" />
-            <FormControlLabel value="matrix" control={<Radio />} label="Matrixscale" />
-            <FormControlLabel value="textarea" control={<Radio />} label="Textarea" />
-          </RadioGroup>
-          <FormHelperText>{helperText}</FormHelperText>
-          <Button type="submit" variant="outlined" color="primary" onClick={() => props.handleAddQues(questionStructure)} className={classes.button}>ADD</Button>
-        </FormControl>
-      </form>
-    </Grid>
+              {optionValues && <TextField id="outlined-basic"
+                variant="outlined" placeholder="option 1 ,option 2" value={optionval} onChange={e => handleOptions(e)}>Add Options</TextField>}
+            </FormControl>
+          </form>  {addValue && <Grid container justify="flex-end">< Button type="submit" variant="contained" color="primary" component="span" href="#contained-buttons"
+            onClick={() => props.handleAddQues(questionStructure)} className={classes.button}>ADD</Button></Grid>}
+
+
+
+        </Container>
+      </Grid>
+    </React.Fragment>
   );
+
 }
 export default Question

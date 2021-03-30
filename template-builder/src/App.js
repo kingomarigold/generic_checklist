@@ -3,8 +3,10 @@ import 'fontsource-roboto'
 import Login from './components/Login'
 import Admin from './components/Admin'
 import Template from './components/Template'
+import Section from './components/Section'
 import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
+import Question from './components/Question'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -39,6 +41,9 @@ function App() {
           <Switch>
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
+            <Route exact path='/admin/template/section' component={Section} ></Route>
+            <Route exact path='/admin/template/edit' component={Question} ></Route>
+         
           </Switch>
         </BrowserRouter>
       }
