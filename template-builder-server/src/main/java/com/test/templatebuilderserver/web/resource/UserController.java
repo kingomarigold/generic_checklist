@@ -9,13 +9,14 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.test.templatebuilderserver.dto.User;
+import com.test.templatebuilderserver.entity.User;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -29,10 +30,10 @@ public class UserController {
 	public User login( @RequestParam("name") String username, @RequestParam("password") String pwd) {
 		System.out.println("Security post");
 		String token = getJWTToken(username);
-		User user = new User();
-		user.setName(username);
+		User user = new User(username,pwd);
+		//user.setName(username);
 		user.setToken(token);	
-		System.out.println("Security token"+token);
+		System.out.println(user.token+"Security token"+token);
 		return user;
 		
 	}

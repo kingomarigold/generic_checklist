@@ -12,9 +12,10 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const history = useHistory()
-
+const url=process.env.REACT_APP_TOKEN
   const handleLoginSuccess = () => {
     setIsLoggedIn(true)
+
     // TODO - Change depending on Role
     history.push('/admin')
   }
@@ -22,7 +23,8 @@ function App() {
   useEffect(() => {
     // Removing this token for now so that we can test login
     localStorage.removeItem('token')
-    let myToken = localStorage.getItem('token')
+   let myToken = localStorage.getItem('token')
+  
     if (myToken) {
       // TODO - Validate token with the server
       handleLoginSuccess()

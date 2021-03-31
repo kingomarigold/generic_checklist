@@ -7,10 +7,13 @@ import Button from '@material-ui/core/Button'
 const Login = (props) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-
+  
+const url=process.env.REACT_APP_TOKEN
   const login = () => {
     // TODO - Connect to server and login.
     const token = 'abcdef'
+  //let tokenurl = fetch(url);
+ // console.log(token+"***")
     localStorage.setItem('token', token)
     props.loginSuccess()
   }
@@ -33,7 +36,7 @@ const Login = (props) => {
         <Grid item>
           <Button style={{ marginTop: '10%' }} variant="contained" color="primary" onClick={login}> Login </Button>
         </Grid>
-      </Grid>F
+      </Grid>
     </React.Fragment>
   )
 }

@@ -20,7 +20,7 @@ const EditableText = (props) => {
       {
         !editMode &&
         <div className='editable-text-container'>
-          <TextField  disabled  value={props.value}/>
+          <TextField  disabled  value={props.value} />
           <EditOutlinedIcon onClick={() => setEditMode(true)}  />
         </div>
       }

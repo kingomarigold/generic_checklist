@@ -23,7 +23,20 @@ public class User {
 	private String password;
 
 	private String role;
+	public String token;
+	public void setToken(String token) {
+		this.token = token;
+	}
+	public String getToken(String token) {
+		return token;
+	}
+	public User(String name, String password) {
+		super();
+		this.name = name;
+		this.password = password;
+	}
 
+	
 	public int getId() {
 		return id;
 	}

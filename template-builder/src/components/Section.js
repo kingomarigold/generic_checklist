@@ -21,53 +21,47 @@ const Section = (props) => {
 
   const addQuestion = () => {
     let mySection = {...props.section}
-    mySection.questions.push({name: '', type: ''})
+    mySection.questions.push({name: '', type: '', choices: []})
+    props.onChange(props.index, mySection)
+  }
+
+  const handleQuestionChange = (index, question) => {
+    let mySection = {...props.section}
+    mySection.questions[index] = question
     props.onChange(props.index, mySection)
   }
 
   return (
+    <React.Fragment>
       <Grid
           container
           justify="center"
           alignItems="center"
           direction="column"
       >
-
-      <EditableText editMode={newSection} label="Name"
-        value={props.section.name} onChange={changeName}/>
-      <Button onClick={addQuestion}
-                color="primary">Add Question</Button>
-      {
-        props.section.questions &&
-        props.section.questions.map((question,index) => {
-          return (
-            <React.Fragment>
-                <Accordion style={{width: '80%', marginTop: '20px'}}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} >
-                    <Grid
-                      container
-                      direction="row"
-                      justify="space-between"
-                      alignItems="flex-start"
-                    >
-                      <Grid item>
-                     { question.name} 
-                      </Grid>
-                      <Grid item>
-                        {question.type}
-                      </Grid>
-                    </Grid>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Question key={index} question={question} index={index} />
-                  </AccordionDetails>
-                </Accordion>
+        <TextField  required label="Name"
+            value={props.section.name} onChange={(e) => changeName(e.target.value)}/>
+        <Button onClick={addQuestion}
+                  color="primary">Add Question</Button>
+        {
+          props.section.questions &&
+          props.section.questions.map((question, index) => {
+            return (
+              <React.Fragment>
+                <hr  key={'hr_' + index}  style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
+                <Grid  key={'grid_' + index}  item >
+                  <span style={{paddingTop:'10px', paddingBottom: '10px'}}>
+                    <h3>Question {index+1}</h3>
+                  </span>
+                </Grid>
+                <Question key={'question_' + index} index={index} question={question} onChange={handleQuestionChange}/>
               </React.Fragment>
-          )
-        })
-      }
+            )
+          })
+        }
+    </Grid>
 
-      </Grid>
+    </React.Fragment>
   )
 }
 

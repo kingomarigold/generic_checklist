@@ -14,7 +14,7 @@ public class User {
 	private String password;
 
 	private String role;
-	private String token;
+	public String token;
 
 	public User(String name, String password) {
 		super();
