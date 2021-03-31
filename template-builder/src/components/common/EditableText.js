@@ -11,7 +11,7 @@ const EditableText = (props) => {
       {
         editMode &&
         <div className='editable-text-container'>
-          <TextField   required id="standard-required" label={props.label} value={props.value}
+          <TextField  required id="standard-required" label={props.label} value={props.value}
           inputRef={input => input && input.focus()}
           onChange={(e) => props.onChange(e.target.value)} onBlur={() => setEditMode(false)}/>
           <EditOutlinedIcon disabled  />

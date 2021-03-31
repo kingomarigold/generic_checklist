@@ -17,7 +17,7 @@ const Section = (props) => {
 
   const addQuestion = () => {
     let mySection = {...props.section}
-    mySection.questions.push({name: '', type: ''})
+    mySection.questions.push({name: '', type: '', choices: []})
     props.onChange(props.index, mySection)
   }
 
@@ -44,7 +44,15 @@ const Section = (props) => {
           props.section.questions &&
           props.section.questions.map((question, index) => {
             return (
-              <Question key={index} index={index} question={question} onChange={handleQuestionChange}/>
+              <React.Fragment>
+                <hr style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
+                <Grid item >
+                  <span style={{paddingTop:'10px', paddingBottom: '10px'}}>
+                    <h3>Question {index+1}</h3>
+                  </span>
+                </Grid>
+                <Question key={index} index={index} question={question} onChange={handleQuestionChange}/>
+              </React.Fragment>
             )
           })
         }

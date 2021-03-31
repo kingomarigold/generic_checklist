@@ -83,7 +83,7 @@ const Question = (props) => {
           direction="row"
       >
         <Grid item xs={12} sm={12} lg={5} md={5}>
-          <TextField style={{width:'100%'}} required label='Name' value={props.question.name}
+          <TextField inputRef={input => input && input.focus()} style={{width:'100%'}} required label='Name' value={props.question.name}
               onChange={(e) => changeName(e.target.value)}/>
         </Grid>
         <Grid item xs={12} sm={12} lg={5} md={5}>
@@ -103,8 +103,19 @@ const Question = (props) => {
             }
           </TextField>
         </Grid>
-        <Grid item xs={12} sm={12} lg={6} md={6}>
-        </Grid>
+        {
+          props.question.type &&
+          parseInt(props.question.type) < 4 &&
+          <Grid item xs={12} sm={12} lg={11} md={11}>
+            <TextField
+              style={{width: '100%'}}
+              value={props.question.choices}
+              label='Choices'
+              placeholder = 'Option 1, Option 2'
+              onChange={(e) => handleChange(e.target.value)}
+            />
+          </Grid>
+        }
       </Grid>
     </React.Fragment>
   );
