@@ -4,8 +4,7 @@ import React from 'react'
 import Header from './Header'
 import {useState} from 'react'
 import Section from './Section'
-import EditableText from './common/EditableText'
-import EditableTextArea from './common/EditableTextArea'
+import TextField from '@material-ui/core/TextField'
 import { useHistory } from 'react-router-dom'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -15,6 +14,7 @@ import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.name === '')
@@ -50,6 +50,13 @@ const Template = (props) => {
     setTemplate(myTemplate)
   }
 
+  const handleDelete = (event, index) => {
+    event.stopPropagation()
+    let myTemplate = JSON.parse(JSON.stringify(template))
+    myTemplate.sections.splice(index, 1)
+    setTemplate(myTemplate)
+  }
+
   return (
     <React.Fragment>
       <Header userName={props.userName}/>
@@ -67,11 +74,15 @@ const Template = (props) => {
             alignItems="center"
           >
             <CardContent>
-
-                <EditableText editMode={newTemplate} label="Name"
-                  value={template.name} onChange={changeName} />
-                <EditableTextArea label='Description' value={template.description}
-                    onChange={changeDescription} />
+                <Grid item >
+                  <TextField required label="Name"
+                    value={template.name} onChange={(e) => changeName(e.target.value)} />
+                </Grid>
+                <Grid item>
+                  <TextField multiline label='Description' value={template.description}
+                    onChange={(e) =>changeDescription(e.target.value)}
+                    helperText='You can add multiple lines here'/>
+                </Grid>
             </CardContent>
             <CardActions>
               <Button size='medium' onClick={addSection}
@@ -99,6 +110,10 @@ const Template = (props) => {
                       </Grid>
                       <Grid item>
                         {section.name}
+                      </Grid>
+                      <Grid item>
+                        <DeleteIcon onFocus={(event) => event.stopPropagation()}
+                          onClick={(event) => handleDelete(event, index)}/>
                       </Grid>
                     </Grid>
                   </AccordionSummary>

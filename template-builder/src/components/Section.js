@@ -35,9 +35,8 @@ const Section = (props) => {
           alignItems="center"
           direction="column"
       >
-
-        <EditableText editMode={newSection} label="Name"
-          value={props.section.name} onChange={changeName}/>
+        <TextField  required label="Name"
+            value={props.section.name} onChange={(e) => changeName(e.target.value)}/>
         <Button onClick={addQuestion}
                   color="primary">Add Question</Button>
         {
@@ -51,7 +50,7 @@ const Section = (props) => {
                     <h3>Question {index+1}</h3>
                   </span>
                 </Grid>
-                <Question key={'question_'+index} index={index} question={question} onChange={handleQuestionChange}/>
+                <Question key={'question_' + index} index={index} question={question} onChange={handleQuestionChange}/>
               </React.Fragment>
             )
           })

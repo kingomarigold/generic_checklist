@@ -33,7 +33,7 @@ const Login = (props) => {
         <Grid item>
           <Button style={{ marginTop: '10%' }} variant="contained" color="primary" onClick={login}> Login </Button>
         </Grid>
-      </Grid>F
+      </Grid>
     </React.Fragment>
   )
 }
