@@ -18,7 +18,6 @@ import com.test.templatebuilderserver.dto.Template;
 import com.test.templatebuilderserver.service.TemplateService;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
 public class TemplateResource {
 
@@ -26,6 +25,7 @@ public class TemplateResource {
 	TemplateService templateService;
 
 	@PostMapping("/template")
+	@CrossOrigin
 	public ResponseEntity save(@RequestBody @Validated Template template) {
 		try {
 			return ResponseEntity.created(new URI("/api/template/" + templateService.save(template))).build();
@@ -36,6 +36,7 @@ public class TemplateResource {
 	}
 
 	@GetMapping("/template/{id}")
+	@CrossOrigin
 	public ResponseEntity<Template> get(@PathVariable Long id) {
 		Template data = templateService.get(id);
 		if (data != null) {
@@ -45,6 +46,7 @@ public class TemplateResource {
 	}
 
 	@GetMapping("/templates")
+	@CrossOrigin
 	public ResponseEntity getAll() {
 		return ResponseEntity.ok(templateService.getAll());
 	}

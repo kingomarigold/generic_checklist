@@ -41,9 +41,6 @@ function App() {
           <Switch>
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
-            <Route exact path='/admin/template/section' component={Section} ></Route>
-            <Route exact path='/admin/template/edit' component={Question} ></Route>
-         
           </Switch>
         </BrowserRouter>
       }

@@ -17,14 +17,19 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
+		http.cors().and()
 			.authorizeRequests()
-				.antMatchers("/", "/ping").permitAll()
+				.antMatchers("/", "/ping","/user").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
 				.loginPage("/login")
 				.permitAll()
+				.and()
+				.formLogin()
+				.loginPage("/user/user")
+				.permitAll()
+				.and().csrf().ignoringAntMatchers("/h2-console/")
 				.and()
 			.csrf().disable()
 			.sessionManagement()

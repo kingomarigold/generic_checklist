@@ -2,6 +2,7 @@ server:
     port: 8090
 
 spring:
+    h2.console.enabled: true   
     profiles:
         active: test
     datasource:
@@ -30,3 +31,4 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.hbm2ddl.auto: update
+
