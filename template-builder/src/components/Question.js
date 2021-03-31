@@ -52,7 +52,10 @@ const Question = (props) => {
     {value: '6', name: 'Widget - Date'},
   ]
 
+  const baseHelperText = 'Enter your choices separated by comma'
   const [newQuestion, setNewQuestion] = useState(props.question.name === '')
+  const [hasError, setHasError] = useState('')
+  const [helperText, setHelperText] = useState(baseHelperText)
   const classes = useStyles()
 
   const changeName = (value) => {
@@ -61,16 +64,19 @@ const Question = (props) => {
     props.onChange(props.index, myQuestion)
   }
 
-  const handleMultipleChoice = () => {
-
+  const handleMultipleChoice = (value) => {
+    let myQuestion = {...props.question}
+    let choices = []
+    if (value) {
+      choices = value.split(',').map(choice => choice.trim())
+    }
+    myQuestion.choices = choices
+    props.onChange(props.index, myQuestion)
   }
 
   const handleChange = (value) => {
     let myQuestion = {...props.question}
     myQuestion.type = value
-    if (parseInt(value) < 4 ) {
-      handleMultipleChoice(value)
-    }
     props.onChange(props.index, myQuestion)
   }
 
@@ -83,7 +89,7 @@ const Question = (props) => {
           direction="row"
       >
         <Grid item xs={12} sm={12} lg={5} md={5}>
-          <TextField inputRef={input => input && input.focus()} style={{width:'100%'}} required label='Name' value={props.question.name}
+          <TextField  style={{width:'100%'}} required label='Name' value={props.question.name}
               onChange={(e) => changeName(e.target.value)}/>
         </Grid>
         <Grid item xs={12} sm={12} lg={5} md={5}>
@@ -108,11 +114,13 @@ const Question = (props) => {
           parseInt(props.question.type) < 4 &&
           <Grid item xs={12} sm={12} lg={11} md={11}>
             <TextField
+              required
               style={{width: '100%'}}
-              value={props.question.choices}
+              helperText={helperText}
+              value={props.question.choices?props.question.choices.join(', '):''}
               label='Choices'
               placeholder = 'Option 1, Option 2'
-              onChange={(e) => handleChange(e.target.value)}
+              onChange={(e) => handleMultipleChoice(e.target.value)}
             />
           </Grid>
         }

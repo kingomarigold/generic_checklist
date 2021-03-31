@@ -45,13 +45,13 @@ const Section = (props) => {
           props.section.questions.map((question, index) => {
             return (
               <React.Fragment>
-                <hr style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
-                <Grid item >
+                <hr  key={'hr_' + index}  style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
+                <Grid  key={'grid_' + index}  item >
                   <span style={{paddingTop:'10px', paddingBottom: '10px'}}>
                     <h3>Question {index+1}</h3>
                   </span>
                 </Grid>
-                <Question key={index} index={index} question={question} onChange={handleQuestionChange}/>
+                <Question key={'question_'+index} index={index} question={question} onChange={handleQuestionChange}/>
               </React.Fragment>
             )
           })
