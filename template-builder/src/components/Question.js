@@ -2,14 +2,7 @@ import React, { useState } from 'react'
 import { Grid, TextField, Container, Button, Typography, Select, MenuItem, InputLabel } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { makeStyles } from '@material-ui/core/styles'
-import Radio from '@material-ui/core/Radio'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl from '@material-ui/core/FormControl'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import FormLabel from '@material-ui/core/FormLabel'
-import EditableText from './common/EditableText'
-import NativeSelect from '@material-ui/core/NativeSelect'
+
 
 const Question = (props) => {
 

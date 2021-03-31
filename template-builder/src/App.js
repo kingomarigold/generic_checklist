@@ -3,7 +3,7 @@ import 'fontsource-roboto'
 import Login from './components/Login'
 import Admin from './components/Admin'
 import Template from './components/Template'
-import Section from './components/Section'
+import TemplatePreview from './components/TemplatePreview'
 import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 import Question from './components/Question'
@@ -41,6 +41,7 @@ function App() {
           <Switch>
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
+            <Route exact path='/template' component={TemplatePreview} ></Route>
           </Switch>
         </BrowserRouter>
       }

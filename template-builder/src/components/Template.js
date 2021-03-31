@@ -16,6 +16,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete'
 
+
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.name === '')
   const [template, setTemplate] = useState(props.location.state)
@@ -57,6 +58,10 @@ const Template = (props) => {
     setTemplate(myTemplate)
   }
 
+  const preview  = () => {
+    history.push('/template', template)
+  }
+
   return (
     <React.Fragment>
       <Header userName={props.userName}/>
@@ -87,6 +92,8 @@ const Template = (props) => {
             <CardActions>
               <Button size='medium' onClick={addSection}
                       color="primary">Add Section</Button>
+              <Button size='default' onClick={preview}
+                color="primary">Preview</Button>
             </CardActions>
           </Grid>
         </Card>
