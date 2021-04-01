@@ -7,15 +7,28 @@ import Button from '@material-ui/core/Button'
 const Login = (props) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-  
-const url=process.env.REACT_APP_TOKEN
+
+  const url=process.env.REACT_APP_BASE_URL + process.env.REACT_APP_LOGIN_URI
+
   const login = () => {
-    // TODO - Connect to server and login.
-    const token = 'abcdef'
-  //let tokenurl = fetch(url);
- // console.log(token+"***")
-    localStorage.setItem('token', token)
-    props.loginSuccess()
+    const params = {
+      username: userName,
+      password: password
+    }
+    fetch(
+      url,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(params)
+      }
+    )
+    .then(res => res.json())
+    .then(json => {
+      props.loginSuccess(json.id_token, userName, json.roles)
+    })
+    .catch(err => console.log('Error: ', err))
+
   }
 
   return (

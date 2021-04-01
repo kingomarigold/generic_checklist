@@ -14,18 +14,31 @@ const Admin = (props) => {
 
   const history = useHistory()
 
+  const getAuthHeader = () => {
+    return 'Bearer ' + localStorage.getItem('token')
+  }
+
   const makeApiCall = (url, method, params, headers) => {
     setIsLoading(true)
+    let authToken = getAuthHeader()
     let  fetcher = method == 'GET' || method == 'HEAD'?fetch(
       url,
       {
-        method: method
+        method: method,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': authToken
+        }
       }
     ):
     fetch(
       url,
       {
         method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authToken
+        },
         body: params
       }
     )
