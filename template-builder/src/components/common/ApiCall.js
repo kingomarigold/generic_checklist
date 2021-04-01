@@ -11,7 +11,7 @@ const callLoadingCallback = (loadingCallback, value) => {
 const ApiCall = (url, method, params, loadingCallback)  => {
   callLoadingCallback(loadingCallback, true)
   let authToken = getAuthHeader()
-  let  fetcher = method == 'GET' || method == 'HEAD'?fetch(
+  let  fetcher = method === 'GET' || method === 'HEAD'?fetch(
     url,
     {
       method: method,
@@ -37,8 +37,8 @@ const ApiCall = (url, method, params, loadingCallback)  => {
   .then(response => {
     callLoadingCallback(loadingCallback, false)
     return response
-  }).
-  catch(err => {
+  })
+  .catch(err => {
     callLoadingCallback(loadingCallback, false)
     console.log('Error occured: ', err)
   })
