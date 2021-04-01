@@ -74,6 +74,10 @@ const Template = (props) => {
     })
   }
 
+  const goBack = () => {
+    history.push('/admin')
+  }
+
   return (
     <React.Fragment>
       <Header userName={props.userName}/>
@@ -102,6 +106,8 @@ const Template = (props) => {
                 </Grid>
             </CardContent>
             <CardActions>
+              <Button size='medium' variant="outlined" onClick={goBack}
+                  color="default">Back</Button>
               <Button size='medium' onClick={addSection}
                       color="primary">Add Section</Button>
               <Button size='medium' onClick={preview}

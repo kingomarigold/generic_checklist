@@ -15,6 +15,7 @@ const Templates = (props) => {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell >Name</TableCell>
+            <TableCell >Description</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -25,8 +26,8 @@ const Templates = (props) => {
                   <TableCell component="th" scope="row">
                     {p.id}
                   </TableCell>
-                  <TableCell >{p.name}</TableCell>
-                  <TableCell > </TableCell>
+                  <TableCell component="th" scope="row">{p.name}</TableCell>
+                  <TableCell component="th" scope="row"> {p.description} </TableCell>
                 </TableRow>
               )
             })
