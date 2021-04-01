@@ -7,7 +7,6 @@ import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -28,7 +27,7 @@ public class TemplateService {
 	@Transactional
 	public Long save(Template template) {
 		return templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getName(),
-				ClobProxy.generateProxy(template.getTemplate()))).getId();
+				ClobProxy.generateProxy(template.getTemplate()), template.getDescription())).getId();
 	}
 
 	public Template get(Long id) {
@@ -37,7 +36,7 @@ public class TemplateService {
 		Optional<com.test.templatebuilderserver.entity.Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
 			retVal = new Template(template.get().getId(), template.get().getName(),
-					clobToString(template.get().getData()));
+					clobToString(template.get().getData()), template.get().getDescription());
 		}
 		return retVal;
 	}
