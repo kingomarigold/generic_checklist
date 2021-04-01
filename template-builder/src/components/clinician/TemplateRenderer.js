@@ -22,7 +22,7 @@ const TemplateRenderer = (props) => {
   }
 
   const back = () => {
-    history.push('/admin/template', props.template)
+    history.push('/admin/template', {template: props.template})
   }
 
   const save = () => {
