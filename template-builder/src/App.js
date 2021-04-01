@@ -22,12 +22,12 @@ function App() {
     if (roles.includes('ROLE_ADMIN')) {
       setIsAdmin(true)
       setIsClinician(false)
-      setTimeout( () => history.push('/admin'), 500)
+      history.push('/admin')
     }
     else if (roles.includes('ROLE_USER')) {
       setIsClinician(true)
       setIsAdmin(false)
-      setTimeout( () => history.push('/cliniciandashboard'), 500)
+      history.push('/cliniciandashboard')
     }
   }
 
@@ -61,22 +61,18 @@ function App() {
       {
         isLoggedIn &&
         isAdmin &&
-        <BrowserRouter>
           <Switch>
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
             <Route exact path='/template' component={TemplatePreview} ></Route>
           </Switch>
-        </BrowserRouter>
       }
       {
         isLoggedIn &&
         isClinician &&
-        <BrowserRouter>
           <Switch>
             <Route exact path='/cliniciandashboard' component={ClinicianDashboard} ></Route>
           </Switch>
-        </BrowserRouter>
       }
     </main>
   );
