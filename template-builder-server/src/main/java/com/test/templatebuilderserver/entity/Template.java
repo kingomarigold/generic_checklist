@@ -54,6 +54,14 @@ public class Template {
 		this.data = type;
 		this.description = description;
 	}
+	
+	public Template(Long id, String name, Clob type, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.data = type;
+		this.description = description;
+	}
 
 	public String getName() {
 		return name;

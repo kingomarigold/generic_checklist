@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,8 +43,14 @@ public class TemplateService {
 	}
 
 	public List getAll() {
-		
-		return templateRepository.getAll(); 
+		return convertToDtos( templateRepository.getAll());
+	}
+
+	private List convertToDtos(List<com.test.templatebuilderserver.entity.Template> all) {
+		List retVal = new ArrayList();
+		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(),
+				template.getData()!=null?clobToString(template.getData()):null, template.getDescription())));
+		return retVal;
 	}
 
 	public static String clobToString(final Clob clob) {
