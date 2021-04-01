@@ -10,14 +10,32 @@ import FormGroup from '@material-ui/core/FormGroup'
 
 const QuestionRenderer = (props) => {
 
-  console.log(props.question)
-
   const handleRadioChange = (value) => {
-
+    let myQuestion = JSON.parse(JSON.stringify(props.question))
+    myQuestion.value = value
+    props.onChange(props.index, myQuestion)
   }
 
   const handleCheckboxChange = (value) => {
-    console.log('Value: ', value)
+    let myQuestion = JSON.parse(JSON.stringify(props.question))
+    if (!myQuestion.values) {
+      myQuestion.values = []
+    }
+    if (myQuestion.values.includes(value)) {
+      myQuestion.values = myQuestion.values.filter(myValue => value !== myValue)
+    }
+    else {
+      myQuestion.values.push(value)
+    }
+    props.onChange(props.index, myQuestion)
+  }
+
+  const handleSelectChange = (value) => {
+    handleRadioChange(value)
+  }
+
+  const handleInputChange = (value) => {
+    handleRadioChange(value)
   }
 
   const renderRadio = () => {
@@ -50,7 +68,7 @@ const QuestionRenderer = (props) => {
                 return (
                   <FormControlLabel
                     control={<Checkbox
-                      checked={props.question.values && props.questions.values.includes(choice)}
+                      checked={props.question.values && props.question.values.includes(choice)}
                       onChange={e => handleCheckboxChange(choice)} name={choice} />}
                     label={choice}
                   />
@@ -58,8 +76,53 @@ const QuestionRenderer = (props) => {
               })
             }
           </FormGroup>
-        </FormControl>
-      )
+      </FormControl>
+    )
+  }
+
+  const renderSelect = () => {
+    return (
+      <TextField
+        style={{width: '100%'}}
+        value={props.question.value}
+        label='Select Choice'
+        select
+        onChange={(e) => handleSelectChange(e.target.value)}
+      >
+        {
+          props.question.choices &&
+          props.question.choices.map(choice => {
+            return (
+              <MenuItem value={choice}>{choice}</MenuItem>
+            )
+          })
+        }
+      </TextField>
+    )
+  }
+
+  const renderTextBox = () => {
+    return (
+      <TextField
+        style={{width: '100%'}}
+        value={props.question.value}
+        label='Answer here'
+        onChange={(e) => handleInputChange(e.target.value)}
+      />
+    )
+  }
+
+  const renderTextArea = () => {
+    return (
+      <TextField
+        multiline
+        rowsMax={4}
+        style={{width: '100%'}}
+        value={props.question.value}
+        label='Answer here'
+        onChange={(e) => handleInputChange(e.target.value)}
+      />
+    )
   }
 
   const renderAnswer = () => {
@@ -73,6 +136,18 @@ const QuestionRenderer = (props) => {
         props.question.type === '2' &&
         renderCheckbox()
       }
+      {
+        props.question.type === '3' &&
+        renderSelect()
+      }
+      {
+        props.question.type === '4' &&
+        renderTextBox()
+      }
+      {
+        props.question.type === '5' &&
+        renderTextArea()
+      }
       </React.Fragment>
     )
   }
@@ -81,14 +156,14 @@ const QuestionRenderer = (props) => {
     <React.Fragment>
       <Grid
           container
-          justify="flex-start"
+          justify="space-around"
           alignItems="center"
-          direction="column"
+          direction="row"
       >
-        <Grid item>
+        <Grid item xs={12} sm={12} lg={5} md={5}>
           {props.question.name}
         </Grid>
-        <Grid item>
+        <Grid item xs={12} sm={12} lg={5} md={5}>
           {
             renderAnswer()
           }
