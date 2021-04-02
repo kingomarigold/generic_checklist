@@ -1,7 +1,10 @@
 package com.test.templatebuilderserver.web.security;
 
+import javax.servlet.Filter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,29 +15,25 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	//private static final Filter new JWTAuthorizationFilter() = new ;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and()
 			.authorizeRequests()
 				.antMatchers("/", "/ping","/user").permitAll()
 				.anyRequest().authenticated()
-				.and()
-			.formLogin()
-				.loginPage("/login")
-				.permitAll()
-				.and()
-				.formLogin()
-				.loginPage("/user/user")
-				.permitAll()
 				.and().csrf().ignoringAntMatchers("/h2-console/")
 				.and()
 			.csrf().disable()
 			.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
+				//.addFilterBefore(new JWTAuthorizationFilter(),UsernamePasswordAuthenticationToken.class)
 			.logout()
 				.permitAll();
 	}

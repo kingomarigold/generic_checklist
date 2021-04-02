@@ -4,6 +4,8 @@ import Login from './components/Login'
 import Admin from './components/Admin'
 import Template from './components/Template'
 import TemplatePreview from './components/TemplatePreview'
+import UserTemplateRenderer from './components/clinician/UserTemplateRenderer'
+import Clinicalview from './components/Clinicalview'
 import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 import Question from './components/Question'
@@ -17,7 +19,8 @@ const url=process.env.REACT_APP_TOKEN
     setIsLoggedIn(true)
 
     // TODO - Change depending on Role
-    history.push('/admin')
+  //  history.push('/admin')
+  history.push('/user')
   }
 
   useEffect(() => {
@@ -44,6 +47,10 @@ const url=process.env.REACT_APP_TOKEN
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
             <Route exact path='/template' component={TemplatePreview} ></Route>
+            <Route exact path='/user' component={Clinicalview} ></Route>
+            <Route exact path='/user/template' component={UserTemplateRenderer} ></Route>
+         
+            
           </Switch>
         </BrowserRouter>
       }

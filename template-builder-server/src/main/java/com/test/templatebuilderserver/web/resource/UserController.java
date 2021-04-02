@@ -27,14 +27,14 @@ public class UserController {
 
 	@PostMapping(value = "/user")
 	@CrossOrigin
-	public User login( @RequestParam("name") String username, @RequestParam("password") String pwd) {
+	public String login( @RequestParam("name") String username, @RequestParam("password") String pwd) {
 		System.out.println("Security post");
 		String token = getJWTToken(username);
 		User user = new User(username,pwd);
 		//user.setName(username);
 		user.setToken(token);	
 		System.out.println(user.token+"Security token"+token);
-		return user;
+		return token;
 		
 	}
 

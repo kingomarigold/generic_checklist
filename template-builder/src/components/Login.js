@@ -8,16 +8,54 @@ const Login = (props) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   
+  const [isLoading, setIsLoading] = useState(false)
+  let headers = "Access-Control-Allow-Origin";
+ 
 const url=process.env.REACT_APP_TOKEN
   const login = () => {
     // TODO - Connect to server and login.
+    let params = {"name":userName,"password":password}
     const token = 'abcdef'
-  //let tokenurl = fetch(url);
+  let tokenurl =   makeApiCall("https://cors-anywhere.herokuapp.com/"+url,
+    'GET',
+    params, headers)
+  .then(json => {
+    console.log(json)
+   
+  })
  // console.log(token+"***")
-    localStorage.setItem('token', token)
+    localStorage.setItem('token', tokenurl)
     props.loginSuccess()
   }
+  const makeApiCall = (url, method, params, headers) => {
+    setIsLoading(true)
+    let  fetcher = method == 'GET' || method == 'HEAD'?fetch(
+      url,
+      {
+        method: method
+      }
+    ):
+    fetch(
+      url,
+      {
+        method: method,
+        body: params
+      }
+    )
 
+    return fetcher
+    .then(response => {
+      setIsLoading(false)
+      return response.json()
+    }).
+    catch(err => {
+      setIsLoading(false)
+      console.log('Error occured: ', err)
+    })
+    .then(response => [])
+  }
+  
+  
   return (
     <React.Fragment>
       <CssBaseline />
