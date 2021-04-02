@@ -32,7 +32,7 @@ public class TemplateService {
 	}
 
 	public Template get(Long id) {
-		
+
 		Template retVal = null;
 		Optional<com.test.templatebuilderserver.entity.Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
@@ -43,13 +43,24 @@ public class TemplateService {
 	}
 
 	public List getAll() {
-		return convertToDtos( templateRepository.getAll());
+		return convertToDtos(templateRepository.getAll());
+	}
+
+	public Template update(Long id, Template template) {
+		Template retVal = null;
+		Optional<com.test.templatebuilderserver.entity.Template> existingTemplate = templateRepository.findById(id);
+		if (existingTemplate.isPresent()) {
+			templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getId(),
+					template.getName(), ClobProxy.generateProxy(template.getTemplate()), template.getDescription()));
+			retVal = template;
+		}
+		return retVal;
 	}
 
 	private List convertToDtos(List<com.test.templatebuilderserver.entity.Template> all) {
 		List retVal = new ArrayList();
 		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(),
-				template.getData()!=null?clobToString(template.getData()):null, template.getDescription())));
+				template.getData() != null ? clobToString(template.getData()) : null, template.getDescription())));
 		return retVal;
 	}
 

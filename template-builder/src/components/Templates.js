@@ -5,7 +5,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
-
+import { Link } from 'react-router-dom';
 
 const Templates = (props) => {
   return (
@@ -16,18 +16,21 @@ const Templates = (props) => {
             <TableCell>Id</TableCell>
             <TableCell >Name</TableCell>
             <TableCell >Description</TableCell>
+            <TableCell >Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {
             props.templates.map((p, index) => {
               return (
-                <TableRow key={index}>
+                <TableRow key={index} >
                   <TableCell component="th" scope="row">
                     {p.id}
                   </TableCell>
                   <TableCell component="th" scope="row">{p.name}</TableCell>
                   <TableCell component="th" scope="row"> {p.description} </TableCell>
+                  <TableCell component="th" scope="row"> <Link to={{pathname: '/admin/template/'+p.id, state: { template:JSON.parse(p.template)} }}>Edit</Link>
+                    </TableCell>              
                 </TableRow>
               )
             })

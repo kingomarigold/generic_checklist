@@ -35,6 +35,14 @@ class TemplateResourceTest extends BaseTest {
 		mockMvc.perform(
 				get("/api/templates").with(user("user").password("user")).contentType(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().isOk());
+
+		String updatedjsonInput = new Template("Template1", "Tempalate updated", "Description of the template")
+				.toJSON();
+		And: // When template is updated
+
+		mockMvc.perform(
+				get(templateLocation).with(user("admin").password("admin")).contentType(MediaType.APPLICATION_JSON))
+				.andDo(print()).andExpect(content().json(updatedjsonInput));
 	}
 
 }
