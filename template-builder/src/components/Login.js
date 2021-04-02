@@ -8,11 +8,27 @@ const Login = (props) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
 
+  const url=process.env.REACT_APP_BASE_URL + process.env.REACT_APP_LOGIN_URI
+
   const login = () => {
-    // TODO - Connect to server and login.
-    const token = 'abcdef'
-    localStorage.setItem('token', token)
-    props.loginSuccess()
+    const params = {
+      username: userName,
+      password: password
+    }
+    fetch(
+      url,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(params)
+      }
+    )
+    .then(res => res.json())
+    .then(json => {
+      props.loginSuccess(json.id_token, userName, json.roles)
+    })
+    .catch(err => console.log('Error: ', err))
+
   }
 
   return (
@@ -33,7 +49,7 @@ const Login = (props) => {
         <Grid item>
           <Button style={{ marginTop: '10%' }} variant="contained" color="primary" onClick={login}> Login </Button>
         </Grid>
-      </Grid>F
+      </Grid>
     </React.Fragment>
   )
 }

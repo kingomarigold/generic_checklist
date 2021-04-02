@@ -5,62 +5,30 @@ import Header  from './Header'
 import { useHistory } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
 import Templates from './Templates'
-
+import ApiCall from './common/ApiCall'
 
 const Admin = (props) => {
   const [templates, setTemplates] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
-  const [templateName, setTemplateName] = useState('')
 
   const history = useHistory()
 
-  const makeApiCall = (url, method, params, headers) => {
-    setIsLoading(true)
-    let  fetcher = method == 'GET' || method == 'HEAD'?fetch(
-      url,
-      {
-        method: method
-      }
-    ):
-    fetch(
-      url,
-      {
-        method: method,
-        body: params
-      }
-    )
-
-    return fetcher
-    .then(response => {
-      setIsLoading(false)
-      return response.json()
-    }).
-    catch(err => {
-      setIsLoading(false)
-      console.log('Error occured: ', err)
-    })
-    .then(response => [])
-  }
-
   useEffect(()=> {
     let params = {}
-    let headers = { token: localStorage.getItem('token') }
-    makeApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
+    ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
       'GET',
-      params, headers)
+      params)
+    .then(res => res.json())
     .then(json => {
       console.log(json)
       setTemplates(json)
     })
   }, [])
 
-  const handleInputChange = (event) => {
-    setTemplateName(event.target.value)
-  }
 
   const addTemplate = () => {
-    history.push('/admin/template', {name: '', id: '', sections: []})
+    history.push('/admin/template', {template:{name: '', id: '', sections: []}})
   }
 
   return(
@@ -77,7 +45,7 @@ const Admin = (props) => {
       </Grid>
       {
         templates.length > 0 &&
-        <Templates templates={templates}/>
+        <Templates templates={templates} sections={templates}/>
       }
     </React.Fragment>
   )

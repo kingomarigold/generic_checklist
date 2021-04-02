@@ -1,78 +1,68 @@
 import React, { useState } from 'react';
-import { Grid, TextField, Container, Button, Typography } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Question from './Question';
+import { Grid, TextField, Container, Button, Typography } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import Question from './Question'
+import Questions from './Questions'
+import EditableText from './common/EditableText'
 
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 const Section = (props) => {
-    const [button, setButton] = useState(false);
-    const [question, setQuestion] = useState(false);
-    const section = [
-        { title: 'Para' },
-        { title: 'wara' },
-        { title: 'qwer' },
-        { title: 'ccccc' },
-        { title: 'qwsdfgh' },
-    ];
-    const defaultProps = {
-        options: section,
-        getOptionLabel: (option) => option.title,
-    };
-    const flatProps = {
-        options: section.map((option) => option.title),
-    };
-    const handleQues = (e) => {
-        setQuestion(true);
-    }
-    const handleSelect = (e) => {
-        console.log("********", e.target.value)
-        if (e.target.value) {
-            setButton(true);
-            setValue(e.target.value)
+
+  const [newSection, setNewSection] = useState(props.section.name === '')
+
+  const changeName = (value) => {
+    let mySection = {...props.section}
+    mySection.name = value
+    props.onChange(props.index, mySection)
+  }
+
+  const addQuestion = () => {
+    let mySection = {...props.section}
+    mySection.questions.push({name: '', type: '', choices: []})
+    props.onChange(props.index, mySection)
+  }
+
+  const handleQuestionChange = (index, question) => {
+    let mySection = {...props.section}
+    mySection.questions[index] = question
+    props.onChange(props.index, mySection)
+  }
+
+  return (
+    <React.Fragment>
+      <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+      >
+        <TextField  required label="Name"
+            value={props.section.name} onChange={(e) => changeName(e.target.value)}/>
+        <Button onClick={addQuestion}
+                  color="primary">Add Question</Button>
+        {
+          props.section.questions &&
+          props.section.questions.map((question, index) => {
+            return (
+              <React.Fragment>
+                <hr  key={'hr_' + index}  style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
+                <Grid  key={'grid_' + index}  item >
+                  <span style={{paddingTop:'10px', paddingBottom: '10px'}}>
+                    <h3>Question {index+1}</h3>
+                  </span>
+                </Grid>
+                <Question key={'question_' + index} index={index} question={question} onChange={handleQuestionChange}/>
+              </React.Fragment>
+            )
+          })
         }
-        else {
-            setButton(false);
-        }
-    }
- //   const sectionData=[{"sectionName":"","questions":[]}]
- const [sectionData,setSectionData]=useState({"sectionName":"","questions":[]})
-    const handleAddQues=(value)=>{
-        let temp={...sectionData}
-        temp.questions.push(value);
-        setSectionData(temp);
-    }
+    </Grid>
 
-    const [value, setValue] = useState();
-    return (
-        <Grid
-
-            justify="center"
-            alignItems="center"
-            direction="column"
-            style={{ minHeight: "100vh" }}
-        >
-
-            <Container maxWidth="sm">
-                <Autocomplete
-                    id="section-name-complete"
-                    freeSolo
-                    {...defaultProps}
-                    autoComplete
-                    includeInputInList
-                    defaultValue={value}
-                    onSelect={e => handleSelect(e)}
-
-                    renderInput={(params) => <TextField
-                        {...params} label="Section name" margin="normal"
-                    />}
-                />
-                {button && <Button variant="contained" color="primary" component="span" href="#contained-buttons" onClick={e => handleQues(e)}>
-                    + Add Question </Button>}
-                {question && <Question handleAddQues={handleAddQues} />}
-
-            </Container>
-
-        </Grid>
-    );
+    </React.Fragment>
+  )
 }
 
 export default Section

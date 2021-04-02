@@ -24,6 +24,17 @@ public class Template {
 
 	@Lob
     private Clob data;
+	
+	@Column(name="description")
+	private String description;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public Long getId() {
 		return id;
@@ -37,10 +48,19 @@ public class Template {
 		super();
 	}
 
-	public Template(String name, Clob type) {
+	public Template(String name, Clob type, String description) {
 		super();
 		this.name = name;
 		this.data = type;
+		this.description = description;
+	}
+	
+	public Template(Long id, String name, Clob type, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.data = type;
+		this.description = description;
 	}
 
 	public String getName() {

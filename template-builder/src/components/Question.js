@@ -1,25 +1,20 @@
-import React,{useState} from 'react';
-import { Grid, TextField, Container, Button, Typography } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormLabel from '@material-ui/core/FormLabel';
+import React, { useState } from 'react'
+import { Grid, TextField, Container, Button, Typography, Select, MenuItem, InputLabel } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { makeStyles } from '@material-ui/core/styles'
 
-
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(3),
-  },
-  button: {
-    margin: theme.spacing(1, 1, 0, 0),
-  },
-}));
 
 const Question = (props) => {
+
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    }
+  }))
+
   const question = [
     { ques: 'What type of clients do you do your best work with?' },
     { ques: 'Do you utilize any particular modalities with clients?' },
@@ -40,89 +35,91 @@ const Question = (props) => {
       ques: 'How many supervision hours can I anticipate collecting with you each month ?'
     },
   ];
-  const defaultProps = {
-    options: question,
-    getOptionLabel: (option) => option.ques,
-  };
-  const flatProps = {
-    options: question.map((option) => option.ques),
-  };
 
+  const questionTypes = [
+    {value: '1', name: 'Options - radio'},
+    {value: '2', name: 'Options - checkbox'},
+    {value: '3', name: 'Options - select'},
+    {value: '4', name: 'Input - Textbox'},
+    {value: '5', name: 'Input - Textarea'},
+    {value: '6', name: 'Widget - Date'},
+  ]
 
-  const classes = useStyles();
-  const [value, setValue] = useState('');
-  const [error, setError] = useState(false);
-  const [helperText, setHelperText] = useState('Choose wisely');
-  const questionStructure = {
-    "question": '', "type": ""
+  const baseHelperText = 'Enter your choices separated by comma'
+  const [newQuestion, setNewQuestion] = useState(props.question.name === '')
+  const [hasError, setHasError] = useState('')
+  const [helperText, setHelperText] = useState(baseHelperText)
+  const classes = useStyles()
+
+  const changeName = (value) => {
+    let myQuestion = {...props.question}
+    myQuestion.name = value
+    props.onChange(props.index, myQuestion)
   }
-  const handleRadioChange = (event) => {
-    console.log(event.target.value,"1111")
-    setValue(event.target.value);
-    setHelperText(' ');
-    setError(false);
-    questionStructure.type = event.target.value;
-    console.log(questionStructure.type,'2222')
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleMultipleChoice = (value) => {
+    let myQuestion = {...props.question}
+    let choices = []
+    if (value) {
+      choices = value.split(',').map(choice => choice.trim())
+    }
+    myQuestion.choices = choices
+    props.onChange(props.index, myQuestion)
+  }
 
-    if (value === 'radio' || value === 'checkbox' || value === 'text' ||
-      value === 'textarea' || value === 'Date' || value === 'dropdown' || value === 'matrix') {
-      setHelperText('You got it!');
-      setError(false);
-    }
-    else {
-      setHelperText('Please select an option.');
-      setError(true);
-    }
-  };
-  const handleSelect = (e) => {
-    console.log("********", e.target.value)
-    if (e.target.value) {
-
-        setValue(e.target.value)
-    }
-}
+  const handleChange = (value) => {
+    let myQuestion = {...props.question}
+    myQuestion.type = value
+    props.onChange(props.index, myQuestion)
+  }
 
   return (
-    <Grid
-      justify="center"
-      alignItems="center"
-      direction="column"
-      style={{ minHeight: "100vh" }}
-    >
-      <Container maxWidth="sm">
-        <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          defaultValue={value}
-          onSelect={e => handleSelect(e)}
-          options={question.map((option) => option.ques)}
-          renderInput={(params) => (
-            <TextField {...params} label="Questions" margin="normal" variant="outlined" />
-          )}
-        />
-
-
-      </Container>
-      <form onSubmit={handleSubmit}>
-        <FormControl component="fieldset" error={error} className={classes.formControl}>
-          <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={e => handleRadioChange(e)}>
-            <FormControlLabel value="radio" control={<Radio />} label="Multiple choice - radio" />
-            <FormControlLabel value="checkbox" control={<Radio />} label="Multiple choice - checkbox" />
-            <FormControlLabel value="text" control={<Radio />} label="Input" />
-            <FormControlLabel value="Date" control={<Radio />} label="Date" />
-            <FormControlLabel value="dropdown" control={<Radio />} label="Select dropdown" />
-            <FormControlLabel value="matrix" control={<Radio />} label="Matrixscale" />
-            <FormControlLabel value="textarea" control={<Radio />} label="Textarea" />
-          </RadioGroup>
-          <FormHelperText>{helperText}</FormHelperText>
-          <Button type="submit" variant="outlined" color="primary" onClick={() => props.handleAddQues(questionStructure)} className={classes.button}>ADD</Button>
-        </FormControl>
-      </form>
-    </Grid>
+    <React.Fragment>
+      <Grid
+          container
+          justify="space-around"
+          alignItems="center"
+          direction="row"
+      >
+        <Grid item xs={12} sm={12} lg={5} md={5}>
+          <TextField  style={{width:'100%'}} required label='Name' value={props.question.name}
+              onChange={(e) => changeName(e.target.value)}/>
+        </Grid>
+        <Grid item xs={12} sm={12} lg={5} md={5}>
+          <TextField
+            style={{width: '100%'}}
+            value={props.question.type}
+            label='Type'
+            select
+            onChange={(e) => handleChange(e.target.value)}
+          >
+            {
+              questionTypes.map(question => {
+                return (
+                  <MenuItem value={question.value}>{question.name}</MenuItem>
+                )
+              })
+            }
+          </TextField>
+        </Grid>
+        {
+          props.question.type &&
+          parseInt(props.question.type) < 4 &&
+          <Grid item xs={12} sm={12} lg={11} md={11}>
+            <TextField
+              required
+              style={{width: '100%'}}
+              helperText={helperText}
+              value={props.question.choices?props.question.choices.join(', '):''}
+              label='Choices'
+              placeholder = 'Option 1, Option 2'
+              onChange={(e) => handleMultipleChoice(e.target.value)}
+            />
+          </Grid>
+        }
+      </Grid>
+    </React.Fragment>
   );
+
 }
 export default Question

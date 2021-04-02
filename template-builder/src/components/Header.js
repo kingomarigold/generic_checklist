@@ -1,15 +1,35 @@
 import { AppBar, Toolbar } from "@material-ui/core"
-import React, { useEffect } from "react"
+import React from "react"
 import Button from '@material-ui/core/Button'
-import { Home, ThreeDRotation } from '@material-ui/icons'
+import Grid from '@material-ui/core/Grid'
+import { useHistory } from 'react-router-dom'
 
 const Header = (props) => {
+  const history = useHistory()
+
+  const logout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('userName')
+    localStorage.removeItem('roles')
+    history.push('/')
+  }
 
   const displayDesktop = () => {
     return (
         <Toolbar>
-          Welcome {props.userName}
-          <Button color="inherit">Logout</Button>
+          <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+          >
+            <Grid item>
+              Welcome {props.userName}
+            </Grid>
+            <Grid item>
+              <Button color="inherit" onClick={logout}>Logout</Button>
+            </Grid>
+          </Grid>
         </Toolbar>
       )
   };

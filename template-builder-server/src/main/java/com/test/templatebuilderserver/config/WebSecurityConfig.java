@@ -1,5 +1,6 @@
-package com.test.templatebuilderserver.web.security;
+package com.test.templatebuilderserver.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,23 +16,24 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	TokenProvider tokenProvider;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
+		http.cors().and()
 			.authorizeRequests()
-				.antMatchers("/", "/ping").permitAll()
+				.antMatchers("/", "/ping","/login").permitAll()
 				.anyRequest().authenticated()
-				.and()
-			.formLogin()
-				.loginPage("/login")
-				.permitAll()
 				.and()
 			.csrf().disable()
 			.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 			.logout()
-				.permitAll();
+				.permitAll()
+			.and().apply(securityConfigurerAdapter());
 	}
 
 	@Bean
@@ -51,4 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.build();
 		return new InMemoryUserDetailsManager(user, admin);
 	}
+	
+    private JWTConfigurer securityConfigurerAdapter() {
+        return new JWTConfigurer(tokenProvider);
+    }
 }
