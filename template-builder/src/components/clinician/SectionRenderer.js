@@ -7,7 +7,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import QuestionRenderer from './QuestionRenderer'
 
 const SectionRenderer = (props) => {
+  console.log("props",props)
   const handleQuestionChange = (index, question) => {
+    console.log(props.onChange,"???")
     if (props.onChange) {
       let section = {...props.section}
       section.questions[index] = question
@@ -44,7 +46,7 @@ const SectionRenderer = (props) => {
             props.section.questions &&
             props.section.questions.map((question, index) => {
               return (
-                <React.Fragment>
+                <React.Fragment key={'frag_'+index}>
                   <hr  key={'hr_' + index}  style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
                   <Grid  key={'grid_' + index}  item >
                     <span style={{paddingTop:'10px', paddingBottom: '10px'}}>

@@ -9,6 +9,6 @@ import com.test.templatebuilderserver.entity.Template;
 
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
-	@Query("select new com.test.templatebuilderserver.dto.Template(t.id, t.name) from Template t")
-	List<com.test.templatebuilderserver.dto.Template> getAll();
+	@Query("select t from Template t")
+	List<com.test.templatebuilderserver.entity.Template> getAll();
 }

@@ -1,6 +1,10 @@
 server:
     port: 8090
 
+# Base64 key generated using openssl rand
+secret: iBxg/Gmn2Z9qjBDJ0OkgZjSdixNHPnDHioCsWjo1hf3/vE5zRTpXmbGgjCOcnIcEvzVXFmyy9TmBoIJG7QsmHA==
+tokenValidity: 300
+
 spring:
     h2.console.enabled: true   
     profiles:

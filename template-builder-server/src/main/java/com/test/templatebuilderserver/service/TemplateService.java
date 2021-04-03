@@ -5,9 +5,9 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -28,7 +28,7 @@ public class TemplateService {
 	@Transactional
 	public Long save(Template template) {
 		return templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getName(),
-				ClobProxy.generateProxy(template.getTemplate()))).getId();
+				ClobProxy.generateProxy(template.getTemplate()), template.getDescription())).getId();
 	}
 
 	public Template get(Long id) {
@@ -37,14 +37,20 @@ public class TemplateService {
 		Optional<com.test.templatebuilderserver.entity.Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
 			retVal = new Template(template.get().getId(), template.get().getName(),
-					clobToString(template.get().getData()));
+					clobToString(template.get().getData()), template.get().getDescription());
 		}
 		return retVal;
 	}
 
 	public List getAll() {
-		
-		return templateRepository.getAll(); 
+		return convertToDtos( templateRepository.getAll());
+	}
+
+	private List convertToDtos(List<com.test.templatebuilderserver.entity.Template> all) {
+		List retVal = new ArrayList();
+		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(),
+				template.getData()!=null?clobToString(template.getData()):null, template.getDescription())));
+		return retVal;
 	}
 
 	public static String clobToString(final Clob clob) {

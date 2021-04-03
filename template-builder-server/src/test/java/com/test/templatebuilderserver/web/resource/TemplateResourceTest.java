@@ -17,7 +17,7 @@ class TemplateResourceTest extends BaseTest {
 	@Test
 	void validateTemplate_integrationTests() throws Exception {
 		String templateLocation = null;
-		String jsonInput = new Template("Template1","Some Json Content").toJSON();		
+		String jsonInput = new Template("Template1", "Some Json Content", "Description of the template").toJSON();
 		Given: // when there are no templates.
 		mockMvc.perform(
 				get("/api/templates").with(user("user").password("user")).contentType(MediaType.APPLICATION_JSON))

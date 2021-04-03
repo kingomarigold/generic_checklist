@@ -6,21 +6,30 @@
       "name" : "The first existing template",
       "description":"templatee",
       "sections":[{
-        "section":{
+       
           "name":"sec1",
           "questions":[
             {
-              "question":"abc",
-              "type":"radio",
-              "options":"a,b,c"
+              "name":"abc",
+              "type":"1",
+              "choices":[
+            "a","b"]
             }
           ]
-        }
+        
       },
       {
-        "section":{
-          
-        }
+        
+          "name":"sec1",
+          "questions":[
+            {
+              "name":"abc",
+              "type":"2",
+              "choices":[
+                "a","b"]
+            }
+          ]
+        
       }]
     },
     {

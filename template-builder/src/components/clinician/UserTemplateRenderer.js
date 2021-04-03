@@ -14,15 +14,16 @@ const UserTemplateRenderer = (props) => {
 
   const history = useHistory()
 
-  const [template, setTemplate] = useState(props.template)
+  //const [template, setTemplate] = useState(props.template)
 
-  console.log(template,"**")
+  console.log(props.template,"**")
   const handleSectionChange = (index, section) => {
+console.log(props.onChange,">>>")
     if (props.onChange) {
         console.log("sec")
       let myTemplate = JSON.parse(JSON.stringify(props.template))
       myTemplate.sections[index] = section
-      props.onChange(myTemplate)
+    //  props.onChange(myTemplate)
     }
   }
 
@@ -33,7 +34,7 @@ const UserTemplateRenderer = (props) => {
   const save = () => {
     // TODO - Add later
   }
-
+/*
   useEffect(()=> {
     const response =  fetch('http://localhost:3000/templates',{credentials:'include'})
     .then(response => response.json())
@@ -41,7 +42,7 @@ const UserTemplateRenderer = (props) => {
       setTemplate(json[props.template])
     })
   })
-
+*/
   return (
     <React.Fragment>
       <Grid
@@ -52,11 +53,11 @@ const UserTemplateRenderer = (props) => {
       >
         <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
           <CardHeader
-            title={template.name}
+            title={props.template.name}
           />
           <CardContent>
               <Grid item>
-                {template.description}
+                {props.template.description}
               </Grid>
           </CardContent>
           <CardActions>
@@ -73,8 +74,8 @@ const UserTemplateRenderer = (props) => {
           </CardActions>
         </Card>
         {
-          template.sections &&
-          template.sections.map((section, index) => {
+          props.template.sections &&
+          props.template.sections.map((section, index) => {
             return (
               <SectionRenderer key={index} index={index} section={section}
                 onChange={handleSectionChange}/>

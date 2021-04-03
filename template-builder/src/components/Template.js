@@ -15,12 +15,14 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete'
-
+import ApiCall from './common/ApiCall'
 
 const Template = (props) => {
-  const [newTemplate, setNewTemplate] = useState(props.location.state.name === '')
-  const [template, setTemplate] = useState(props.location.state)
-  
+  const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
+  const [template, setTemplate] = useState(props.location.state.template)
+
+  const onSave = props.location.state.onSave
+
   const [section, setSection] = useState(false);
   const history = useHistory();
   const changeName = (name) => {
@@ -63,6 +65,19 @@ const Template = (props) => {
     history.push('/template', template)
   }
 
+  const save = () => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
+    ApiCall(uri, 'POST', {name: template.name, description: template.description,
+      template: JSON.stringify(template)})
+    .then(res => {
+      console.log('Response from template', res)
+    })
+  }
+
+  const goBack = () => {
+    history.push('/admin')
+  }
+
   return (
     <React.Fragment>
       <Header userName={props.userName}/>
@@ -91,10 +106,14 @@ const Template = (props) => {
                 </Grid>
             </CardContent>
             <CardActions>
+              <Button size='medium' variant="outlined" onClick={goBack}
+                  color="default">Back</Button>
               <Button size='medium' onClick={addSection}
                       color="primary">Add Section</Button>
-              <Button size='default' onClick={preview}
+              <Button size='medium' onClick={preview}
                 color="primary">Preview</Button>
+              <Button size='medium' variant="outlined" onClick={save}
+                  color="primary">Save</Button>
             </CardActions>
           </Grid>
         </Card>
