@@ -4,8 +4,6 @@ import Login from './components/Login'
 import Admin from './components/Admin'
 import Template from './components/Template'
 import TemplatePreview from './components/TemplatePreview'
-import UserTemplateRenderer from './components/clinician/UserTemplateRenderer'
-import Clinicalview from './components/Clinicalview'
 import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 import Question from './components/Question'
@@ -67,10 +65,6 @@ function App() {
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
             <Route exact path='/template' component={TemplatePreview} ></Route>
-            <Route exact path='/user' component={Clinicalview} ></Route>
-            <Route exact path='/user/template' component={UserTemplateRenderer} ></Route>
-         
-            
           </Switch>
       }
       {

@@ -1,102 +1,61 @@
-
-
 import React, { useEffect, useState } from 'react'
-
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import UserTemplateRenderer from './UserTemplateRenderer'
-
-import TemplateRenderer from './TemplateRenderer'
-import Header from '../Header'
-import { useHistory } from 'react-router-dom'
+import ApiCall from '../common/ApiCall'
 import Grid from '@material-ui/core/Grid'
-
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
 
 const ClinicianDashboard = (props) => {
- 
-  const [template, setTemplate] = useState({})
-  
-  const [usertemplate, setUsertemplate] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+
   const [templates, setTemplates] = useState([])
-  const handleTemplateChange = (idx) => {
-    setUsertemplate(true)
-    setTemplate(templates[idx])
-   
+  const [selectedTemplate, setSelectedTemplate] = useState(null)
+
+  const handleTemplateChange = (value) => {
+    let myTemplate = templates.find(template => template.name === value)
+    setSelectedTemplate(myTemplate)
   }
 
-  
- const  getTemplates=()=>{
-  const response =  fetch('http://localhost:3000/templates',{credentials:'include'})
-  .then(response => response.json())
-  .then(json => {
-    setTemplates(json)
-  })
-   };
-  useEffect(()=> {
-    getTemplates();
-  },[]);
-
-  
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
-  const classes = useStyles();
-  const history = useHistory()
-
+  useEffect(() => {
+    let params = {}
+    ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
+      'GET',
+      params)
+    .then(res => res.json())
+    .then(json => {
+      console.log(json)
+      setTemplates(json)
+    })
+  }, [])
 
   return (
-    <div>
-        <Header userName={props.userName}/>
-    
-       <Grid
-        container
-        direction="column"
-        justify="flex-start"
-        alignItems="center"
+    <Grid
+      container
+      direction="column"
+      justify="flex-start"
+      alignItems="center"
+    >
+    <TextField
+        id="standard-select-currency"
+        select
+        label="Select"
+        value={selectedTemplate?.name}
+        onChange={(e) => handleTemplateChange(e.target.value)}
+        helperText="Please select a template"
       >
-      <FormControl className={classes.formControl}>
-         <Select
-          native
-         
-          onChange={e=>handleTemplateChange(e.target.value)}
-          inputProps={{
-            name: 'templates',
-            id: 'age-native-simple',
-          }}
-        >
-          <option>select</option>
-          {
-      templates.length>0 &&
-      templates.map((h, i) => 
-      (<option key={i} value={i}>{h.name}</option>))
+        <MenuItem key='default' value ={null}>
+           None
+        </MenuItem>
+      {
+        templates.map(template => {
+          return (
+            <MenuItem key={template.name} value={template.name}>
+              {template.name}
+            </MenuItem>
+          )
+        })
       }
-        </Select>
-      </FormControl>
-    {usertemplate &&
-    <UserTemplateRenderer userName={props.userName} template={template}
-      fromAdmin={false} />
-    }
-      </Grid>
-     
-</div>
+    </TextField>
+    </Grid>
   )
 }
 
 export default ClinicianDashboard
-/* { usertemplate &&
-    <UserTemplateRenderer userName={props.userName} template={state.template}
-      fromAdmin={false} />
-    }
-    */
