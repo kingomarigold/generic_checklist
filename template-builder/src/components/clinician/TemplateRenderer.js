@@ -8,7 +8,7 @@ import CardHeader from '@material-ui/core/CardHeader'
 import SectionRenderer from './SectionRenderer'
 import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router-dom'
-
+import ApiCall from './../common/ApiCall'
 const TemplateRenderer = (props) => {
 
   const history = useHistory()
@@ -22,12 +22,33 @@ const TemplateRenderer = (props) => {
   }
 
   const back = () => {
-    history.push('/admin/template', {template: props.template})
+    history.push('/cliniciandashboard')
+  }
+  const save = () => {
+    create(props.template)
+   /*  template.id = template.id ? template.id : id;
+    if (template.id) {
+      update(template.id)
+    } else {
+      create(template)
+    } */
+  }
+  
+  const create = (template) => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE
+  //  console.log('Create API', uri);
+     ApiCall(uri, 'POST', {
+        name: template.name,
+        description: template.description,
+        template: JSON.stringify(template)
+      })
+      .then(res => {
+        console.log('Response from template', res.headers.get('Location'));
+        history.push('/cliniciandashboard')
+      }) 
   }
 
-  const save = () => {
-    // TODO - Add later
-  }
+
 
   return (
     <React.Fragment>
@@ -54,7 +75,7 @@ const TemplateRenderer = (props) => {
                       color="primary">Back</Button>
             }
             {
-              !props.fromAdmin &&
+              props.fromAdmin &&
               <Button size='medium' onClick={save}
                       color="primary">Save</Button>
             }

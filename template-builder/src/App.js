@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 import Question from './components/Question'
 import ClinicianDashboard from './components/clinician/ClinicianDashboard'
+import TemplateRenderer from './components/clinician/TemplateRenderer'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -73,6 +74,7 @@ function App() {
         isClinician &&
           <Switch>
             <Route exact path='/cliniciandashboard' component={ClinicianDashboard} ></Route>
+            <Route exact path='/template/:id' component={TemplatePreview} ></Route>
           </Switch>
       }
     </main>

@@ -41,8 +41,8 @@ class TemplateResourceTest extends BaseTest {
 		And: // When template is updated
 
 		mockMvc.perform(
-				get(templateLocation).with(user("admin").password("admin")).contentType(MediaType.APPLICATION_JSON))
-				.andDo(print()).andExpect(content().json(updatedjsonInput));
+				put(templateLocation).with(user("admin").password("admin")).contentType(MediaType.APPLICATION_JSON))
+				.andDo(print()).andExpect(status().isOk()).andExpect(content().json(updatedjsonInput));
 	}
 
 }
