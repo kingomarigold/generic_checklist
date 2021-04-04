@@ -20,7 +20,7 @@ const ClinicianDashboard = (props) => {
 
   const fillTemplate = () => {
     if (selectedTemplate) {
-      history.push('/template', selectedTemplate)
+      history.push('/template', JSON.parse(selectedTemplate.template))
     }
   }
 

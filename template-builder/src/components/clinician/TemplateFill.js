@@ -5,6 +5,7 @@ import TemplateRenderer from './TemplateRenderer'
 const TemplateFill = (props) => {
   const [template, setTemplate] = useState(props.location.state)
 
+  console.log('Template in fill: ', template)
   const handleTemplateChange = (changedTemplate) => {
     console.log('Changed Template: ', changedTemplate)
     setTemplate(JSON.parse(JSON.stringify(changedTemplate)))

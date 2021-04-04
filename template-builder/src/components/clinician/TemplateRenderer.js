@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom'
 const TemplateRenderer = (props) => {
 
   const history = useHistory()
+  console.log('Template is: ', props.template)
 
   const handleSectionChange = (index, section) => {
     if (props.onChange) {
@@ -39,6 +40,9 @@ const TemplateRenderer = (props) => {
         alignItems="center"
       >
         <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
+          {
+            console.log('Template Name: ', props.template.name)
+          }
           <CardHeader
             title={props.template.name}
           />
