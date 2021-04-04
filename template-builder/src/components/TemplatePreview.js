@@ -12,7 +12,7 @@ const TemplatePreview = (props) => {
 
   return (
     <TemplateRenderer userName={props.userName} template={template}
-      fromAdmin={true} onChange={handleTemplateChange}/>
+      fromAdmin={true} onChange={handleTemplateChange} back='/admin/template'/>
   )
 }
 
