@@ -49,7 +49,6 @@ const TemplateRenderer = (props) => {
           </CardContent>
           <CardActions>
             {
-              props.fromAdmin &&
               <Button size='medium' onClick={back}
                       color="primary">Back</Button>
             }

@@ -5,12 +5,13 @@ import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import Button from '@material-ui/core/Button'
 import TemplateRenderer from './TemplateRenderer'
+import { useHistory } from 'react-router-dom'
 
 const ClinicianDashboard = (props) => {
 
+  const history = useHistory()
   const [templates, setTemplates] = useState([])
   const [selectedTemplate, setSelectedTemplate] = useState(null)
-  const [showTemplate, setShowTemplate] = useState(false)
 
   const handleTemplateChange = (value) => {
     let myTemplate = templates.find(template => template.name === value)
@@ -18,13 +19,11 @@ const ClinicianDashboard = (props) => {
   }
 
   const fillTemplate = () => {
-    setShowTemplate(true)
+    if (selectedTemplate) {
+      history.push('/template', selectedTemplate)
+    }
   }
 
-  const onAnswerChange = (changedTemplate) => {
-    console.log('Changed Template: ', changedTemplate)
-    setSelectedTemplate(JSON.parse(JSON.stringify(changedTemplate)))
-  }
 
   useEffect(() => {
     let params = {}
@@ -55,7 +54,7 @@ const ClinicianDashboard = (props) => {
             helperText="Please select a template"
           >
           {
-            templates.map(template => {
+            templates && templates.map(template => {
               return (
                 <MenuItem key={template.name} value={template.name}>
                   {template.name}
@@ -68,8 +67,6 @@ const ClinicianDashboard = (props) => {
       <Grid item xs={12} sm={12} lg={5} md={5}>
         <Button variant='contained' color='primary' onClick={fillTemplate}>Fill Template</Button>
       </Grid>
-
-      
     </Grid>
   )
 }
