@@ -65,6 +65,7 @@ function App() {
           <Switch>
             <Route exact path='/admin' component={Admin} />
             <Route exact path='/admin/template' component={Template} ></Route>
+            <Route exact path='/admin/template/:id' component={Template} ></Route>
             <Route exact path='/template' component={TemplatePreview} ></Route>
           </Switch>
       }

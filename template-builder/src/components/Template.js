@@ -16,6 +16,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ApiCall from './common/ApiCall'
+import { useParams } from 'react-router-dom';
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
@@ -25,6 +26,8 @@ const Template = (props) => {
 
   const [section, setSection] = useState(false);
   const history = useHistory();
+  const {id}= useParams();
+
   const changeName = (name) => {
     const myTemplate = {...template}
     myTemplate.name = name
@@ -62,18 +65,48 @@ const Template = (props) => {
   }
 
   const preview  = () => {
-    history.push('/template', template)
+    template.id = id;
+    history.push('/template', template,true)
   }
 
   const save = () => {
-    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
-    ApiCall(uri, 'POST', {name: template.name, description: template.description,
-      template: JSON.stringify(template)})
-    .then(res => {
-      console.log('Response from template', res)
-    })
+    template.id =template.id?template.id:id;
+    if (template.id) {
+      update(template.id)
+    } else {
+      create()
+    }
   }
-
+  
+    const create = () => {
+      const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
+    //  console.log('Create API', uri);
+       ApiCall(uri, 'POST', {
+          name: template.name,
+          description: template.description,
+          template: JSON.stringify(template)
+        })
+        .then(res => {
+          console.log('Response from template', res.headers.get('Location'));
+          history.push('/admin')
+        }) 
+    }
+  
+    const update = (templateId) => {
+      const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE + "/" + templateId
+     // console.log('UPDATE API', uri);
+      ApiCall(uri, 'PUT', {
+          id: template.id,
+          name: template.name,
+          description: template.description,
+          template: JSON.stringify(template)
+        })
+        .then(res => {
+          console.log('Response from template', res)
+          history.push('/admin')
+        }) 
+    }
+  
   const goBack = () => {
     history.push('/admin')
   }

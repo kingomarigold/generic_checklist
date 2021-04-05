@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.test.templatebuilderserver.dto.Template;
 import com.test.templatebuilderserver.service.TemplateService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class TemplateResource {
@@ -25,7 +27,6 @@ public class TemplateResource {
 	TemplateService templateService;
 
 	@PostMapping("/template")
-	@CrossOrigin
 	public ResponseEntity save(@RequestBody @Validated Template template) {
 		try {
 			return ResponseEntity.created(new URI("/api/template/" + templateService.save(template))).build();
@@ -36,7 +37,6 @@ public class TemplateResource {
 	}
 
 	@GetMapping("/template/{id}")
-	@CrossOrigin
 	public ResponseEntity<Template> get(@PathVariable Long id) {
 		Template data = templateService.get(id);
 		if (data != null) {
@@ -46,8 +46,17 @@ public class TemplateResource {
 	}
 
 	@GetMapping("/templates")
-	@CrossOrigin
 	public ResponseEntity getAll() {
 		return ResponseEntity.ok(templateService.getAll());
 	}
+
+	@PutMapping("/template/{id}")
+	public ResponseEntity<Template> update(@PathVariable Long id, @RequestBody @Validated Template template) {
+		Template data = templateService.update(id, template);
+		if (data != null) {
+			return ResponseEntity.ok(data);
+		}
+		return ResponseEntity.notFound().build();
+	}
+
 }
