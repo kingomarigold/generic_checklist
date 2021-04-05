@@ -22,17 +22,19 @@ public class UserTemplate {
 
 	private String userId;
 	private String status;
+	private String category;
 
-	public UserTemplate(String name, String template, String description, String userId, String status) {
+	public UserTemplate(String name, String template, String description, String userId, String status, String category) {
 		super();
 		this.name = name;
 		this.template = template;
 		this.description = description;
 		this.userId = userId;
 		this.status = status;
+		this.category = category;
 	}
 
-	public UserTemplate(Long id, String name, String template, String description, String userId, String status) {
+	public UserTemplate(Long id, String name, String template, String description, String userId, String status,String category) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -40,6 +42,8 @@ public class UserTemplate {
 		this.description = description;
 		this.userId = userId;
 		this.status = status;
+
+		this.category = category;
 	}
 
 	public String getDescription() {
@@ -94,5 +98,13 @@ public class UserTemplate {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

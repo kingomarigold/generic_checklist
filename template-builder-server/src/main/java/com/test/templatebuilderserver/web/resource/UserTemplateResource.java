@@ -1,7 +1,9 @@
 package com.test.templatebuilderserver.web.resource;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.test.templatebuilderserver.dto.Template;
 import com.test.templatebuilderserver.dto.UserTemplate;
 import com.test.templatebuilderserver.service.TemplateService;
 import com.test.templatebuilderserver.service.UserTemplateService;
@@ -30,12 +33,13 @@ public class UserTemplateResource {
 
 	@Autowired
 	TemplateService templateService;
-	
+
 	@PostMapping("/{id}/template")
 	ResponseEntity save(@PathVariable("id") String id, @RequestBody UserTemplate template) {
 		try {
 			return ResponseEntity
-					.created(new URI("/api/user/" + id + "/template/" + userTemplateService.save(id, template))).build();
+					.created(new URI("/api/user/" + id + "/template/" + userTemplateService.save(id, template)))
+					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -52,17 +56,20 @@ public class UserTemplateResource {
 		return ResponseEntity.notFound().build();
 	}
 
-	
 	@GetMapping("/{id}/templates")
 	public ResponseEntity getAll(@PathVariable("id") String userId) {
+		Map<String, Object> templatesMap = new HashMap<String, Object>();
+		List<Template> defaultTempaltes = templateService.getAll();
 
-		List tempaltes = userTemplateService.getAll(userId);
-		if (tempaltes.size() > 0) {
-			return ResponseEntity.ok(tempaltes);
-		} else {
-			return ResponseEntity.ok(templateService.getAll());
-
+		for (Template template : defaultTempaltes) {
+			templatesMap.put(template.getName(), template);
 		}
+		List<UserTemplate> tempaltes = userTemplateService.getAll(userId);
+
+		for (UserTemplate template : tempaltes) {
+			templatesMap.put(template.getName(), template);
+		}
+		return ResponseEntity.ok(templatesMap.values());
 	}
 
 	@PutMapping("/{id}/template/{templateId}")

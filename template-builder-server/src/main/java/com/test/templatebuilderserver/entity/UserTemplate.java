@@ -30,22 +30,26 @@ public class UserTemplate {
 	private Clob data;
 
 	private String status;
+	
+	private String category;
 
-	public UserTemplate(String userId, String name, String description, Clob data, String status) {
+	public UserTemplate(String userId, String name, String description, Clob data, String status,  String category) {
 		this.userId = userId;
 		this.name = name;
 		this.description = description;
 		this.data = data;
 		this.status = status;
+		this.category = category;
 	}
 
-	public UserTemplate(Long id, String userId, String name, String description, Clob data, String status) {
+	public UserTemplate(Long id, String userId, String name, String description, Clob data, String status,  String category) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
 		this.description = description;
 		this.data = data;
 		this.status = status;
+		this.category = category;
 	}
 
 	public Long getId() {
@@ -98,5 +102,13 @@ public class UserTemplate {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

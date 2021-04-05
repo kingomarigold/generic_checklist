@@ -10,6 +10,6 @@ import com.test.templatebuilderserver.entity.UserTemplate;
 
 public interface UserTemplateRepository extends JpaRepository<UserTemplate, Long> {
 
-	@Query("select t from UserTemplate t where t.userId = :userId")
+	@Query("select t from UserTemplate t where t.userId = :userId and t.status='inprogress'")
 	List<com.test.templatebuilderserver.entity.UserTemplate> getAll(@Param("userId") String userId);
 }

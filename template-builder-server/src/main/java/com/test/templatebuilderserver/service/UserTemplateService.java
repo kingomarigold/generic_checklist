@@ -23,7 +23,7 @@ public class UserTemplateService {
 	public Long save(String userId, UserTemplate template) {
 		return userTemplateRepository
 				.save(new com.test.templatebuilderserver.entity.UserTemplate(userId, template.getName(),
-						template.getDescription(), ClobProxy.generateProxy(template.getTemplate()), "inprogress"))
+						template.getDescription(), ClobProxy.generateProxy(template.getTemplate()),  template.getStatus(), template.getCategory()))
 				.getId();
 	}
 
@@ -33,7 +33,7 @@ public class UserTemplateService {
 		if (template.isPresent()) {
 			retVal = new UserTemplate(template.get().getId(), template.get().getName(),
 					ClobToStringConvertUtility.clobToString(template.get().getData()), template.get().getDescription(),
-					template.get().getUserId(), template.get().getStatus());
+					template.get().getUserId(), template.get().getStatus(), template.get().getCategory());
 		}
 		return retVal;
 	}
@@ -45,7 +45,7 @@ public class UserTemplateService {
 	public UserTemplate update(Long id, String userId, UserTemplate template) {
 		userTemplateRepository
 				.save(new com.test.templatebuilderserver.entity.UserTemplate(id, userId, template.getName(),
-						template.getDescription(), ClobProxy.generateProxy(template.getTemplate()), "inprogress"));
+						template.getDescription(), ClobProxy.generateProxy(template.getTemplate()), template.getStatus(),template.getCategory()));
 		return template;
 	}
 
@@ -53,7 +53,7 @@ public class UserTemplateService {
 		List retVal = new ArrayList();
 		list.forEach(template -> retVal.add(new UserTemplate(template.getId(), template.getName(),
 				ClobToStringConvertUtility.clobToString(template.getData()), template.getDescription(),
-				template.getUserId(), template.getStatus())));
+				template.getUserId(), template.getStatus(), template.getCategory())));
 		return retVal;
 	}
 }
