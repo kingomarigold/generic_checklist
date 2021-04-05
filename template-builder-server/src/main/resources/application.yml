@@ -13,7 +13,7 @@ spring:
         dataSourceClassName: org.h2.jdbcx.JdbcDataSource    
 
 
-        url: jdbc:h2:mem:datax;MODE=MYSQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;
+        url: jdbc:h2:file:C:/FMC/checklist.db;MODE=MYSQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;
         username: 
         password: 
         driver-class-name: org.h2.Driver
