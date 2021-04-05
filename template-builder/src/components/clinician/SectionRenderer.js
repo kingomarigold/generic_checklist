@@ -7,7 +7,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import QuestionRenderer from './QuestionRenderer'
 
 const SectionRenderer = (props) => {
+  console.log("props",props)
   const handleQuestionChange = (index, question) => {
+    console.log(props.onChange,"???")
     if (props.onChange) {
       let section = {...props.section}
       section.questions[index] = question

@@ -1,8 +1,36 @@
 {
   "templates": [
+   
     {
       "id" : "1",
-      "name" : "The first existing template"
+      "name" : "The first existing template",
+      "description":"templatee",
+      "sections":[{
+       
+          "name":"sec1",
+          "questions":[
+            {
+              "name":"abc",
+              "type":"1",
+              "choices":[
+            "a","b"]
+            }
+          ]
+        
+      },
+      {
+        
+          "name":"sec1",
+          "questions":[
+            {
+              "name":"abc",
+              "type":"2",
+              "choices":[
+                "a","b"]
+            }
+          ]
+        
+      }]
     },
     {
       "id" : "2",

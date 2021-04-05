@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button'
 const Login = (props) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-
+  const [isLoading, setIsLoading] = useState(false)
   const url=process.env.REACT_APP_BASE_URL + process.env.REACT_APP_LOGIN_URI
 
   const login = () => {
@@ -30,7 +30,35 @@ const Login = (props) => {
     .catch(err => console.log('Error: ', err))
 
   }
+  const makeApiCall = (url, method, params, headers) => {
+    setIsLoading(true)
+    let  fetcher = method == 'GET' || method == 'HEAD'?fetch(
+      url,
+      {
+        method: method
+      }
+    ):
+    fetch(
+      url,
+      {
+        method: method,
+        body: params
+      }
+    )
 
+    return fetcher
+    .then(response => {
+      setIsLoading(false)
+      return response.json()
+    }).
+    catch(err => {
+      setIsLoading(false)
+      console.log('Error occured: ', err)
+    })
+    .then(response => [])
+  }
+  
+  
   return (
     <React.Fragment>
       <CssBaseline />

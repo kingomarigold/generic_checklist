@@ -1,15 +1,11 @@
 import React from 'react'
 import {useState} from 'react'
-import TemplateRenderer from './clinician/TemplateRenderer'
-import { useParams } from 'react-router-dom';
+import TemplateRenderer from './TemplateRenderer'
 
-const TemplatePreview = (props) => {
+const TemplateFill = (props) => {
   const [template, setTemplate] = useState(props.location.state)
 
-  //Need to validate and remove
-  const {id}= useParams();
-  console.log('Preview  Template ID: ', id)
-
+  console.log('Template in fill: ', template)
   const handleTemplateChange = (changedTemplate) => {
     console.log('Changed Template: ', changedTemplate)
     setTemplate(JSON.parse(JSON.stringify(changedTemplate)))
@@ -17,8 +13,8 @@ const TemplatePreview = (props) => {
 
   return (
     <TemplateRenderer userName={props.userName} template={template}
-      fromAdmin={true} onChange={handleTemplateChange} back='/admin/template'/>
+      fromAdmin={false} onChange={handleTemplateChange} back='/cliniciandashboard'/>
   )
 }
 
-export default TemplatePreview
+export default TemplateFill

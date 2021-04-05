@@ -15,7 +15,7 @@ const QuestionRenderer = (props) => {
     myQuestion.value = value
     props.onChange(props.index, myQuestion)
   }
-
+console.log(props,"ques")
   const handleCheckboxChange = (value) => {
     let myQuestion = JSON.parse(JSON.stringify(props.question))
     if (!myQuestion.values) {

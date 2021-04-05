@@ -4,6 +4,7 @@ import Login from './components/Login'
 import Admin from './components/Admin'
 import Template from './components/Template'
 import TemplatePreview from './components/TemplatePreview'
+import TemplateFill from './components/clinician/TemplateFill'
 import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 import Question from './components/Question'
@@ -73,6 +74,7 @@ function App() {
         isClinician &&
           <Switch>
             <Route exact path='/cliniciandashboard' component={ClinicianDashboard} ></Route>
+            <Route exact path='/template' component={TemplateFill} ></Route>
           </Switch>
       }
     </main>
