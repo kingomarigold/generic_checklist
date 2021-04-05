@@ -66,7 +66,7 @@ const Template = (props) => {
 
   const preview  = () => {
     template.id = id;
-    history.push('/template', template)
+    history.push('/template', template,true)
   }
 
   const save = () => {

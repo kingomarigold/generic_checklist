@@ -35,7 +35,7 @@ public class UserTemplateResource {
 	ResponseEntity save(@PathVariable("id") String id, @RequestBody UserTemplate template) {
 		try {
 			return ResponseEntity
-					.created(new URI("/api/user/" + id + "/template" + userTemplateService.save(id, template))).build();
+					.created(new URI("/api/user/" + id + "/template/" + userTemplateService.save(id, template))).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -70,7 +70,7 @@ public class UserTemplateResource {
 			@PathVariable("templateId") Long templateId, @RequestBody @Validated UserTemplate template) {
 		UserTemplate data = userTemplateService.get(templateId);
 		if (data != null) {
-			userTemplateService.update(templateId, userId, template);
+			return ResponseEntity.ok(userTemplateService.update(templateId, userId, template));
 		}
 		return ResponseEntity.notFound().build();
 	}

@@ -22,16 +22,28 @@ const TemplateRenderer = (props) => {
   }
 
   const back = () => {
-    history.push('/cliniciandashboard')
+    navigateTo()
   }
+  const navigateTo=()=>{
+    if(props.fromAdmin){
+      history.push('/admin')
+    }
+    else{
+      history.push('/cliniciandashboard')
+    }
+  }
+
   const save = () => {
-    create(props.template)
-   /*  template.id = template.id ? template.id : id;
-    if (template.id) {
-      update(template.id)
-    } else {
+    const template=props.template
+   // create(props.template)
+     //template.id = template.id ? template.id : id;
+    if (props.isDefault) {
       create(template)
-    } */
+    } else {
+      
+    const userTemplateId=props.userTemplateId
+      update(userTemplateId,template)
+    } 
   }
   
   const create = (template) => {
@@ -44,7 +56,22 @@ const TemplateRenderer = (props) => {
       })
       .then(res => {
         console.log('Response from template', res.headers.get('Location'));
-        history.push('/cliniciandashboard')
+        navigateTo()
+      }) 
+  }
+
+  const update = (id,template) => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE + "/" + id
+   // console.log('UPDATE API', uri);
+    ApiCall(uri, 'PUT', {
+        id: id,
+        name: template.name,
+        description: template.description,
+        template: JSON.stringify(template)
+      })
+      .then(res => {
+        console.log('Response from template', res)
+        navigateTo();
       }) 
   }
 
@@ -75,7 +102,7 @@ const TemplateRenderer = (props) => {
                       color="primary">Back</Button>
             }
             {
-              props.fromAdmin &&
+              !props.fromAdmin &&
               <Button size='medium' onClick={save}
                       color="primary">Save</Button>
             }

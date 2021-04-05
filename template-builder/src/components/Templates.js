@@ -30,9 +30,10 @@ const Templates = (props) => {
                   </TableCell>
                   <TableCell component="th" scope="row">{p.name}</TableCell>
                   <TableCell component="th" scope="row"> {p.description} </TableCell>
+                  <TableCell component="th" scope="row">{p.userId}</TableCell>
                   <TableCell component="th" scope="row"> 
                   {(isEdit===true)
-                      ? <Link to={{pathname: '/template/'+p.id, state: JSON.parse(p.template) }}>Fill</Link>
+                      ? <Link to={{pathname: '/template/'+p.id, state: JSON.parse(p.template), fromAdmin:false, userId:p.userId}}>Fill</Link>
                       : <Link to={{pathname: '/admin/template/'+p.id, state: { template:JSON.parse(p.template)} }}>Edit</Link>
                   }
 
