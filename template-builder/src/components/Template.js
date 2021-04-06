@@ -79,7 +79,7 @@ const Template = (props) => {
       create()
     }
   }
-  
+
     const create = () => {
       const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
     //  console.log('Create API', uri);
@@ -94,9 +94,9 @@ const Template = (props) => {
         .then(res => {
           console.log('Response from template', res.headers.get('Location'));
           history.push('/admin')
-        }) 
+        })
     }
-  
+
     const update = (templateId) => {
       const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE + "/" + templateId
      // console.log('UPDATE API', uri);
@@ -112,9 +112,9 @@ const Template = (props) => {
         .then(res => {
           console.log('Response from template', res)
           history.push('/admin')
-        }) 
+        })
     }
-  
+
   const goBack = () => {
     history.push('/admin')
   }
@@ -151,7 +151,7 @@ const Template = (props) => {
    // setFrequency(event.target.value);
   };
 
-  
+
   const clinicList=[ 'Clinic 1','Clinic 2','Clinic 3', 'Clinic 4']
 
   //const [selectedClinic, setClinic] = useState('');
@@ -169,90 +169,85 @@ const Template = (props) => {
       <Grid
         container
         direction="column"
-        justify="flex-start"
+        justify="center"
         alignItems="center"
       >
         <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
-          <Grid
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="center"
-          >
-          <Grid  item xs={12} sm={6}>
           <CardContent style={{textAlign: "center"}}>
-                <Grid item >
-                  <TextField required label="Title"
-                    value={template.name} onChange={(e) => changeName(e.target.value)} 
-                      style={{width: '80%'}}/>
-                </Grid>
-                <Grid item>
-                  <TextField multiline label='Description' value={template.description}
-                    onChange={(e) =>changeDescription(e.target.value)}
-                    helperText='You can add multiple lines here'     style={{width: '80%'}} / >
-                </Grid>
-            </CardContent>
-          </Grid>
-          <Grid  item xs={12} sm={6}>
-            <CardContent >
-                <Grid item >
-                <TextField multiline label='Category' 
-                  value={template.category}
-                  onChange={(e) => handleCategoryChange(e)}  style={{width: '40%'}} / >
-              <TextField
-                  id="standard-select-freq"
-                  select
-                  label="Frequency"
-                  value={template.frequency}
-                 onChange={(e) => handleFrequencyChange(e)}
-                 style={{width: '40%', paddingLeft:'10%'}}
-                >
-                {
-                 frequencyList.map(freq => {
-                    return (
-                      <MenuItem key={freq} value={freq} >
-                        {freq}
-                      </MenuItem>
-                    )
-                  })
-                }
-              </TextField>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField required label="Title" style={{width: '100%'}}
+                  value={template.name} onChange={(e) => changeName(e.target.value)}/>
               </Grid>
-              <br/>
-              <Grid item >
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField multiline label='Description' value={template.description}
+                  onChange={(e) =>changeDescription(e.target.value)}
+                  style={{width: '100%'}} / >
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField multiline label='Category'
+                  value={template.category}
+                  style={{width: '100%'}}
+                  onChange={(e) => handleCategoryChange(e)} />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField
+                    id="standard-select-freq"
+                    select
+                    label="Frequency"
+                    value={template.frequency}
+                    style={{width: '100%'}}
+                   onChange={(e) => handleFrequencyChange(e)}
+                   >
+                  {
+                   frequencyList.map(freq => {
+                      return (
+                        <MenuItem key={freq} value={freq} >
+                          {freq}
+                        </MenuItem>
+                      )
+                    })
+                  }
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField
                   id="standard-select-clinic"
                   select
                   label="Clinic"
+                  style={{width: '100%'}}
                   value={template.clinic}
                  onChange={(e) => handleClinicChange(e)}
-                 style={{width: '80%'}}
-                >
-                {
-                clinicList.map(clinic => {
-                    return (
-                      <MenuItem key={clinic} value={clinic}>
-                        {clinic}
-                      </MenuItem>
-                    )
-                  })
-                }
-              </TextField>
-              </Grid>
-            </CardContent>
-        </Grid>
-           
-            <CardActions style={{marginLeft: '30%'}} >
-              <Button size='medium' variant="outlined" onClick={goBack}
-                  color="default"  >Back</Button>
-              <Button size='medium' onClick={addSection}
-                      color="primary">Add Section</Button>
-              <Button size='medium' onClick={preview}
-                color="primary">Preview</Button>
-              <Button size='medium' variant="outlined" onClick={save}
-                  color="primary">Save</Button>
-            </CardActions>
-          </Grid>
+                 >
+                  {
+                  clinicList.map(clinic => {
+                      return (
+                        <MenuItem key={clinic} value={clinic}>
+                          {clinic}
+                        </MenuItem>
+                      )
+                    })
+                  }
+                </TextField>
+             </Grid>
+           </Grid>
+          </CardContent>
+
+          <CardActions style={{marginLeft: '30%'}} >
+            <Button size='medium' variant="outlined" onClick={goBack}
+                color="default"  >Back</Button>
+            <Button size='medium' onClick={addSection}
+                    color="primary">Add Section</Button>
+            <Button size='medium' onClick={preview}
+              color="primary">Preview</Button>
+            <Button size='medium' variant="outlined" onClick={save}
+                color="primary">Save</Button>
+          </CardActions>
         </Card>
 
 
