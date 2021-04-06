@@ -238,15 +238,30 @@ const Template = (props) => {
            </Grid>
           </CardContent>
 
-          <CardActions style={{marginLeft: '30%'}} >
-            <Button size='medium' variant="outlined" onClick={goBack}
-                color="default"  >Back</Button>
-            <Button size='medium' onClick={addSection}
+          <CardActions  >
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' variant="outlined" onClick={goBack}
+                  color="default"  >Back</Button>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' onClick={addSection}
                     color="primary">Add Section</Button>
-            <Button size='medium' onClick={preview}
-              color="primary">Preview</Button>
-            <Button size='medium' variant="outlined" onClick={save}
-                color="primary">Save</Button>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' onClick={preview}
+                  color="primary">Preview</Button>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' variant="outlined" onClick={save}
+                    color="primary">Save</Button>
+              </Grid>
+            </Grid>
           </CardActions>
         </Card>
 
