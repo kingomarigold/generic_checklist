@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -80,5 +81,25 @@ public class TokenProvider {
 			log.trace("Invalid JWT token trace.", e);
 		}
 		return false;
+	}
+	
+	public String refreshToken(String authToken) {
+		try {
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
+			return authToken;
+		}
+		catch (ExpiredJwtException e) {
+			long now = (new Date()).getTime();
+			Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+			return Jwts.builder().addClaims(e.getClaims())
+					.signWith(key, SignatureAlgorithm.HS512).setExpiration(validity).compact();
+		}
+		catch (JwtException | IllegalArgumentException e) {
+			e.printStackTrace();
+			log.info("Invalid JWT token.");
+			log.trace("Invalid JWT token trace.", e);
+		}
+		return null;
 	}
 }

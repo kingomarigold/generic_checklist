@@ -1,6 +1,10 @@
 package com.test.templatebuilderserver.web.resource;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.test.templatebuilderserver.config.JWTFilter;
 import com.test.templatebuilderserver.config.TokenProvider;
 import com.test.templatebuilderserver.dto.LoginDTO;
+import com.test.templatebuilderserver.util.TokenFetcher;
 
 @RestController
 @RequestMapping("/")
@@ -45,9 +49,20 @@ public class LoginController {
 		boolean rememberMe = (credentials.isRememberMe() == null) ? false : credentials.isRememberMe();
 		String jwt = tokenProvider.createToken(authentication, rememberMe);
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+		httpHeaders.add(TokenFetcher.AUTHORIZATION_HEADER, "Bearer " + jwt);
 		String roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 		return new ResponseEntity<>(new AuthResponse(jwt, roles), httpHeaders, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "token")
+	@CrossOrigin
+	public ResponseEntity<?> generate(HttpServletRequest request) {
+		String authToken = TokenFetcher.resolveToken(request);
+		String newToken = tokenProvider.refreshToken(authToken);
+		Map<String,String> retVal = new HashMap<String,String>();
+		retVal.put("token", newToken);
+		return newToken != null? new ResponseEntity<>(retVal, HttpStatus.OK): ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
 	}
 
 	static class AuthResponse {
