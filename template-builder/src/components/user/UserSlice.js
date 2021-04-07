@@ -12,12 +12,14 @@ export const UserSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
+      console.log('In reducer, Login - ', action)
       state.loggedIn = true
-      state.name = action.payload.userName
+      state.name = action.payload.name
       state.token = action.payload.token
       state.roles = action.payload.roles
     },
     logout: (state) => {
+      console.log('In reducer, Logout')
       state.loggedIn = false
       state.name = ''
       state.token = ''

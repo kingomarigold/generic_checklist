@@ -31,6 +31,7 @@ function App() {
   }
 
   const handleLoginSuccess = (token, userName, roles) => {
+    console.log('User name is: ', userName)
     dispatch(login({
       name: userName,
       token: token,

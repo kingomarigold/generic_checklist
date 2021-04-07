@@ -3,13 +3,14 @@ import React from "react"
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { logout } from './user/UserSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout, userName } from './user/UserSlice'
 
 const Header = (props) => {
   const history = useHistory()
   const dispatch = useDispatch()
-
+  const currentUserName = useSelector(userName)
+  
   const doLogOut = () => {
     localStorage.removeItem('token')
     dispatch(logout())
@@ -26,7 +27,7 @@ const Header = (props) => {
             alignItems="center"
           >
             <Grid item>
-              Welcome {props.userName}
+              Welcome {currentUserName}
             </Grid>
             <Grid item>
               <Button color="inherit" onClick={doLogOut}>Logout</Button>
