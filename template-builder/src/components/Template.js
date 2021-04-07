@@ -17,6 +17,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ApiCall from './common/ApiCall'
 import { useParams } from 'react-router-dom';
+import MenuItem from '@material-ui/core/MenuItem';
+
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
@@ -66,7 +68,7 @@ const Template = (props) => {
 
   const preview  = () => {
     template.id = id;
-    history.push('/template', template,true)
+    history.push('/template', template)
   }
 
   const save = () => {
@@ -77,78 +79,190 @@ const Template = (props) => {
       create()
     }
   }
-  
+
     const create = () => {
       const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
     //  console.log('Create API', uri);
        ApiCall(uri, 'POST', {
           name: template.name,
           description: template.description,
-          template: JSON.stringify(template)
+          clinic:template.clinic,
+          category:template.category,
+          frequency:template.frequency,
+          template: JSON.stringify(template),
         })
         .then(res => {
           console.log('Response from template', res.headers.get('Location'));
           history.push('/admin')
-        }) 
+        })
     }
-  
+
     const update = (templateId) => {
       const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE + "/" + templateId
      // console.log('UPDATE API', uri);
       ApiCall(uri, 'PUT', {
           id: template.id,
           name: template.name,
+          clinic:template.clinic,
+          category:template.category,
+          frequency:template.frequency,
           description: template.description,
           template: JSON.stringify(template)
         })
         .then(res => {
           console.log('Response from template', res)
           history.push('/admin')
-        }) 
+        })
     }
-  
+
   const goBack = () => {
     history.push('/admin')
   }
 
+  const categoryList = [
+    'Physical Env Building Inspection',
+    'General Audits',
+    'Access Care',
+    'Infection Prevention',
+    'Other Audits',
+    'Medical Record Audit ICHD',
+    'Medical Record Audit PD',
+    'Medical Record Audit HHD'
+  ]
+  //const [selectedCategory, setCategory] = useState('');
+
+  const handleCategoryChange = (event) => {
+    const myTemplate = {...template}
+    myTemplate.category = event.target.value
+    setNewTemplate(false)
+    setTemplate(myTemplate)
+    //setCategory(event.target.value);
+  };
+
+  const frequencyList=[ '"1" a Month','"3" a Month','"1" a Quarter', '"1" a Year']
+
+  //const [selectedFrequency, setFrequency] = useState('');
+
+  const handleFrequencyChange = (event) => {
+    const myTemplate = {...template}
+    myTemplate.frequency = event.target.value
+    setNewTemplate(false)
+    setTemplate(myTemplate)
+   // setFrequency(event.target.value);
+  };
+
+
+  const clinicList=[ 'Clinic 1','Clinic 2','Clinic 3', 'Clinic 4']
+
+  //const [selectedClinic, setClinic] = useState('');
+
+  const handleClinicChange = (event) => {
+    const myTemplate = {...template}
+    myTemplate.clinic = event.target.value
+    setNewTemplate(false)
+    setTemplate(myTemplate)
+    //setClinic(event.target.value);
+  };
   return (
     <React.Fragment>
       <Header userName={props.userName}/>
       <Grid
         container
         direction="column"
-        justify="flex-start"
+        justify="center"
         alignItems="center"
       >
         <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="center"
-          >
-            <CardContent>
-                <Grid item >
-                  <TextField required label="Name"
-                    value={template.name} onChange={(e) => changeName(e.target.value)} />
-                </Grid>
-                <Grid item>
-                  <TextField multiline label='Description' value={template.description}
-                    onChange={(e) =>changeDescription(e.target.value)}
-                    helperText='You can add multiple lines here'/>
-                </Grid>
-            </CardContent>
-            <CardActions>
-              <Button size='medium' variant="outlined" onClick={goBack}
-                  color="default">Back</Button>
-              <Button size='medium' onClick={addSection}
-                      color="primary">Add Section</Button>
-              <Button size='medium' onClick={preview}
-                color="primary">Preview</Button>
-              <Button size='medium' variant="outlined" onClick={save}
-                  color="primary">Save</Button>
-            </CardActions>
-          </Grid>
+          <CardContent style={{textAlign: "center"}}>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField required label="Title" style={{width: '100%'}}
+                  value={template.name} onChange={(e) => changeName(e.target.value)}/>
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField multiline label='Description' value={template.description}
+                  onChange={(e) =>changeDescription(e.target.value)}
+                  style={{width: '100%'}} / >
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField multiline label='Category'
+                  value={template.category}
+                  style={{width: '100%'}}
+                  onChange={(e) => handleCategoryChange(e)} />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField
+                    id="standard-select-freq"
+                    select
+                    label="Frequency"
+                    value={template.frequency}
+                    style={{width: '100%'}}
+                   onChange={(e) => handleFrequencyChange(e)}
+                   >
+                  {
+                   frequencyList.map(freq => {
+                      return (
+                        <MenuItem key={freq} value={freq} >
+                          {freq}
+                        </MenuItem>
+                      )
+                    })
+                  }
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={12} lg={5} md={5}>
+                <TextField
+                  id="standard-select-clinic"
+                  select
+                  label="Clinic"
+                  style={{width: '100%'}}
+                  value={template.clinic}
+                 onChange={(e) => handleClinicChange(e)}
+                 >
+                  {
+                  clinicList.map(clinic => {
+                      return (
+                        <MenuItem key={clinic} value={clinic}>
+                          {clinic}
+                        </MenuItem>
+                      )
+                    })
+                  }
+                </TextField>
+             </Grid>
+           </Grid>
+          </CardContent>
+
+          <CardActions  >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' variant="outlined" onClick={goBack}
+                  color="default"  >Back</Button>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' onClick={addSection}
+                    color="primary">Add Section</Button>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' onClick={preview}
+                  color="primary">Preview</Button>
+              </Grid>
+              <Grid item xs={6} sm={6} lg={2} md={3}>
+                <Button size='medium' variant="outlined" onClick={save}
+                    color="primary">Save</Button>
+              </Grid>
+            </Grid>
+          </CardActions>
         </Card>
 
 

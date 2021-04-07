@@ -10,14 +10,21 @@ import {Grid,Button,} from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import { IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import React, { useEffect, useState } from 'react'
 
-const Templates = (props) => {
+const UserTemplates = (props) => {
 
 const history = useHistory()
+const [templates, setTemplates] = useState([])
+const [selectedTemplate, setSelectedTemplate] = useState(null)
 
 const editTemplate  = (id,template) => {
   console.log(id)
-  history.push('/admin/template/'+id, {template:JSON.parse(template)})
+  history.push('/1001/template/'+id, {template:JSON.parse(template)})
+}
+
+const fillTemplate = (p) => {
+    history.push('/template', {template:JSON.parse(p.template), userTemplateId: p.id, isDefault:(p.userId===undefined)})
 }
 
 return (
@@ -26,11 +33,12 @@ return (
       <TableHead>
         <TableRow>
           <TableCell></TableCell>
+          
+          <TableCell >Category</TableCell>
           <TableCell >Name</TableCell>
           <TableCell >Description</TableCell>
-          <TableCell >Category</TableCell>
-          <TableCell >Frequency</TableCell>
-          <TableCell >Clinic</TableCell>
+          <TableCell >Last Updated date</TableCell>
+          <TableCell >Due date</TableCell>
           <TableCell >Actions</TableCell>
         </TableRow>
       </TableHead>
@@ -41,14 +49,14 @@ return (
               <TableRow key={index} >
                 <TableCell component="th" scope="row">
                 </TableCell>
+                <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row">{p.name}</TableCell>
                 <TableCell component="th" scope="row"> {p.description} </TableCell>
-                <TableCell component="th" scope="row"> {p.category} </TableCell>
-                <TableCell component="th" scope="row"> {p.frequency} </TableCell>
-                <TableCell component="th" scope="row"> {p.clinic} </TableCell>
+                <TableCell component="th" scope="row">{p.updatedDateTime} </TableCell>
+                <TableCell component="th" scope="row">{p.createdDateTime}</TableCell>
                 <TableCell component="th">
-                  <IconButton onClick={() => editTemplate(p.id, p.template)}>
-                    <EditIcon color="primary" />
+                  <IconButton onClick={() => fillTemplate(p)}>
+                    <EditIcon color="secondary" />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -61,4 +69,4 @@ return (
 )
 }
 
-export default Templates
+export default UserTemplates

@@ -12,25 +12,32 @@ public class Template {
 		super();
 	}
 
-	public Template(String name, String template, String description) {
+	public Template(String name, String clinic, String description, String category, String frequency, String template) {
 		super();
 		this.name = name;
 		this.template = template;
 		this.description = description;
+		this.clinic = clinic;
+		this.frequency = frequency;
+		this.category = category;
 	}
 
 	public Template(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
+		
 	}
 
-	public Template(Long id, String name, String template, String description) {
+	public Template(Long id,String name, String clinic, String description,String category,  String frequency, String template) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.template = template;
 		this.description = description;
+		this.clinic = clinic;
+		this.frequency = frequency;
+		this.category = category;
 	}
 
 	private Long id;
@@ -40,6 +47,14 @@ public class Template {
 	private String template;
 
 	private String description;
+	
+
+	private String clinic;
+
+	private String frequency;
+
+	private String category;
+	
 
 	public String getDescription() {
 		return description;
@@ -77,5 +92,29 @@ public class Template {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		return new String(mapper.writeValueAsBytes(this));
+	}
+
+	public String getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(String clinic) {
+		this.clinic = clinic;
+	}
+
+	public String getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(String frequency) {
+		this.frequency = frequency;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

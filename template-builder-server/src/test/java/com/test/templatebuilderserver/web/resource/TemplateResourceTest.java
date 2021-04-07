@@ -17,7 +17,8 @@ class TemplateResourceTest extends BaseTest {
 	@Test
 	void validateTemplate_integrationTests() throws Exception {
 		String templateLocation = null;
-		String jsonInput = new Template("Template1", "Some Json Content", "Description of the template").toJSON();
+		String jsonInput = new Template("Template1", "clinic1", "Some Json Content", "test category", "freq",
+				"Description of the template").toJSON();
 		Given: // when there are no templates.
 		mockMvc.perform(
 				get("/api/templates").with(user("user").password("user")).contentType(MediaType.APPLICATION_JSON))
@@ -36,8 +37,8 @@ class TemplateResourceTest extends BaseTest {
 				get("/api/templates").with(user("user").password("user")).contentType(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().isOk());
 
-		String updatedjsonInput = new Template("Template1", "Tempalate updated", "Description of the template")
-				.toJSON();
+		String updatedjsonInput = new Template("Template1", "clinic1", "Tempalate updated", "test category", "freq",
+				"Description of the template").toJSON();
 		And: // When template is updated
 
 		mockMvc.perform(

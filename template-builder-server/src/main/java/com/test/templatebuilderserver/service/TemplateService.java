@@ -23,7 +23,8 @@ public class TemplateService {
 	@Transactional
 	public Long save(Template template) {
 		return templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getName(),
-				ClobProxy.generateProxy(template.getTemplate()), template.getDescription())).getId();
+				template.getClinic(), template.getDescription(), template.getCategory(), template.getFrequency(),
+				ClobProxy.generateProxy(template.getTemplate()))).getId();
 	}
 
 	public Template get(Long id) {
@@ -31,8 +32,9 @@ public class TemplateService {
 		Template retVal = null;
 		Optional<com.test.templatebuilderserver.entity.Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
-			retVal = new Template(template.get().getId(), template.get().getName(),
-					ClobToStringConvertUtility.clobToString(template.get().getData()), template.get().getDescription());
+			retVal = new Template(template.get().getId(), template.get().getName(), template.get().getClinic(),
+					template.get().getDescription(), template.get().getCategory(), template.get().getFrequency(),
+					ClobToStringConvertUtility.clobToString(template.get().getData()));
 		}
 		return retVal;
 	}
@@ -46,7 +48,8 @@ public class TemplateService {
 		Optional<com.test.templatebuilderserver.entity.Template> existingTemplate = templateRepository.findById(id);
 		if (existingTemplate.isPresent()) {
 			templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getId(),
-					template.getName(), ClobProxy.generateProxy(template.getTemplate()), template.getDescription()));
+					template.getName(), template.getClinic(), template.getDescription(), template.getCategory(),
+					template.getFrequency(), ClobProxy.generateProxy(template.getTemplate())));
 			retVal = template;
 		}
 		return retVal;
@@ -54,9 +57,9 @@ public class TemplateService {
 
 	private List convertToDtos(List<com.test.templatebuilderserver.entity.Template> all) {
 		List retVal = new ArrayList();
-		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(),
-				template.getData() != null ? ClobToStringConvertUtility.clobToString(template.getData()) : null,
-				template.getDescription())));
+		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(), template.getClinic(),
+				template.getDescription(), template.getCategory(), template.getFrequency(),
+				ClobToStringConvertUtility.clobToString(template.getData()))));
 		return retVal;
 	}
 

@@ -22,6 +22,13 @@ public class Template {
 
 	private String name;
 
+
+	private String clinic;
+
+	private String frequency;
+
+	private String category;
+	
 	@Lob
     private Clob data;
 	
@@ -48,13 +55,28 @@ public class Template {
 		super();
 	}
 
-	public Template(String name, Clob type, String description) {
+	public Template( String name, String clinic, String description,String category,  String frequency, Clob data
+			) {
 		super();
 		this.name = name;
-		this.data = type;
+		this.clinic = clinic;
+		this.frequency = frequency;
+		this.category = category;
+		this.data = data;
 		this.description = description;
 	}
 	
+	public Template(Long id,String name, String clinic, String description,  String category, String frequency, Clob data) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.clinic = clinic;
+		this.frequency = frequency;
+		this.category = category;
+		this.data = data;
+		this.description = description;
+	}
+
 	public Template(Long id, String name, Clob type, String description) {
 		super();
 		this.id = id;
@@ -77,5 +99,29 @@ public class Template {
 
 	public void setData(Clob data) {
 		this.data = data;
+	}
+
+	public String getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(String clinic) {
+		this.clinic = clinic;
+	}
+
+	public String getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(String frequency) {
+		this.frequency = frequency;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

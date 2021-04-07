@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
+import UserTemplates from './UserTemplates'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -34,11 +35,11 @@ const ClinicianDashboard = (props) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null)
 
   const classes = useStyles();
-
+/* 
   const handleTemplateChange = (value) => {
     let myTemplate = templates.find(template => template.name === value)
     setSelectedTemplate(JSON.parse(JSON.stringify(myTemplate)))
-  }
+  } */
 
   const fillTemplate = () => {
     if (selectedTemplate) {
@@ -49,7 +50,7 @@ const ClinicianDashboard = (props) => {
 
   useEffect(() => {
     let params = {}
-    ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
+    ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI,
       'GET',
       params)
     .then(res => res.json())
@@ -89,6 +90,11 @@ const ClinicianDashboard = (props) => {
         <br/>
         <Divider variant="middle" />
 
+        { templates.length > 0 &&
+        <UserTemplates templates={templates} sections={templates}/>
+       }
+
+{/* 
       <Grid item xs={12} sm={12} md={5} lg={5}>
         <TextField
             id="standard-select-currency"
@@ -111,7 +117,7 @@ const ClinicianDashboard = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} lg={5} md={5}>
         <Button variant='contained' color='primary' onClick={fillTemplate}>Fill Template</Button>
-      </Grid>
+      </Grid> */}
     </Grid>
     </React.Fragment> 
 

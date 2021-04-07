@@ -6,8 +6,9 @@ import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
 import CardHeader from '@material-ui/core/CardHeader'
 import SectionRenderer from './SectionRenderer'
-import Button from '@material-ui/core/Button'
+import {Button,TextField} from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
+import ApiCall from '../common/ApiCall'
 
 const TemplateRenderer = (props) => {
 
@@ -27,7 +28,50 @@ const TemplateRenderer = (props) => {
   }
 
   const save = () => {
-    // TODO - Add later
+    const template=props.template
+    if (props.isDefault) {
+      create(template)
+    } else {
+    const userTemplateId=props.userTemplateId
+      update(userTemplateId,template,"inprogress")
+    }  
+  }
+  const submit =()=>{
+    const template=props.template;
+    const userTemplateId=props.userTemplateId
+      update(userTemplateId,template,"done")
+  }
+  const create = (template) => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE
+  //  console.log('Create API', uri);
+     ApiCall(uri, 'POST', {
+        name: template.name,
+        category:template.category,
+        status:"inprogress",
+        description: template.description,
+        template: JSON.stringify(template)
+      })
+      .then(res => {
+        console.log('Response from template', res.headers.get('Location'));
+        back()
+      }) 
+  }
+
+  const update = (id,template,status) => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE + "/" + id
+   // console.log('UPDATE API', uri);
+    ApiCall(uri, 'PUT', {
+        id: id,
+        name: template.name,
+        status:status,
+        description: template.description,
+        template: JSON.stringify(template),
+        category:template.category
+      })
+      .then(res => {
+        console.log('Response from template', res)
+        back();
+      }) 
   }
 
   return (
@@ -39,19 +83,51 @@ const TemplateRenderer = (props) => {
         justify="flex-start"
         alignItems="center"
       >
-        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
-          {
-            console.log('Template Name: ', props.template.name)
-          }
+        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}} >
           <CardHeader
             title={props.template.name}
           />
-          <CardContent>
-              <Grid item>
-                {props.template.description}
-              </Grid>
-          </CardContent>
-          <CardActions>
+           <Grid
+            container
+            direction="row"
+            justify="flex-start"
+            alignItems="center"
+          >
+          <Grid  item xs={12} sm={6}>
+          <CardContent style={{textAlign: "center"}}>
+                <Grid item >
+                  <TextField label="Name" InputProps={{ disableUnderline: true }}
+                    value={props.template.name} disabled
+                      style={{width: '80%'}}/>
+                </Grid>
+                <Grid item>
+                <TextField label="Description" InputProps={{ disableUnderline: true }}
+                    value={props.template.description} disabled
+                      style={{width: '80%'}}/>
+                </Grid>
+            </CardContent>
+          </Grid>
+          <Grid  item xs={12} sm={6}>
+          <CardContent style={{textAlign: "center"}}>
+                <Grid item >
+                <TextField label="Category" InputProps={{ disableUnderline: true }} 
+                    value={props.template.category} disabled
+                      style={{width: '80%'}}/>
+                </Grid>
+                <Grid item>
+                <TextField label="Frequency" InputProps={{ disableUnderline: true }}
+                    value={props.template.frequency} disabled
+                      style={{width: '80%'}}/>
+                </Grid>
+                <Grid item>
+                <TextField label="Clinic" InputProps={{ disableUnderline: true }}
+                    value={props.template.clinic} disabled
+                      style={{width: '80%'}}/>
+                </Grid>
+            </CardContent>
+          </Grid>
+          </Grid>
+          <CardActions style={{marginLeft: '30%'}}>
             {
               <Button size='medium' onClick={back}
                       color="primary">Back</Button>
@@ -61,6 +137,11 @@ const TemplateRenderer = (props) => {
               <Button size='medium' onClick={save}
                       color="primary">Save</Button>
             }
+            {
+              !props.fromAdmin &&
+              <Button size='medium' onClick={submit}
+                      color="primary">Submit</Button>
+            } 
           </CardActions>
         </Card>
         {
