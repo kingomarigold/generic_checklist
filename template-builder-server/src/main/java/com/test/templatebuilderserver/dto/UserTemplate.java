@@ -1,5 +1,7 @@
 package com.test.templatebuilderserver.dto;
 
+import java.time.LocalDateTime;
+
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,7 +26,12 @@ public class UserTemplate {
 	private String status;
 	private String category;
 
-	public UserTemplate(String name, String template, String description, String userId, String status, String category) {
+	private String createdDateTime;
+
+	private String updatedDateTime;
+
+	public UserTemplate(String name, String template, String description, String userId, String status, String category,
+			String createdDateTime, String updatedDateTime) {
 		super();
 		this.name = name;
 		this.template = template;
@@ -32,9 +39,13 @@ public class UserTemplate {
 		this.userId = userId;
 		this.status = status;
 		this.category = category;
+
+		this.createdDateTime = createdDateTime;
+		this.updatedDateTime = updatedDateTime;
 	}
 
-	public UserTemplate(Long id, String name, String template, String description, String userId, String status,String category) {
+	public UserTemplate(Long id, String name, String template, String description, String userId, String status,
+			String category, String createdDateTime, String updatedDateTime) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -42,8 +53,11 @@ public class UserTemplate {
 		this.description = description;
 		this.userId = userId;
 		this.status = status;
-
 		this.category = category;
+
+		this.createdDateTime = createdDateTime;
+		this.updatedDateTime = updatedDateTime;
+
 	}
 
 	public String getDescription() {
@@ -106,5 +120,21 @@ public class UserTemplate {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getCreatedDateTime() {
+		return createdDateTime;
+	}
+
+	public void setCreatedDateTime(String createdDateTime) {
+		this.createdDateTime = createdDateTime;
+	}
+
+	public String getUpdatedDateTime() {
+		return updatedDateTime;
+	}
+
+	public void setUpdatedDateTime(String updatedDateTime) {
+		this.updatedDateTime = updatedDateTime;
 	}
 }

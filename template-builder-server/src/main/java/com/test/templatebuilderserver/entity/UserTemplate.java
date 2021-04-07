@@ -1,6 +1,8 @@
 package com.test.templatebuilderserver.entity;
 
 import java.sql.Clob;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,19 +32,27 @@ public class UserTemplate {
 	private Clob data;
 
 	private String status;
-	
+
 	private String category;
 
-	public UserTemplate(String userId, String name, String description, Clob data, String status,  String category) {
+	private LocalDateTime createdDateTime;
+
+	private LocalDateTime updatedDateTime;
+
+	public UserTemplate(String userId, String name, String description, Clob data, String status, String category,
+			LocalDateTime createdDateTime, LocalDateTime updatedDateTime) {
 		this.userId = userId;
 		this.name = name;
 		this.description = description;
 		this.data = data;
 		this.status = status;
 		this.category = category;
+		this.createdDateTime = createdDateTime;
+		this.updatedDateTime = updatedDateTime;
 	}
 
-	public UserTemplate(Long id, String userId, String name, String description, Clob data, String status,  String category) {
+	public UserTemplate(Long id, String userId, String name, String description, Clob data, String status,
+			String category, LocalDateTime createdDateTime, LocalDateTime updatedDateTime) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
@@ -50,6 +60,8 @@ public class UserTemplate {
 		this.data = data;
 		this.status = status;
 		this.category = category;
+		this.createdDateTime = createdDateTime;
+		this.updatedDateTime = updatedDateTime;
 	}
 
 	public Long getId() {
@@ -110,5 +122,21 @@ public class UserTemplate {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public LocalDateTime getCreatedDateTime() {
+		return createdDateTime;
+	}
+
+	public void setCreatedDateTime(LocalDateTime createdDateTime) {
+		this.createdDateTime = createdDateTime;
+	}
+
+	public LocalDateTime getUpdatedDateTime() {
+		return updatedDateTime;
+	}
+
+	public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
+		this.updatedDateTime = updatedDateTime;
 	}
 }

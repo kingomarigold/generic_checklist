@@ -1,7 +1,7 @@
 package com.test.templatebuilderserver.web.resource;
 
 import java.net.URI;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,16 +58,19 @@ public class UserTemplateResource {
 
 	@GetMapping("/{id}/templates")
 	public ResponseEntity getAll(@PathVariable("id") String userId) {
-		Map<String, Object> templatesMap = new HashMap<String, Object>();
-		List<Template> defaultTempaltes = templateService.getAll();
+		Map<String, Object> templatesMap = new LinkedHashMap<String, Object>();
 
-		for (Template template : defaultTempaltes) {
-			templatesMap.put(template.getName(), template);
-		}
 		List<UserTemplate> tempaltes = userTemplateService.getAll(userId);
-
+		System.out.println("User tempaltes list :" + tempaltes.size());
 		for (UserTemplate template : tempaltes) {
 			templatesMap.put(template.getName(), template);
+		}
+		List<Template> defaultTempaltes = templateService.getAll();
+		System.out.println("Default tempaltes list :" + defaultTempaltes.size());
+		for (Template template : defaultTempaltes) {
+			if (!templatesMap.containsKey(template.getName())) {
+				templatesMap.put(template.getName(), template);
+			}
 		}
 		return ResponseEntity.ok(templatesMap.values());
 	}
@@ -77,7 +80,7 @@ public class UserTemplateResource {
 			@PathVariable("templateId") Long templateId, @RequestBody @Validated UserTemplate template) {
 		UserTemplate data = userTemplateService.get(templateId);
 		if (data != null) {
-			return ResponseEntity.ok(userTemplateService.update(templateId, userId, template));
+			return ResponseEntity.ok(userTemplateService.update(templateId, userId, template, data));
 		}
 		return ResponseEntity.notFound().build();
 	}
