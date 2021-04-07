@@ -242,7 +242,7 @@ const Template = (props) => {
             <Grid
               container
               direction="row"
-              justify="space-between"
+              justify="center"
               alignItems="center"
             >
               <Grid item xs={6} sm={6} lg={2} md={3}>
