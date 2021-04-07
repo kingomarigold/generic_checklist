@@ -1,3 +1,5 @@
+
+
 const getAuthHeader = () => {
   return 'Bearer ' + localStorage.getItem('token')
 }
@@ -34,7 +36,7 @@ const getFetcher = (authToken, url, method, params) => {
 
 const ApiCall = (url, method, params, loadingCallback)  => {
   callLoadingCallback(loadingCallback, true)
-  let authToken = getAuthHeader(url, method, params)
+  let authToken = getAuthHeader()
   let  fetcher = getFetcher(authToken, url, method, params)
 
   return fetcher

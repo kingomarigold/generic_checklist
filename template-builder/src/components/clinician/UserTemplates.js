@@ -33,7 +33,7 @@ return (
       <TableHead>
         <TableRow>
           <TableCell></TableCell>
-          
+
           <TableCell >Category</TableCell>
           <TableCell >Name</TableCell>
           <TableCell >Description</TableCell>
@@ -52,8 +52,8 @@ return (
                 <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row">{p.name}</TableCell>
                 <TableCell component="th" scope="row"> {p.description} </TableCell>
-                <TableCell component="th" scope="row">{p.updatedDateTime} </TableCell>
-                <TableCell component="th" scope="row">{p.createdDateTime}</TableCell>
+                <TableCell component="th" scope="row"> </TableCell>
+                <TableCell component="th" scope="row"></TableCell>
                 <TableCell component="th">
                   <IconButton onClick={() => fillTemplate(p)}>
                     <EditIcon color="secondary" />
