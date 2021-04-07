@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import { useHistory } from 'react-router-dom'
 
+import { makeStyles } from '@material-ui/core/styles';
 const Header = (props) => {
   const history = useHistory()
 
@@ -13,30 +14,38 @@ const Header = (props) => {
     localStorage.removeItem('roles')
     history.push('/')
   }
-
+  const usestyles = makeStyles({
+    logo: {
+      maxWidth: 150,
+    },
+  });
   const displayDesktop = () => {
+    const classes = usestyles();
     return (
-        <Toolbar>
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-          >
-            <Grid item>
-              Welcome {props.userName}
-            </Grid>
-            <Grid item>
-              <Button color="inherit" onClick={logout}>Logout</Button>
-            </Grid>
+      <Toolbar>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+          <Grid item>
+            Welcome {props.userName}
           </Grid>
-        </Toolbar>
-      )
+          <Grid item>
+            <img src="/images/fresenius.jpg" className={classes.logo} />
+          </Grid>
+          <Grid item>
+            <Button color="inherit" onClick={logout}>Logout</Button>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    )
   };
 
   return (
     <header>
-      <AppBar style={{width: '100%'}} position='static'>{displayDesktop()}</AppBar>
+      <AppBar style={{ width: '100%' }} position='static'>{displayDesktop()}</AppBar>
     </header>
   );
 }

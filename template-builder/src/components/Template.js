@@ -2,7 +2,7 @@ import './Template.css'
 import { Grid, Container, Button, Typography } from '@material-ui/core';
 import React from 'react'
 import Header from './Header'
-import {useState} from 'react'
+import { useState } from 'react'
 import Section from './Section'
 import TextField from '@material-ui/core/TextField'
 import { useHistory } from 'react-router-dom'
@@ -17,23 +17,38 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ApiCall from './common/ApiCall'
 
+import { Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
   const [template, setTemplate] = useState(props.location.state.template)
 
   const onSave = props.location.state.onSave
 
+
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+  const [error, setError] = useState({});
   const [section, setSection] = useState(false);
-  const history = useHistory();
-  const changeName = (name) => {
-    const myTemplate = {...template}
+  const history = useHistory(); const changeName = (name) => {
+    const myTemplate = { ...template }
     myTemplate.name = name
     setNewTemplate(false)
     setTemplate(myTemplate)
   }
 
   const changeDescription = (value) => {
-    const myTemplate = {...template}
+    const myTemplate = { ...template }
     myTemplate.description = value
     setNewTemplate(false)
     setTemplate(myTemplate)
@@ -41,11 +56,12 @@ const Template = (props) => {
 
   const addSection = () => {
     let myTemplate = { ...template }
-    if(!myTemplate.sections) {
+    if (!myTemplate.sections) {
       myTemplate.sections = []
     }
-    myTemplate.sections.push({name: '', questions: []})
+    myTemplate.sections.push({ name: '', questions: [] })
     setTemplate(myTemplate)
+
   }
 
   const handleSectionChange = (index, section) => {
@@ -61,33 +77,146 @@ const Template = (props) => {
     setTemplate(myTemplate)
   }
 
-  const preview  = () => {
+  const preview = () => {
     history.push('/template', template)
   }
+  const templateValues = ["name", "description"]
+  const sectionValues = ["name"]
+  const questionValues = ["name", "type", "choices"]
+
+
+
+  const [templateErrors, setTemplateErrors] = useState();
+  const [sectionErrors, setSectionErrors] = useState();
+
+  const [questionErrors, setQuestionErrors] = useState();
+  const validate = () => {
+    let tempErrors = {};
+    let secErrors = [];
+    let quesErrors = [];
+    let success = true;
+    //   console.log("errors parent", tempErrors)
+    let errors = {}
+    //  const myTemplate = {...template}
+
+    templateValues.forEach(field => {
+      if (!template[field]) {
+        tempErrors[field] = true;
+        success = false;
+      }
+      else {
+        tempErrors[field] = false;
+      }
+    })
+    //  console.log("Inside",tempErrorss)
+    setTemplateErrors(tempErrors)
+
+    template.sections.forEach((section, index) => {
+
+
+      //section check  [{ {name:true},{name:false} }]
+      sectionValues.forEach(field => {
+        if (!section[field]) {
+          secErrors.push({ [field]: true });
+          success = false;
+        }
+        else {
+          secErrors.push({ [field]: false });
+        }
+      })
+
+      //questions check  
+      /* n,t,c*/
+      section.questions.forEach((ques, idx) => {
+        questionValues.forEach(values => {
+          if (values == "choices" ? ques[values].length < 1 : !ques[values]) {
+
+            if (quesErrors[index]) {
+              if (quesErrors[index][idx]) {
+                quesErrors[index][idx][values] = true
+                success = false;
+              }
+              else {
+
+                quesErrors[index].push({ [values]: true });
+                success = false;
+                //   quesErrors.push({ [values]: true });
+              }
+            }
+            else {
+              quesErrors.push([]);
+              quesErrors[index].push({ [values]: true });
+              success = false;
+            }
+          }
+          else {
+            if (quesErrors[index]) {
+
+              if (quesErrors[index][idx]) {
+                quesErrors[index][idx][values] = false
+              } else {
+                quesErrors[index].push({ [values]: false });
+                //   quesErrors.push({ [values]: false });
+              }
+            }
+            else {
+              quesErrors.push([]);
+              quesErrors[index].push({ [values]: false });
+            }
+          }
+        })
+
+      })
+
+      console.log("question  ", quesErrors)
+
+
+
+
+    })
+    setSectionErrors(secErrors);
+
+    setQuestionErrors(quesErrors)
+    if (success) {
+      save();
+    }
+  }
+
+
 
   const save = () => {
+
     const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
-    ApiCall(uri, 'POST', {name: template.name, description: template.description,
-      template: JSON.stringify(template)})
-    .then(res => {
-      console.log('Response from template', res)
+    ApiCall(uri, 'POST', {
+      name: template.name, description: template.description,
+      template: JSON.stringify(template)
     })
+      .then(res => {
+        console.log('Response from template', res)
+      })
+
+
+
+    const newState = { vertical: 'top', horizontal: 'right' }
+    setState({ open: true, ...newState });
+
   }
 
   const goBack = () => {
     history.push('/admin')
   }
 
+
   return (
     <React.Fragment>
-      <Header userName={props.userName}/>
+      <Header userName={props.userName} />
       <Grid
         container
         direction="column"
         justify="flex-start"
         alignItems="center"
       >
-        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
+        <Card variant="outlined" style={{ width: '80%', marginTop: '20px' }}>
           <Grid
             container
             direction="column"
@@ -95,25 +224,39 @@ const Template = (props) => {
             alignItems="center"
           >
             <CardContent>
-                <Grid item >
-                  <TextField required label="Name"
-                    value={template.name} onChange={(e) => changeName(e.target.value)} />
-                </Grid>
-                <Grid item>
-                  <TextField multiline label='Description' value={template.description}
-                    onChange={(e) =>changeDescription(e.target.value)}
-                    helperText='You can add multiple lines here'/>
-                </Grid>
+              <Grid item >
+                <TextField required label="Name"
+                  value={template.name} onChange={(e) => changeName(e.target.value)} />
+                {templateErrors?.name && <div className="error-msg" style={{ color: 'red' }}>
+                  name is required</div>}
+
+              </Grid>
+
+              <Grid item>
+                <TextField multiline label='Description' value={template.description}
+                  onChange={(e) => changeDescription(e.target.value)}
+                  helperText='You can add multiple lines here' />
+                {templateErrors?.description && <div className="error-msg" style={{ color: 'red' }}>
+                  description is required</div>}
+
+              </Grid>
             </CardContent>
             <CardActions>
               <Button size='medium' variant="outlined" onClick={goBack}
-                  color="default">Back</Button>
+                color="default">Back</Button>
               <Button size='medium' onClick={addSection}
-                      color="primary">Add Section</Button>
+                color="primary">Add Section</Button>
               <Button size='medium' onClick={preview}
                 color="primary">Preview</Button>
-              <Button size='medium' variant="outlined" onClick={save}
-                  color="primary">Save</Button>
+              <Button size='medium' variant="outlined" onClick={validate}
+                color="primary">Save</Button>
+              <Snackbar autoHideDuration={2000}
+                anchorOrigin={{ vertical, horizontal }}
+                key={`${vertical},${horizontal}`}
+                open={open}
+                onClose={handleClose}
+                message="Saved Successfully!!"
+              />
             </CardActions>
           </Grid>
         </Card>
@@ -121,10 +264,10 @@ const Template = (props) => {
 
         {
           template.sections &&
-          template.sections.map((section,index) => {
+          template.sections.map((section, index) => {
             return (
               <React.Fragment key={index}>
-                <Accordion defaultExpanded={index === 0} style={{width: '80%', marginTop: '20px'}}>
+                <Accordion defaultExpanded={index === 0} style={{ width: '80%', marginTop: '20px' }}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} >
                     <Grid
                       container
@@ -133,19 +276,19 @@ const Template = (props) => {
                       alignItems="flex-start"
                     >
                       <Grid item>
-                        Section {index+1}
+                        Section {index + 1}
                       </Grid>
                       <Grid item>
                         {section.name}
                       </Grid>
                       <Grid item>
                         <DeleteIcon onFocus={(event) => event.stopPropagation()}
-                          onClick={(event) => handleDelete(event, index)}/>
+                          onClick={(event) => handleDelete(event, index)} />
                       </Grid>
                     </Grid>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Section key={index} section={section} index={index} onChange={handleSectionChange}/>
+                    <Section key={index} section={section} index={index} onChange={handleSectionChange} error={sectionErrors} questionErrors={questionErrors} />
                   </AccordionDetails>
                 </Accordion>
               </React.Fragment>

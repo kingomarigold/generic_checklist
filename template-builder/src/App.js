@@ -14,26 +14,40 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [isClinician, setIsClinician] = useState(false)
-
+  const [error, setError] = useState(false)
   const history = useHistory()
-  const url=process.env.REACT_APP_TOKEN
+  const url = process.env.REACT_APP_TOKEN
 
   const redirectToNextStep = (roles) => {
     console.log('Redirecting based on role: ', roles)
-    if (roles.includes('ROLE_ADMIN')) {
-      setIsAdmin(true)
-      setIsClinician(false)
-      history.push('/admin')
+    if (!roles) {
+      //  console.log("****************")
+      setIsLoggedIn(false)
+      setError(true)
+      //   console.log("eee",error)
     }
-    else if (roles.includes('ROLE_USER')) {
-      setIsClinician(true)
-      setIsAdmin(false)
-      history.push('/cliniciandashboard')
+    else {
+
+      if (roles.includes('ROLE_ADMIN')) {
+        setIsLoggedIn(true)
+        setIsAdmin(true)
+        setIsClinician(false)
+        setError(false)
+        history.push('/admin')
+      }
+      else if (roles.includes('ROLE_USER')) {
+        setIsLoggedIn(true)
+        setIsClinician(true)
+        setIsAdmin(false)
+        setError(false)
+        history.push('/cliniciandashboard')
+      }
     }
+
   }
 
   const handleLoginSuccess = (token, userName, roles) => {
-    setIsLoggedIn(true)
+    //  setIsLoggedIn(true)
     localStorage.setItem('token', token)
     localStorage.setItem('userName', userName)
     localStorage.setItem('roles', roles)
@@ -52,30 +66,30 @@ function App() {
       redirectToNextStep(localStorage.getItem('roles'))
     }
   }, [])
-
+  console.log(error, "/app.js")
   return (
     <main>
       {
         !isLoggedIn &&
-        <Login loginSuccess={handleLoginSuccess} />
+        <Login loginSuccess={handleLoginSuccess} error={error} />
       }
       {
         isLoggedIn &&
         isAdmin &&
-          <Switch>
-            <Route exact path='/admin' component={Admin} />
-            <Route exact path='/admin/template' component={Template} ></Route>
-            <Route exact path='/admin/template/:id' component={Template} ></Route>
-            <Route exact path='/template' component={TemplatePreview} ></Route>
-          </Switch>
+        <Switch>
+          <Route exact path='/admin' component={Admin} />
+          <Route exact path='/admin/template' component={Template} ></Route>
+          <Route exact path='/admin/template/:id' component={Template} ></Route>
+          <Route exact path='/template' component={TemplatePreview} ></Route>
+        </Switch>
       }
       {
         isLoggedIn &&
         isClinician &&
-          <Switch>
-            <Route exact path='/cliniciandashboard' component={ClinicianDashboard} ></Route>
-            <Route exact path='/template' component={TemplateFill} ></Route>
-          </Switch>
+        <Switch>
+          <Route exact path='/cliniciandashboard' component={ClinicianDashboard} ></Route>
+          <Route exact path='/template' component={TemplateFill} ></Route>
+        </Switch>
       }
     </main>
   );

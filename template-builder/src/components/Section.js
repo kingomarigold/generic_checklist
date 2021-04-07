@@ -13,53 +13,57 @@ const Section = (props) => {
 
   const [newSection, setNewSection] = useState(props.section.name === '')
 
+  console.log(props.error)
   const changeName = (value) => {
-    let mySection = {...props.section}
+    let mySection = { ...props.section }
     mySection.name = value
     props.onChange(props.index, mySection)
+
+
   }
 
   const addQuestion = () => {
-    let mySection = {...props.section}
-    mySection.questions.push({name: '', type: '', choices: []})
+    let mySection = { ...props.section }
+    mySection.questions.push({ name: '', type: '', choices: [] })
     props.onChange(props.index, mySection)
   }
 
   const handleQuestionChange = (index, question) => {
-    let mySection = {...props.section}
+    let mySection = { ...props.section }
     mySection.questions[index] = question
     props.onChange(props.index, mySection)
   }
-
+  //console.log("errors child",props.error)
   return (
     <React.Fragment>
       <Grid
-          container
-          justify="center"
-          alignItems="center"
-          direction="column"
+        container
+        justify="center"
+        alignItems="center"
+        direction="column"
       >
-        <TextField  required label="Name"
-            value={props.section.name} onChange={(e) => changeName(e.target.value)}/>
+        <TextField required label="Name"
+          value={props.section.name} onChange={(e) => changeName(e.target.value)} />
+        {props.error && props.error[props.index]?.name && <div className="error-msg" style={{ color: 'red' }}> section name is required</div>}
         <Button onClick={addQuestion}
-                  color="primary">Add Question</Button>
+          color="primary">Add Question</Button>
         {
           props.section.questions &&
           props.section.questions.map((question, index) => {
             return (
               <React.Fragment>
-                <hr  key={'hr_' + index}  style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
-                <Grid  key={'grid_' + index}  item >
-                  <span style={{paddingTop:'10px', paddingBottom: '10px'}}>
-                    <h3>Question {index+1}</h3>
+                <hr key={'hr_' + index} style={{ width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none' }} />
+                <Grid key={'grid_' + index} item >
+                  <span style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+                    <h3>Question {index + 1}</h3>
                   </span>
                 </Grid>
-                <Question key={'question_' + index} index={index} question={question} onChange={handleQuestionChange}/>
+                <Question key={'question_' + index} sectionIndex={props.index} index={index} question={question} onChange={handleQuestionChange} error={props.questionErrors} />
               </React.Fragment>
             )
           })
         }
-    </Grid>
+      </Grid>
 
     </React.Fragment>
   )

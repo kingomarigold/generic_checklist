@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { AppBar, Toolbar } from "@material-ui/core"
-import Header  from './Header'
+import Header from './Header'
 import { useHistory } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
 import Templates from './Templates'
 import ApiCall from './common/ApiCall'
+
+import { Snackbar } from '@material-ui/core';
 
 const Admin = (props) => {
   const [templates, setTemplates] = useState([])
@@ -14,33 +16,52 @@ const Admin = (props) => {
 
   const history = useHistory()
 
-  useEffect(()=> {
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal, open } = state;
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+
+  useEffect(() => {
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
       'GET',
       params)
-    .then(res => res.json())
-    .then(json => {
-      console.log(json)
-      setTemplates(json)
-    })
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        setTemplates(json)
+      })
   }, [])
 
 
   const addTemplate = () => {
-    history.push('/admin/template', {template:{name: '', id: '', sections: []}})
+    history.push('/admin/template', { template: { name: '', id: '', sections: [] } })
   }
 
-  return(
+  let userName = localStorage.getItem('userName')
+  return (
     <React.Fragment>
-      <Header userName='User'/>
+      <Header userName={userName} />
+      <Snackbar autoHideDuration={2000}
+        anchorOrigin={{ vertical, horizontal }}
+        key={`${vertical},${horizontal}`}
+        open={open}
+        onClose={handleClose}
+        message="login Successfull!!"
+      />
       <Grid
         container
         direction="column"
         justify="flex-start"
         alignItems="center"
       >
-        <Button style={{marginTop: '10px'}} onClick={addTemplate}
+        <Button style={{ marginTop: '10px' }} onClick={addTemplate}
           variant="contained" color="default">Add Template</Button>
       </Grid>
       {

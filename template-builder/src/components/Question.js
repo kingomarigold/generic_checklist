@@ -15,6 +15,9 @@ const Question = (props) => {
     }
   }))
 
+
+  const [error, setError] = useState(props.error);
+
   const question = [
     { ques: 'What type of clients do you do your best work with?' },
     { ques: 'Do you utilize any particular modalities with clients?' },
@@ -37,12 +40,12 @@ const Question = (props) => {
   ];
 
   const questionTypes = [
-    {value: '1', name: 'Options - radio'},
-    {value: '2', name: 'Options - checkbox'},
-    {value: '3', name: 'Options - select'},
-    {value: '4', name: 'Input - Textbox'},
-    {value: '5', name: 'Input - Textarea'},
-    {value: '6', name: 'Widget - Date'},
+    { value: '1', name: 'Options - radio' },
+    { value: '2', name: 'Options - checkbox' },
+    { value: '3', name: 'Options - select' },
+    { value: '4', name: 'Input - Textbox' },
+    { value: '5', name: 'Input - Textarea' },
+    { value: '6', name: 'Widget - Date' },
   ]
 
   const baseHelperText = 'Enter your choices separated by comma'
@@ -52,13 +55,13 @@ const Question = (props) => {
   const classes = useStyles()
 
   const changeName = (value) => {
-    let myQuestion = {...props.question}
+    let myQuestion = { ...props.question }
     myQuestion.name = value
     props.onChange(props.index, myQuestion)
   }
 
   const handleMultipleChoice = (value) => {
-    let myQuestion = {...props.question}
+    let myQuestion = { ...props.question }
     let choices = []
     if (value) {
       choices = value.split(',').map(choice => choice.trim())
@@ -68,7 +71,7 @@ const Question = (props) => {
   }
 
   const handleChange = (value) => {
-    let myQuestion = {...props.question}
+    let myQuestion = { ...props.question }
     myQuestion.type = value
     props.onChange(props.index, myQuestion)
   }
@@ -76,18 +79,19 @@ const Question = (props) => {
   return (
     <React.Fragment>
       <Grid
-          container
-          justify="space-around"
-          alignItems="center"
-          direction="row"
+        container
+        justify="space-around"
+        alignItems="center"
+        direction="row"
       >
         <Grid item xs={12} sm={12} lg={5} md={5}>
-          <TextField  style={{width:'100%'}} required label='Name' value={props.question.name}
-              onChange={(e) => changeName(e.target.value)}/>
+          <TextField style={{ width: '100%' }} required label='Name' value={props.question.name}
+            onChange={(e) => changeName(e.target.value)} />
+          {props.error && props.error[props.sectionIndex][props.index]?.name && <div className="error-msg" style={{ color: 'red' }}> question is required</div>}
         </Grid>
         <Grid item xs={12} sm={12} lg={5} md={5}>
           <TextField
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             value={props.question.type}
             label='Type'
             select
@@ -101,6 +105,7 @@ const Question = (props) => {
               })
             }
           </TextField>
+          {props.error && props.error[props.sectionIndex][props.index]?.type && <div className="error-msg" style={{ color: 'red' }}> type is required</div>}
         </Grid>
         {
           props.question.type &&
@@ -108,13 +113,14 @@ const Question = (props) => {
           <Grid item xs={12} sm={12} lg={11} md={11}>
             <TextField
               required
-              style={{width: '100%'}}
+              style={{ width: '100%' }}
               helperText={helperText}
-              value={props.question.choices?props.question.choices.join(', '):''}
+              value={props.question.choices ? props.question.choices.join(', ') : ''}
               label='Choices'
-              placeholder = 'Option 1, Option 2'
+              placeholder='Option 1, Option 2'
               onChange={(e) => handleMultipleChoice(e.target.value)}
             />
+            {props.error && props.error[props.sectionIndex][props.index]?.choices && <div className="error-msg" style={{ color: 'red' }}> choices are required</div>}
           </Grid>
         }
       </Grid>

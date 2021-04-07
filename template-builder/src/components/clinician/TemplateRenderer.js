@@ -8,8 +8,23 @@ import CardHeader from '@material-ui/core/CardHeader'
 import SectionRenderer from './SectionRenderer'
 import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router-dom'
+import { Snackbar } from '@material-ui/core';
+import { useState } from 'react'
 
 const TemplateRenderer = (props) => {
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+    console.log("**********")
+  };
 
   const history = useHistory()
   console.log('Template is: ', props.template)
@@ -23,23 +38,26 @@ const TemplateRenderer = (props) => {
   }
 
   const back = () => {
-    history.push(props.back, {template: props.template})
+    history.push(props.back, { template: props.template })
   }
 
   const save = () => {
+
+    const newState = { vertical: 'top', horizontal: 'right' }
+    setState({ open: true, ...newState });
     // TODO - Add later
   }
 
   return (
     <React.Fragment>
-      <Header userName={props.userName}/>
+      <Header userName={props.userName} />
       <Grid
         container
         direction="column"
         justify="flex-start"
         alignItems="center"
       >
-        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
+        <Card variant="outlined" style={{ width: '80%', marginTop: '20px' }}>
           {
             console.log('Template Name: ', props.template.name)
           }
@@ -47,19 +65,27 @@ const TemplateRenderer = (props) => {
             title={props.template.name}
           />
           <CardContent>
-              <Grid item>
-                {props.template.description}
-              </Grid>
+            <Grid item>
+              {props.template.description}
+            </Grid>
           </CardContent>
           <CardActions>
             {
               <Button size='medium' onClick={back}
-                      color="primary">Back</Button>
+                color="primary">Back</Button>
             }
             {
               !props.fromAdmin &&
-              <Button size='medium' onClick={save}
-                      color="primary">Save</Button>
+              <div>
+                <Button size='medium' onClick={save} color="primary">Save</Button>
+                <Snackbar autoHideDuration={2000}
+                  anchorOrigin={{ vertical, horizontal }}
+                  key={`${vertical},${horizontal}`}
+                  open={open}
+                  onClose={handleClose}
+                  message="Saved Successfully!!"
+                />
+              </div>
             }
           </CardActions>
         </Card>
@@ -67,8 +93,9 @@ const TemplateRenderer = (props) => {
           props.template.sections &&
           props.template.sections.map((section, index) => {
             return (
+
               <SectionRenderer key={index} index={index} section={section}
-                onChange={handleSectionChange}/>
+                onChange={handleSectionChange} />
             )
           })
         }
