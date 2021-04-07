@@ -129,7 +129,8 @@ const Template = (props) => {
       /* n,t,c*/
       section.questions.forEach((ques, idx) => {
         questionValues.forEach(values => {
-          if (values == "choices" ? ques[values].length < 1 : !ques[values]) {
+          
+          if (values == "choices" ? (ques[values].length < 1 && ques.type<3) : !ques[values]) {
 
             if (quesErrors[index]) {
               if (quesErrors[index][idx]) {
