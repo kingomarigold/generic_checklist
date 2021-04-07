@@ -29,9 +29,6 @@ const TemplateRenderer = (props) => {
 
   const save = () => {
     const template=props.template
-    create(props.template)
-   // create(props.template)
-     //template.id = template.id ? template.id : id;
     if (props.isDefault) {
       create(template)
     } else {
@@ -49,6 +46,7 @@ const TemplateRenderer = (props) => {
   //  console.log('Create API', uri);
      ApiCall(uri, 'POST', {
         name: template.name,
+        category:template.category,
         status:"inprogress",
         description: template.description,
         template: JSON.stringify(template)
@@ -67,7 +65,8 @@ const TemplateRenderer = (props) => {
         name: template.name,
         status:status,
         description: template.description,
-        template: JSON.stringify(template)
+        template: JSON.stringify(template),
+        category:template.category
       })
       .then(res => {
         console.log('Response from template', res)
