@@ -2,7 +2,6 @@ package com.test.templatebuilderserver.entity;
 
 import java.sql.Clob;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,9 +37,10 @@ public class UserTemplate {
 	private LocalDateTime createdDateTime;
 
 	private LocalDateTime updatedDateTime;
+	private LocalDateTime dueDateTime;
 
 	public UserTemplate(String userId, String name, String description, Clob data, String status, String category,
-			LocalDateTime createdDateTime, LocalDateTime updatedDateTime) {
+			LocalDateTime createdDateTime, LocalDateTime updatedDateTime, LocalDateTime dueDateTime) {
 		this.userId = userId;
 		this.name = name;
 		this.description = description;
@@ -49,10 +49,11 @@ public class UserTemplate {
 		this.category = category;
 		this.createdDateTime = createdDateTime;
 		this.updatedDateTime = updatedDateTime;
+		this.dueDateTime = dueDateTime;
 	}
 
 	public UserTemplate(Long id, String userId, String name, String description, Clob data, String status,
-			String category, LocalDateTime createdDateTime, LocalDateTime updatedDateTime) {
+			String category, LocalDateTime createdDateTime, LocalDateTime updatedDateTime, LocalDateTime dueDateTime) {
 		this.id = id;
 		this.userId = userId;
 		this.name = name;
@@ -62,6 +63,7 @@ public class UserTemplate {
 		this.category = category;
 		this.createdDateTime = createdDateTime;
 		this.updatedDateTime = updatedDateTime;
+		this.dueDateTime = dueDateTime;
 	}
 
 	public Long getId() {
@@ -138,5 +140,13 @@ public class UserTemplate {
 
 	public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
 		this.updatedDateTime = updatedDateTime;
+	}
+
+	public LocalDateTime getDueDateTime() {
+		return dueDateTime;
+	}
+
+	public void setDueDateTime(LocalDateTime dueDateTime) {
+		this.dueDateTime = dueDateTime;
 	}
 }

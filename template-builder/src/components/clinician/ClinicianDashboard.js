@@ -33,6 +33,7 @@ const ClinicianDashboard = (props) => {
   const history = useHistory()
   const [templates, setTemplates] = useState([])
   const [selectedTemplate, setSelectedTemplate] = useState(null)
+  const [dashboards, setDashboards] = useState([])
 
   const classes = useStyles();
 /* 
@@ -47,8 +48,8 @@ const ClinicianDashboard = (props) => {
     }
   }
 
-
-  useEffect(() => {
+  const getTemplatesList=()=>{
+    
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI,
       'GET',
@@ -58,8 +59,29 @@ const ClinicianDashboard = (props) => {
       console.log(json)
       setTemplates(json)
     })
+  }
+  
+  const getDashboardCountList= ()=>{
+    
+    let params = {}
+    ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_DASHBOARDS_URI,
+      'GET',
+      params)
+    .then(res => res.json())
+    .then(json => {
+      console.log(json)
+      setDashboards(json)
+    })
+  }
+
+
+
+  useEffect(() => {
+    getTemplatesList();
+    getDashboardCountList();
+
   }, [])
-  const dashboardCount=[{"name":"Todo","count":"5","color":"primary"},{"name":"InProgress","count":"10","color":"secondary"},{"name":"Completed","count":"20","color":"textPrimary"},{"name":"Overdue","count":"5","color":"error"}];
+  //const dashboards=[{"name":"Todo","count":"5","color":"primary"},{"name":"InProgress","count":"10","color":"secondary"},{"name":"Completed","count":"20","color":"textPrimary"},{"name":"Overdue","count":"5","color":"error"}];
 
   return (
     <React.Fragment>
@@ -70,11 +92,11 @@ const ClinicianDashboard = (props) => {
       justify="space-around"
       alignItems="center"
     >
-      <Grid container justify="center" spacing={10}>
-          {dashboardCount.map((item,i) => (
+      <Grid container justify="center" spacing={10} style={{ marginTop: 'auto'}}>
+          {dashboards.map((item,i) => (
             <Grid key={i} item >
               <Card className={classes.card}>
-                <CardHeader title={item.name} align="center" />
+                <CardHeader title={item.status} align="center" />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="h2" align="center" color={item.color} > 
                     {item.count}

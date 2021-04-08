@@ -53,7 +53,7 @@ return (
                 <TableCell component="th" scope="row">{p.name}</TableCell>
                 <TableCell component="th" scope="row"> {p.description} </TableCell>
                 <TableCell component="th" scope="row">{p.updatedDateTime} </TableCell>
-                <TableCell component="th" scope="row">{p.createdDateTime}</TableCell>
+                <TableCell component="th" scope="row">{p.dueDateTime}</TableCell>
                 <TableCell component="th">
                   <IconButton onClick={() => fillTemplate(p)}>
                     <EditIcon color="secondary" />

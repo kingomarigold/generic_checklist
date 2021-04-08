@@ -49,7 +49,8 @@ const TemplateRenderer = (props) => {
         category:template.category,
         status:"inprogress",
         description: template.description,
-        template: JSON.stringify(template)
+        template: JSON.stringify(template),
+        frequency:template.frequency
       })
       .then(res => {
         console.log('Response from template', res.headers.get('Location'));
@@ -65,6 +66,7 @@ const TemplateRenderer = (props) => {
         name: template.name,
         status:status,
         description: template.description,
+        frequency:template.frequency,
         template: JSON.stringify(template),
         category:template.category
       })
