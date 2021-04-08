@@ -7,12 +7,13 @@ import Grid from '@material-ui/core/Grid'
 import Templates from './Templates'
 import ApiCall from './common/ApiCall'
 import TokenRefresh from './common/TokenRefresh'
+import Backdrop from '@material-ui/core/Backdrop'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const Admin = (props) => {
   const [templates, setTemplates] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
-
   const history = useHistory()
 
 
@@ -20,7 +21,7 @@ const Admin = (props) => {
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP_TEMPLATE_URI,
       'GET',
-      params)
+      params, setIsLoading)
     .then(res => {
       if (res.status === 200) {
         return res.json()
@@ -70,8 +71,11 @@ const Admin = (props) => {
         justify="flex-start"
         alignItems="center"
       >
-        <Button style={{marginTop: '10px'}} onClick={addTemplate}
+        <Button style={{marginTop: '10px', marginBottom: '10px'}} onClick={addTemplate}
           variant="contained" color="default">Add Template</Button>
+        <Backdrop open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </Grid>
       {
         templates.length > 0 &&

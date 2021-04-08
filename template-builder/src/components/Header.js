@@ -12,7 +12,7 @@ const Header = (props) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const currentUserName = useSelector(userName)
-  
+
   const doLogOut = () => {
     localStorage.removeItem('token')
     dispatch(logout())
@@ -20,11 +20,11 @@ const Header = (props) => {
   }
   const usestyles = makeStyles({
     logo: {
-      maxWidth: 150,
+      maxWidth: 150
     },
   });
   const displayDesktop = () => {
-    
+
     const classes = usestyles();
     return (
         <Toolbar>
@@ -38,8 +38,8 @@ const Header = (props) => {
               Welcome {currentUserName}
             </Grid>
             <Grid item>
-            <img src="/images/fresenius.jpg" className={classes.logo} />
-          </Grid>
+              <img src="/images/fresenius.jpg" className={classes.logo} />
+            </Grid>
             <Grid item>
               <Button color="inherit" onClick={doLogOut}>Logout</Button>
             </Grid>
