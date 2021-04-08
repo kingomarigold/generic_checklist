@@ -26,9 +26,9 @@ return (
       <TableHead>
         <TableRow>
           <TableCell></TableCell>
+          <TableCell >Category</TableCell>
           <TableCell >Name</TableCell>
           <TableCell >Description</TableCell>
-          <TableCell >Category</TableCell>
           <TableCell >Frequency</TableCell>
           <TableCell >Clinic</TableCell>
           <TableCell >Actions</TableCell>
@@ -41,9 +41,9 @@ return (
               <TableRow key={index} >
                 <TableCell component="th" scope="row">
                 </TableCell>
+                <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row">{p.name}</TableCell>
                 <TableCell component="th" scope="row"> {p.description} </TableCell>
-                <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row"> {p.frequency} </TableCell>
                 <TableCell component="th" scope="row"> {p.clinic} </TableCell>
                 <TableCell component="th">
