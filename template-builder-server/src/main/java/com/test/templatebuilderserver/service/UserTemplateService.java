@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.test.templatebuilderserver.dto.Dashboard;
+import com.test.templatebuilderserver.dto.Template;
 import com.test.templatebuilderserver.dto.UserTemplate;
 import com.test.templatebuilderserver.repository.UserTemplateRepository;
 import com.test.templatebuilderserver.util.ClobToStringConvertUtility;
@@ -23,6 +24,9 @@ public class UserTemplateService {
 	UserTemplateRepository userTemplateRepository;
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+	@Autowired
+	TemplateService templateService;
 
 	@Transactional
 	public Long save(String userId, UserTemplate template) {
@@ -36,12 +40,14 @@ public class UserTemplateService {
 
 	LocalDateTime getDueDate(String frequency, LocalDateTime date) {
 
-		if (frequency.equals("\"1\" a Month")) {
+		if (frequency.equals("\"1\" a Week")) {
+			date = date.plusWeeks(1);
+		} else if (frequency.equals("\"1\" a Month")) {
 			date = date.plusMonths(1);
-		} else if (frequency.equals("\"3\" a Month")) {
-			date = date.plusDays(10);
 		} else if (frequency.equals("\"1\" a Quarter")) {
 			date = date.plusMonths(3);
+		} else if (frequency.equals("\"1\" a Half")) {
+			date = date.plusMonths(6);
 		} else if (frequency.equals("\"1\" a Year")) {
 			date = date.plusMonths(12);
 		}
@@ -70,22 +76,25 @@ public class UserTemplateService {
 
 	public List<Dashboard> getDashboardCount(String userId) {
 		List<Object[]> statusCount = userTemplateRepository.getDashboardCount((userId));
+		Long todo = (long) templateService.getAll().size();
 
 		List<Dashboard> dashboards = new ArrayList<Dashboard>();
-
+		dashboards.add(new Dashboard("Todo", todo, "primary"));
 		for (Object[] result : statusCount) {
 			String status = (String) result[0];
 			Long count = (Long) result[1];
-			dashboards.add(new Dashboard(status, count,""));
+			dashboards.add(new Dashboard(status, count, getStatusColor(status)));
 		}
+		
+		dashboards.add(new Dashboard("Overdue", 0L, "error"));
 		return dashboards;
 	}
 
 	String getStatusColor(String status) {
 		String color = "primary";
-		if (status == "done") {
+		if (status.equals("done")) {
 			color = "textPrimary";
-		} else if (status == "inprogress") {
+		} else if (status.equals("inprogress")) {
 			color = "secondary";
 		}
 		return color;

@@ -139,7 +139,7 @@ const Template = (props) => {
     //setCategory(event.target.value);
   };
 
-  const frequencyList=[ '"1" a Month','"3" a Month','"1" a Quarter', '"1" a Year']
+  const frequencyList=[ '"1" a Week', '"1" a Month','"1" a Quarter', '"1" a Half', '"1" a Year']
 
   //const [selectedFrequency, setFrequency] = useState('');
 

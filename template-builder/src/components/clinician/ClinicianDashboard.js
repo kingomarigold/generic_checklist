@@ -96,7 +96,7 @@ const ClinicianDashboard = (props) => {
           {dashboards.map((item,i) => (
             <Grid key={i} item >
               <Card className={classes.card}>
-                <CardHeader title={item.status} align="center" />
+                <CardHeader title={item.status.charAt(0).toUpperCase() + item.status.slice(1)} align="center" />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="h2" align="center" color={item.color} > 
                     {item.count}
