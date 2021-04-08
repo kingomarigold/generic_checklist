@@ -36,7 +36,7 @@ const ClinicianDashboard = (props) => {
   const [dashboards, setDashboards] = useState([])
 
   const classes = useStyles();
-/* 
+/*
   const handleTemplateChange = (value) => {
     let myTemplate = templates.find(template => template.name === value)
     setSelectedTemplate(JSON.parse(JSON.stringify(myTemplate)))
@@ -49,7 +49,7 @@ const ClinicianDashboard = (props) => {
   }
 
   const getTemplatesList=()=>{
-    
+
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI,
       'GET',
@@ -60,9 +60,9 @@ const ClinicianDashboard = (props) => {
       setTemplates(json)
     })
   }
-  
+
   const getDashboardCountList= ()=>{
-    
+
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_DASHBOARDS_URI,
       'GET',
@@ -92,13 +92,13 @@ const ClinicianDashboard = (props) => {
       justify="space-around"
       alignItems="center"
     >
-      <Grid container justify="center" spacing={10} style={{ marginTop: 'auto'}}>
+      <Grid container justify="center" style={{ marginTop: '10px', marginBottom: '10px'}}>
           {dashboards.map((item,i) => (
             <Grid key={i} item >
               <Card className={classes.card}>
                 <CardHeader title={item.status.charAt(0).toUpperCase() + item.status.slice(1)} align="center" />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2" align="center" color={item.color} > 
+                  <Typography gutterBottom variant="h5" component="h2" align="center" color={item.color} >
                     {item.count}
                   </Typography>
               </CardContent>
@@ -113,10 +113,10 @@ const ClinicianDashboard = (props) => {
         <Divider variant="middle" />
 
         { templates.length > 0 &&
-        <UserTemplates templates={templates} sections={templates}/>
+          <UserTemplates templates={templates} sections={templates}/>
        }
 
-{/* 
+{/*
       <Grid item xs={12} sm={12} md={5} lg={5}>
         <TextField
             id="standard-select-currency"
@@ -141,7 +141,7 @@ const ClinicianDashboard = (props) => {
         <Button variant='contained' color='primary' onClick={fillTemplate}>Fill Template</Button>
       </Grid> */}
     </Grid>
-    </React.Fragment> 
+    </React.Fragment>
 
   )
 }
