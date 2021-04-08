@@ -66,7 +66,7 @@ return (
       </TableBody>
     </Table>
   </TableContainer>
-)
+  )
 }
 
 export default UserTemplates

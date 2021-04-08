@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.test.templatebuilderserver.dto.Dashboard;
 import com.test.templatebuilderserver.dto.Template;
 import com.test.templatebuilderserver.dto.UserTemplate;
 import com.test.templatebuilderserver.service.TemplateService;
@@ -83,6 +84,12 @@ public class UserTemplateResource {
 			return ResponseEntity.ok(userTemplateService.update(templateId, userId, template, data));
 		}
 		return ResponseEntity.notFound().build();
+	}
+
+	@GetMapping("/{id}/dashboards")
+	public ResponseEntity getDashboardCount(@PathVariable("id") String userId) {
+		List<Dashboard> tempaltes = userTemplateService.getDashboardCount(userId);
+		return ResponseEntity.ok(tempaltes);
 	}
 
 }

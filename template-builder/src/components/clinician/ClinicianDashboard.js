@@ -33,9 +33,10 @@ const ClinicianDashboard = (props) => {
   const history = useHistory()
   const [templates, setTemplates] = useState([])
   const [selectedTemplate, setSelectedTemplate] = useState(null)
+  const [dashboards, setDashboards] = useState([])
 
   const classes = useStyles();
-/* 
+/*
   const handleTemplateChange = (value) => {
     let myTemplate = templates.find(template => template.name === value)
     setSelectedTemplate(JSON.parse(JSON.stringify(myTemplate)))
@@ -47,8 +48,8 @@ const ClinicianDashboard = (props) => {
     }
   }
 
+  const getTemplatesList=()=>{
 
-  useEffect(() => {
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI,
       'GET',
@@ -58,26 +59,44 @@ const ClinicianDashboard = (props) => {
       console.log(json)
       setTemplates(json)
     })
+  }
+
+  const getDashboardCountList= ()=>{
+
+    let params = {}
+    ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_DASHBOARDS_URI,
+      'GET',
+      params)
+    .then(res => res.json())
+    .then(json => {
+      console.log(json)
+      setDashboards(json)
+    })
+  }
+
+
+
+  useEffect(() => {
+    getTemplatesList();
+    getDashboardCountList();
+
   }, [])
-  const dashboardCount=[{"name":"Todo","count":"5","color":"primary"},{"name":"InProgress","count":"10","color":"secondary"},{"name":"Completed","count":"20","color":"textPrimary"},{"name":"Overdue","count":"5","color":"error"}];
- 
-  let userName = localStorage.getItem('userName')
   return (
     <React.Fragment>
-   <Header userName={userName}/>
+   <Header />
     <Grid
       container
       direction="column"
       justify="space-around"
       alignItems="center"
     >
-      <Grid container justify="center" spacing={10}>
-          {dashboardCount.map((item,i) => (
+      <Grid container justify="center" style={{ marginTop: '10px', marginBottom: '10px'}}>
+          {dashboards.map((item,i) => (
             <Grid key={i} item >
               <Card className={classes.card}>
-                <CardHeader title={item.name} align="center" />
+                <CardHeader title={item.status.charAt(0).toUpperCase() + item.status.slice(1)} align="center" />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2" align="center" color={item.color} > 
+                  <Typography gutterBottom variant="h5" component="h2" align="center" color={item.color} >
                     {item.count}
                   </Typography>
               </CardContent>
@@ -92,10 +111,10 @@ const ClinicianDashboard = (props) => {
         <Divider variant="middle" />
 
         { templates.length > 0 &&
-        <UserTemplates templates={templates} sections={templates}/>
+          <UserTemplates templates={templates} sections={templates}/>
        }
 
-{/* 
+{/*
       <Grid item xs={12} sm={12} md={5} lg={5}>
         <TextField
             id="standard-select-currency"
@@ -120,7 +139,7 @@ const ClinicianDashboard = (props) => {
         <Button variant='contained' color='primary' onClick={fillTemplate}>Fill Template</Button>
       </Grid> */}
     </Grid>
-    </React.Fragment> 
+    </React.Fragment>
 
   )
 }

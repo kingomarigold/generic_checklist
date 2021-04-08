@@ -57,14 +57,15 @@ const TemplateRenderer = (props) => {
   }
   const create = (template) => {
     const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE
-    //  console.log('Create API', uri);
-    ApiCall(uri, 'POST', {
-      name: template.name,
-      category: template.category,
-      status: "inprogress",
-      description: template.description,
-      template: JSON.stringify(template)
-    })
+  //  console.log('Create API', uri);
+     ApiCall(uri, 'POST', {
+        name: template.name,
+        category:template.category,
+        status:"inprogress",
+        description: template.description,
+        template: JSON.stringify(template),
+        frequency:template.frequency
+      })
       .then(res => {
         console.log('Response from template', res.headers.get('Location'));
 
@@ -78,13 +79,14 @@ const TemplateRenderer = (props) => {
     const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE + "/" + id
     // console.log('UPDATE API', uri);
     ApiCall(uri, 'PUT', {
-      id: id,
-      name: template.name,
-      status: status,
-      description: template.description,
-      template: JSON.stringify(template),
-      category: template.category
-    })
+        id: id,
+        name: template.name,
+        status:status,
+        description: template.description,
+        frequency:template.frequency,
+        template: JSON.stringify(template),
+        category:template.category
+      })
       .then(res => {
         console.log('Response from template', res)
 

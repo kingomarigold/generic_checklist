@@ -1,7 +1,5 @@
 package com.test.templatebuilderserver.dto;
 
-import java.time.LocalDateTime;
-
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,13 +23,14 @@ public class UserTemplate {
 	private String userId;
 	private String status;
 	private String category;
+	private String frequency;
 
 	private String createdDateTime;
-
 	private String updatedDateTime;
+	private String dueDateTime;
 
 	public UserTemplate(String name, String template, String description, String userId, String status, String category,
-			String createdDateTime, String updatedDateTime) {
+			String createdDateTime, String updatedDateTime, String dueDateTime, String frequency) {
 		super();
 		this.name = name;
 		this.template = template;
@@ -42,10 +41,13 @@ public class UserTemplate {
 
 		this.createdDateTime = createdDateTime;
 		this.updatedDateTime = updatedDateTime;
+
+		this.dueDateTime = dueDateTime;
+		this.frequency = frequency;
 	}
 
 	public UserTemplate(Long id, String name, String template, String description, String userId, String status,
-			String category, String createdDateTime, String updatedDateTime) {
+			String category, String createdDateTime, String updatedDateTime, String dueDateTime, String frequency) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -57,6 +59,10 @@ public class UserTemplate {
 
 		this.createdDateTime = createdDateTime;
 		this.updatedDateTime = updatedDateTime;
+
+		this.dueDateTime = dueDateTime;
+		this.frequency = frequency;
+
 
 	}
 
@@ -136,5 +142,21 @@ public class UserTemplate {
 
 	public void setUpdatedDateTime(String updatedDateTime) {
 		this.updatedDateTime = updatedDateTime;
+	}
+
+	public String getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(String frequency) {
+		this.frequency = frequency;
+	}
+
+	public String getDueDateTime() {
+		return dueDateTime;
+	}
+
+	public void setDueDateTime(String dueDateTime) {
+		this.dueDateTime = dueDateTime;
 	}
 }
