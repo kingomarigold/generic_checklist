@@ -9,49 +9,38 @@ import { useState, useEffect } from 'react'
 import { Router, Route, Switch, BrowserRouter, useHistory } from 'react-router-dom'
 import Question from './components/Question'
 import ClinicianDashboard from './components/clinician/ClinicianDashboard'
+import { useSelector, useDispatch } from 'react-redux'
+import { loggedIn, login, clinician, admin } from './components/user/UserSlice'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isClinician, setIsClinician] = useState(false)
-
+  const isLoggedIn = useSelector(loggedIn)
+  const isClinician = useSelector(clinician)
+  const isAdmin = useSelector(admin)
+  const dispatch = useDispatch()
   const history = useHistory()
   const url=process.env.REACT_APP_TOKEN
 
   const redirectToNextStep = (roles) => {
     console.log('Redirecting based on role: ', roles)
     if (roles.includes('ROLE_ADMIN')) {
-      setIsAdmin(true)
-      setIsClinician(false)
       history.push('/admin')
     }
     else if (roles.includes('ROLE_USER')) {
-      setIsClinician(true)
-      setIsAdmin(false)
       history.push('/cliniciandashboard')
     }
   }
 
   const handleLoginSuccess = (token, userName, roles) => {
-    setIsLoggedIn(true)
+    console.log('User name is: ', userName)
+    dispatch(login({
+      name: userName,
+      token: token,
+      roles: roles
+    }))
     localStorage.setItem('token', token)
-    localStorage.setItem('userName', userName)
-    localStorage.setItem('roles', roles)
-
     redirectToNextStep(roles)
   }
 
-  useEffect(() => {
-    // Removing this token for now so that we can test login
-    localStorage.removeItem('token')
-    let myToken = localStorage.getItem('token')
-
-    if (myToken) {
-      // TODO - Validate token with the server
-      setIsLoggedIn(true)
-      redirectToNextStep(localStorage.getItem('roles'))
-    }
-  }, [])
 
   return (
     <main>
