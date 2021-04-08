@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, userName } from './user/UserSlice'
 
+
+import { makeStyles } from '@material-ui/core/styles';
 const Header = (props) => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -16,8 +18,14 @@ const Header = (props) => {
     dispatch(logout())
     history.push('/')
   }
-
+  const usestyles = makeStyles({
+    logo: {
+      maxWidth: 150,
+    },
+  });
   const displayDesktop = () => {
+    
+    const classes = usestyles();
     return (
         <Toolbar>
           <Grid
@@ -29,6 +37,9 @@ const Header = (props) => {
             <Grid item>
               Welcome {currentUserName}
             </Grid>
+            <Grid item>
+            <img src="/images/fresenius.jpg" className={classes.logo} />
+          </Grid>
             <Grid item>
               <Button color="inherit" onClick={doLogOut}>Logout</Button>
             </Grid>

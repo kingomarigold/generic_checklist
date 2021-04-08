@@ -41,6 +41,8 @@ const Section = (props) => {
       >
         <TextField  required label="Name"
             value={props.section.name} onChange={(e) => changeName(e.target.value)}/>
+              {props.error && props.error[props.index]?.name && <div className="error-msg" style={{ color: 'red' }}> section name is required</div>}
+    
         <Button onClick={addQuestion}
                   color="primary">Add Question</Button>
         {
@@ -54,8 +56,8 @@ const Section = (props) => {
                     <h3>Question {index+1}</h3>
                   </span>
                 </Grid>
-                <Question key={'question_' + index} index={index} question={question} onChange={handleQuestionChange}/>
-              </React.Fragment>
+                <Question key={'question_' + index} sectionIndex={props.index} index={index} question={question} onChange={handleQuestionChange} error={props.questionErrors} />
+            </React.Fragment>
             )
           })
         }

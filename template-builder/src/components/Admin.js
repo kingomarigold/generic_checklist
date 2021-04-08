@@ -60,9 +60,10 @@ const Admin = (props) => {
     history.push('/admin/template', {template:{name: '', id: '', sections: []}})
   }
 
+  let userName = localStorage.getItem('userName')
   return(
     <React.Fragment>
-      <Header userName='User'/>
+      <Header userName={userName}/>
       <Grid
         container
         direction="column"

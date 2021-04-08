@@ -60,10 +60,11 @@ const ClinicianDashboard = (props) => {
     })
   }, [])
   const dashboardCount=[{"name":"Todo","count":"5","color":"primary"},{"name":"InProgress","count":"10","color":"secondary"},{"name":"Completed","count":"20","color":"textPrimary"},{"name":"Overdue","count":"5","color":"error"}];
-
+ 
+  let userName = localStorage.getItem('userName')
   return (
     <React.Fragment>
-   <Header userName='Clinician'/>
+   <Header userName={userName}/>
     <Grid
       container
       direction="column"

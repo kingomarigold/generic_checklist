@@ -12,6 +12,7 @@ import ClinicianDashboard from './components/clinician/ClinicianDashboard'
 import { useSelector, useDispatch } from 'react-redux'
 import { loggedIn, login, clinician, admin } from './components/user/UserSlice'
 
+import { makeStyles } from '@material-ui/core/styles';
 function App() {
   const isLoggedIn = useSelector(loggedIn)
   const isClinician = useSelector(clinician)
@@ -20,14 +21,22 @@ function App() {
   const history = useHistory()
   const url=process.env.REACT_APP_TOKEN
 
+  const [error, setError] = useState(false)
+
   const redirectToNextStep = (roles) => {
     console.log('Redirecting based on role: ', roles)
+    if (!roles) {
+    //  isLoggedIn(false)
+      setError(true)
+    }
+    else {
     if (roles.includes('ROLE_ADMIN')) {
       history.push('/admin')
     }
     else if (roles.includes('ROLE_USER')) {
       history.push('/cliniciandashboard')
     }
+  }
   }
 
   const handleLoginSuccess = (token, userName, roles) => {
@@ -46,7 +55,7 @@ function App() {
     <main>
       {
         !isLoggedIn &&
-        <Login loginSuccess={handleLoginSuccess} />
+        <Login loginSuccess={handleLoginSuccess} error={error} />
       }
       {
         isLoggedIn &&

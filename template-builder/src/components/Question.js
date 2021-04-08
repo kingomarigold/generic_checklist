@@ -82,8 +82,9 @@ const Question = (props) => {
           direction="row"
       >
         <Grid item xs={12} sm={12} lg={5} md={5}>
-          <TextField  style={{width:'100%'}} required label='Name' value={props.question.name}
+          <TextField  style={{width:'100%'}} required label='Name' value={props?.question.name}
               onChange={(e) => changeName(e.target.value)}/>
+                  {props.error && props.error[props.sectionIndex][props.index]?.name && <div className="error-msg" style={{ color: 'red' }}> question is required</div>}
         </Grid>
         <Grid item xs={12} sm={12} lg={5} md={5}>
           <TextField
@@ -101,6 +102,7 @@ const Question = (props) => {
               })
             }
           </TextField>
+          {props.error && props.error[props.sectionIndex][props.index]?.type && <div className="error-msg" style={{ color: 'red' }}> type is required</div>}
         </Grid>
         {
           props.question.type &&
@@ -115,6 +117,7 @@ const Question = (props) => {
               placeholder = 'Option 1, Option 2'
               onChange={(e) => handleMultipleChoice(e.target.value)}
             />
+               {props.error && props.error[props.sectionIndex][props.index]?.choices && <div className="error-msg" style={{ color: 'red' }}> choices are required</div>}
           </Grid>
         }
       </Grid>

@@ -19,13 +19,26 @@ import ApiCall from './common/ApiCall'
 import { useParams } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import { Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
   const [template, setTemplate] = useState(props.location.state.template)
 
   const onSave = props.location.state.onSave
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
 
+  const { vertical, horizontal, open } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+  };
+  
   const [section, setSection] = useState(false);
   const history = useHistory();
   const {id}= useParams();
@@ -70,6 +83,106 @@ const Template = (props) => {
     template.id = id;
     history.push('/template', template)
   }
+  
+  const templateValues = ["name", "description","category","frequency","clinic"]
+  const sectionValues = ["name"]
+  const questionValues = ["name", "type", "choices"]
+
+
+
+  const [templateErrors, setTemplateErrors] = useState();
+  const [sectionErrors, setSectionErrors] = useState();
+
+  const [questionErrors, setQuestionErrors] = useState();
+  const validate = () => {
+    let tempErrors = {};
+    let secErrors = [];
+    let quesErrors = [];
+    let success = true;
+    //   console.log("errors parent", tempErrors)
+    let errors = {}
+    //  const myTemplate = {...template}
+
+    templateValues.forEach(field => {
+      if (!template[field]) {
+        tempErrors[field] = true;
+        success = false;
+      }
+      else {
+        tempErrors[field] = false;
+      }
+    })
+    //  console.log("Inside",tempErrorss)
+    setTemplateErrors(tempErrors)
+
+    template.sections.forEach((section, index) => {
+
+
+      //section check  [{ {name:true},{name:false} }]
+      sectionValues.forEach(field => {
+        if (!section[field]) {
+          secErrors.push({ [field]: true });
+          success = false;
+        }
+        else {
+          secErrors.push({ [field]: false });
+        }
+      })
+
+      //questions check  
+      /* n,t,c*/
+      section.questions.forEach((ques, idx) => {
+        questionValues.forEach(values => {
+          
+          if (values == "choices" ? (ques[values].length < 1 && ques.type<3) : !ques[values]) {
+
+            if (quesErrors[index]) {
+              if (quesErrors[index][idx]) {
+                quesErrors[index][idx][values] = true
+                success = false;
+              }
+              else {
+
+                quesErrors[index].push({ [values]: true });
+                success = false;
+                //   quesErrors.push({ [values]: true });
+              }
+            }
+            else {
+              quesErrors.push([]);
+              quesErrors[index].push({ [values]: true });
+              success = false;
+            }
+          }
+          else {
+            if (quesErrors[index]) {
+
+              if (quesErrors[index][idx]) {
+                quesErrors[index][idx][values] = false
+              } else {
+                quesErrors[index].push({ [values]: false });
+                //   quesErrors.push({ [values]: false });
+              }
+            }
+            else {
+              quesErrors.push([]);
+              quesErrors[index].push({ [values]: false });
+            }
+          }
+        })
+
+      })
+
+    })
+    setSectionErrors(secErrors);
+
+    setQuestionErrors(quesErrors)
+    if (success) {
+      save();
+    }
+  }
+
+
 
   const save = () => {
     template.id =template.id?template.id:id;
@@ -94,6 +207,10 @@ const Template = (props) => {
         .then(res => {
           console.log('Response from template', res.headers.get('Location'));
           history.push('/admin')
+
+          const newState = { vertical: 'top', horizontal: 'right' }
+          setState({ open: true, ...newState });
+      
         })
     }
 
@@ -112,6 +229,10 @@ const Template = (props) => {
         .then(res => {
           console.log('Response from template', res)
           history.push('/admin')
+
+          const newState = { vertical: 'top', horizontal: 'right' }
+          setState({ open: true, ...newState });
+      
         })
     }
 
@@ -183,17 +304,25 @@ const Template = (props) => {
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField required label="Title" style={{width: '100%'}}
                   value={template.name} onChange={(e) => changeName(e.target.value)}/>
+                   {templateErrors?.name && <div className="error-msg" style={{ color: 'red' }}>
+                  name is required</div>}
+
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField multiline label='Description' value={template.description}
                   onChange={(e) =>changeDescription(e.target.value)}
                   style={{width: '100%'}} / >
+                    {templateErrors?.description && <div className="error-msg" style={{ color: 'red' }}>
+                  description is required</div>}
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField multiline label='Category'
                   value={template.category}
                   style={{width: '100%'}}
                   onChange={(e) => handleCategoryChange(e)} />
+                  {templateErrors?.category && <div className="error-msg" style={{ color: 'red' }}>
+                  category is required</div>}
+
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField
@@ -214,6 +343,9 @@ const Template = (props) => {
                     })
                   }
                 </TextField>
+                {templateErrors?.frequency && <div className="error-msg" style={{ color: 'red' }}>
+                frequency is required</div>}
+
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField
@@ -234,6 +366,9 @@ const Template = (props) => {
                     })
                   }
                 </TextField>
+                {templateErrors?.clinic && <div className="error-msg" style={{ color: 'red' }}>
+                clinic is required</div>}
+
              </Grid>
            </Grid>
           </CardContent>
@@ -258,9 +393,16 @@ const Template = (props) => {
                   color="primary">Preview</Button>
               </Grid>
               <Grid item xs={6} sm={6} lg={2} md={3}>
-                <Button size='medium' variant="outlined" onClick={save}
+                <Button size='medium' variant="outlined" onClick={validate}
                     color="primary">Save</Button>
               </Grid>
+              <Snackbar autoHideDuration={2000}
+                anchorOrigin={{ vertical, horizontal }}
+                key={`${vertical},${horizontal}`}
+                open={open}
+                onClose={handleClose}
+                message="Saved Successfully!!"
+              />
             </Grid>
           </CardActions>
         </Card>
@@ -292,8 +434,8 @@ const Template = (props) => {
                     </Grid>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Section key={index} section={section} index={index} onChange={handleSectionChange}/>
-                  </AccordionDetails>
+                  <Section key={index} section={section} index={index} onChange={handleSectionChange} error={sectionErrors} questionErrors={questionErrors} />
+                </AccordionDetails>
                 </Accordion>
               </React.Fragment>
             )

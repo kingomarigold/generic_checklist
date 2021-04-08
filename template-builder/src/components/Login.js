@@ -4,6 +4,8 @@ import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 
+import { Alert } from '@material-ui/lab';
+
 const Login = (props) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -15,6 +17,10 @@ const Login = (props) => {
       username: userName,
       password: password
     }
+    
+    if (params.username) {
+      if (params.password) {
+       
     fetch(
       url,
       {
@@ -58,7 +64,8 @@ const Login = (props) => {
     .then(response => [])
   }
 
-
+}
+}
   return (
     <React.Fragment>
       <CssBaseline />
@@ -68,6 +75,9 @@ const Login = (props) => {
         justify="center"
         alignItems="center"
       >
+         {props.error && <Alert severity="warning">
+          Wrong   User name or password </Alert>}
+
         <Grid item>
           <TextField id="standard-basic" value={userName} label="User Name" onChange={(e) => setUserName(e.target.value)} />
         </Grid>

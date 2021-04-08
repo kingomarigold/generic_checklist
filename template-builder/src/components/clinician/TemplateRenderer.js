@@ -6,11 +6,25 @@ import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
 import CardHeader from '@material-ui/core/CardHeader'
 import SectionRenderer from './SectionRenderer'
-import {Button,TextField} from '@material-ui/core'
+import { Button, TextField } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 import ApiCall from '../common/ApiCall'
 
+import { Snackbar } from '@material-ui/core';
+import { useState } from 'react'
 const TemplateRenderer = (props) => {
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false });
+   };
 
   const history = useHistory()
   console.log('Template is: ', props.template)
@@ -24,124 +38,139 @@ const TemplateRenderer = (props) => {
   }
 
   const back = () => {
-    history.push(props.back, {template: props.template})
+    history.push(props.back, { template: props.template })
   }
 
   const save = () => {
-    const template=props.template
+    const template = props.template
     if (props.isDefault) {
       create(template)
     } else {
-    const userTemplateId=props.userTemplateId
-      update(userTemplateId,template,"inprogress")
-    }  
+      const userTemplateId = props.userTemplateId
+      update(userTemplateId, template, "inprogress")
+    }
   }
-  const submit =()=>{
-    const template=props.template;
-    const userTemplateId=props.userTemplateId
-      update(userTemplateId,template,"done")
+  const submit = () => {
+    const template = props.template;
+    const userTemplateId = props.userTemplateId
+    update(userTemplateId, template, "done")
   }
   const create = (template) => {
     const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE
-  //  console.log('Create API', uri);
-     ApiCall(uri, 'POST', {
-        name: template.name,
-        category:template.category,
-        status:"inprogress",
-        description: template.description,
-        template: JSON.stringify(template)
-      })
+    //  console.log('Create API', uri);
+    ApiCall(uri, 'POST', {
+      name: template.name,
+      category: template.category,
+      status: "inprogress",
+      description: template.description,
+      template: JSON.stringify(template)
+    })
       .then(res => {
         console.log('Response from template', res.headers.get('Location'));
+
+        const newState = { vertical: 'top', horizontal: 'right' }
+        setState({ open: true, ...newState });
         back()
-      }) 
+      })
   }
 
-  const update = (id,template,status) => {
+  const update = (id, template, status) => {
     const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI_SAVE + "/" + id
-   // console.log('UPDATE API', uri);
+    // console.log('UPDATE API', uri);
     ApiCall(uri, 'PUT', {
-        id: id,
-        name: template.name,
-        status:status,
-        description: template.description,
-        template: JSON.stringify(template),
-        category:template.category
-      })
+      id: id,
+      name: template.name,
+      status: status,
+      description: template.description,
+      template: JSON.stringify(template),
+      category: template.category
+    })
       .then(res => {
         console.log('Response from template', res)
+
+        const newState = { vertical: 'top', horizontal: 'right' }
+        setState({ open: true, ...newState });
         back();
-      }) 
+      })
   }
 
   return (
     <React.Fragment>
-      <Header userName={props.userName}/>
+      <Header userName={props.userName} />
       <Grid
         container
         direction="column"
         justify="flex-start"
         alignItems="center"
       >
-        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}} >
+        <Card variant="outlined" style={{ width: '80%', marginTop: '20px' }} >
           <CardHeader
             title={props.template.name}
           />
-           <Grid
+          <Grid
             container
             direction="row"
             justify="flex-start"
             alignItems="center"
           >
-          <Grid  item xs={12} sm={6}>
-          <CardContent style={{textAlign: "center"}}>
+            <Grid item xs={12} sm={6}>
+              <CardContent style={{ textAlign: "center" }}>
                 <Grid item >
                   <TextField label="Name" InputProps={{ disableUnderline: true }}
                     value={props.template.name} disabled
-                      style={{width: '80%'}}/>
+                    style={{ width: '80%' }} />
                 </Grid>
                 <Grid item>
-                <TextField label="Description" InputProps={{ disableUnderline: true }}
+                  <TextField label="Description" InputProps={{ disableUnderline: true }}
                     value={props.template.description} disabled
-                      style={{width: '80%'}}/>
+                    style={{ width: '80%' }} />
                 </Grid>
-            </CardContent>
-          </Grid>
-          <Grid  item xs={12} sm={6}>
-          <CardContent style={{textAlign: "center"}}>
+              </CardContent>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CardContent style={{ textAlign: "center" }}>
                 <Grid item >
-                <TextField label="Category" InputProps={{ disableUnderline: true }} 
+                  <TextField label="Category" InputProps={{ disableUnderline: true }}
                     value={props.template.category} disabled
-                      style={{width: '80%'}}/>
+                    style={{ width: '80%' }} />
                 </Grid>
                 <Grid item>
-                <TextField label="Frequency" InputProps={{ disableUnderline: true }}
+                  <TextField label="Frequency" InputProps={{ disableUnderline: true }}
                     value={props.template.frequency} disabled
-                      style={{width: '80%'}}/>
+                    style={{ width: '80%' }} />
                 </Grid>
                 <Grid item>
-                <TextField label="Clinic" InputProps={{ disableUnderline: true }}
+                  <TextField label="Clinic" InputProps={{ disableUnderline: true }}
                     value={props.template.clinic} disabled
-                      style={{width: '80%'}}/>
+                    style={{ width: '80%' }} />
                 </Grid>
-            </CardContent>
+              </CardContent>
+            </Grid>
           </Grid>
-          </Grid>
-          <CardActions style={{marginLeft: '30%'}}>
+          <CardActions style={{ marginLeft: '30%' }}>
             {
               <Button size='medium' onClick={back}
-                      color="primary">Back</Button>
+                color="primary">Back</Button>
             }
             {
               !props.fromAdmin &&
-              <Button size='medium' onClick={save}
-                      color="primary">Save</Button>
+              <div>
+                <Button size='medium' onClick={save}
+                  color="primary">Save</Button>
+                <Snackbar autoHideDuration={2000}
+                  anchorOrigin={{ vertical, horizontal }}
+                  key={`${vertical},${horizontal}`}
+                  open={open}
+                  onClose={handleClose}
+                  message="Saved Successfully!!"
+                />
+              </div>
             }
             {
               !props.fromAdmin &&
               <Button size='medium' onClick={submit}
-                      color="primary">Submit</Button>
-            } 
+                color="primary">Submit</Button>
+            }
           </CardActions>
         </Card>
         {
@@ -149,7 +178,7 @@ const TemplateRenderer = (props) => {
           props.template.sections.map((section, index) => {
             return (
               <SectionRenderer key={index} index={index} section={section}
-                onChange={handleSectionChange}/>
+                onChange={handleSectionChange} />
             )
           })
         }
