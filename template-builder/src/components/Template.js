@@ -2,7 +2,7 @@ import './Template.css'
 import { Grid, Container, Button, Typography } from '@material-ui/core';
 import React from 'react'
 import Header from './Header'
-import {useState} from 'react'
+import { useState } from 'react'
 import Section from './Section'
 import TextField from '@material-ui/core/TextField'
 import { useHistory } from 'react-router-dom'
@@ -19,6 +19,7 @@ import ApiCall from './common/ApiCall'
 import { useParams } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import TokenRefresh from './common/TokenRefresh'
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
@@ -38,20 +39,20 @@ const Template = (props) => {
   const handleClose = () => {
     setState({ ...state, open: false });
   };
-  
+
   const [section, setSection] = useState(false);
   const history = useHistory();
-  const {id}= useParams();
+  const { id } = useParams();
 
   const changeName = (name) => {
-    const myTemplate = {...template}
+    const myTemplate = { ...template }
     myTemplate.name = name
     setNewTemplate(false)
     setTemplate(myTemplate)
   }
 
   const changeDescription = (value) => {
-    const myTemplate = {...template}
+    const myTemplate = { ...template }
     myTemplate.description = value
     setNewTemplate(false)
     setTemplate(myTemplate)
@@ -59,10 +60,10 @@ const Template = (props) => {
 
   const addSection = () => {
     let myTemplate = { ...template }
-    if(!myTemplate.sections) {
+    if (!myTemplate.sections) {
       myTemplate.sections = []
     }
-    myTemplate.sections.push({name: '', questions: []})
+    myTemplate.sections.push({ name: '', questions: [] })
     setTemplate(myTemplate)
   }
 
@@ -79,12 +80,12 @@ const Template = (props) => {
     setTemplate(myTemplate)
   }
 
-  const preview  = () => {
+  const preview = () => {
     template.id = id;
     history.push('/template', template)
   }
-  
-  const templateValues = ["name", "description","category","frequency","clinic"]
+
+  const templateValues = ["name", "description", "category", "frequency", "clinic"]
   const sectionValues = ["name"]
   const questionValues = ["name", "type", "choices"]
 
@@ -129,12 +130,12 @@ const Template = (props) => {
         }
       })
 
-      //questions check  
+      //questions check
       /* n,t,c*/
       section.questions.forEach((ques, idx) => {
         questionValues.forEach(values => {
-          
-          if (values == "choices" ? (ques[values].length < 1 && ques.type<3) : !ques[values]) {
+
+          if (values == "choices" ? (ques[values].length < 1 && ques.type < 3) : !ques[values]) {
 
             if (quesErrors[index]) {
               if (quesErrors[index][idx]) {
@@ -185,56 +186,81 @@ const Template = (props) => {
 
 
   const save = () => {
-    template.id =template.id?template.id:id;
+    template.id = template.id ? template.id : id;
     if (template.id) {
       update(template.id)
     } else {
-      create()
+      create(true)
     }
   }
 
-    const create = () => {
-      const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
+  const create = (attemptRefresh) => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE
     //  console.log('Create API', uri);
-       ApiCall(uri, 'POST', {
-          name: template.name,
-          description: template.description,
-          clinic:template.clinic,
-          category:template.category,
-          frequency:template.frequency,
-          template: JSON.stringify(template),
-        })
-        .then(res => {
-          console.log('Response from template', res.headers.get('Location'));
-          history.push('/admin')
-
+    ApiCall(uri, 'POST', {
+      name: template.name,
+      description: template.description,
+      clinic: template.clinic,
+      category: template.category,
+      frequency: template.frequency,
+      template: JSON.stringify(template),
+    })
+      .then(res => {
+        if (res.status === 201) {
+          return true
+        }
+        else {
+          return new Promise((resolve, reject) => {
+            resolve(null)
+          })
+        }
+      })
+      .then(json => {
+        if (json) {
+          setTimeout(() => {
+            history.push('/admin')
+          }, 3000)
           const newState = { vertical: 'top', horizontal: 'right' }
           setState({ open: true, ...newState });
-      
-        })
-    }
+        }
+        else {
+          if (attemptRefresh) {
+            console.log('Refreshing Token ')
+            TokenRefresh()
+              .then(res => {
+                console.log('Refreshed token with response: ', res)
+                if (res) {
+                  create(false)
+                }
+              })
+          }
+        }
 
-    const update = (templateId) => {
-      const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE + "/" + templateId
-     // console.log('UPDATE API', uri);
-      ApiCall(uri, 'PUT', {
-          id: template.id,
-          name: template.name,
-          clinic:template.clinic,
-          category:template.category,
-          frequency:template.frequency,
-          description: template.description,
-          template: JSON.stringify(template)
-        })
-        .then(res => {
-          console.log('Response from template', res)
+      })
+  }
+
+  const update = (templateId) => {
+    const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE + "/" + templateId
+    // console.log('UPDATE API', uri);
+    ApiCall(uri, 'PUT', {
+      id: template.id,
+      name: template.name,
+      clinic: template.clinic,
+      category: template.category,
+      frequency: template.frequency,
+      description: template.description,
+      template: JSON.stringify(template)
+    })
+      .then(res => {
+        console.log('Response from template', res)
+        setTimeout(() => {
           history.push('/admin')
+        }, 3000)
+        const newState = { vertical: 'top', horizontal: 'right' }
+        setState({ open: true, ...newState });
 
-          const newState = { vertical: 'top', horizontal: 'right' }
-          setState({ open: true, ...newState });
-      
-        })
-    }
+      })
+  }
 
   const goBack = () => {
     history.push('/admin')
@@ -253,32 +279,32 @@ const Template = (props) => {
   //const [selectedCategory, setCategory] = useState('');
 
   const handleCategoryChange = (event) => {
-    const myTemplate = {...template}
+    const myTemplate = { ...template }
     myTemplate.category = event.target.value
     setNewTemplate(false)
     setTemplate(myTemplate)
     //setCategory(event.target.value);
   };
 
-  const frequencyList=[ '"1" a Week', '"1" a Month','"1" a Quarter', '"1" a Half', '"1" a Year']
+  const frequencyList = ['"1" a Month', '"3" a Month', '"1" a Quarter', '"1" a Year']
 
   //const [selectedFrequency, setFrequency] = useState('');
 
   const handleFrequencyChange = (event) => {
-    const myTemplate = {...template}
+    const myTemplate = { ...template }
     myTemplate.frequency = event.target.value
     setNewTemplate(false)
     setTemplate(myTemplate)
-   // setFrequency(event.target.value);
+    // setFrequency(event.target.value);
   };
 
 
-  const clinicList=[ 'Clinic 1','Clinic 2','Clinic 3', 'Clinic 4']
+  const clinicList = ['Clinic 1', 'Clinic 2', 'Clinic 3', 'Clinic 4']
 
   //const [selectedClinic, setClinic] = useState('');
 
   const handleClinicChange = (event) => {
-    const myTemplate = {...template}
+    const myTemplate = { ...template }
     myTemplate.clinic = event.target.value
     setNewTemplate(false)
     setTemplate(myTemplate)
@@ -286,15 +312,15 @@ const Template = (props) => {
   };
   return (
     <React.Fragment>
-      <Header userName={props.userName}/>
+      <Header userName={props.userName} />
       <Grid
         container
         direction="column"
         justify="center"
         alignItems="center"
       >
-        <Card variant="outlined" style={{width: '80%', marginTop: '20px'}}>
-          <CardContent style={{textAlign: "center"}}>
+        <Card variant="outlined" style={{ width: '80%', marginTop: '20px' }}>
+          <CardContent style={{ textAlign: "center" }}>
             <Grid
               container
               direction="row"
@@ -302,39 +328,39 @@ const Template = (props) => {
               alignItems="center"
             >
               <Grid item xs={12} sm={12} lg={5} md={5}>
-                <TextField required label="Title" style={{width: '100%'}}
-                  value={template.name} onChange={(e) => changeName(e.target.value)}/>
-                   {templateErrors?.name && <div className="error-msg" style={{ color: 'red' }}>
+                <TextField required label="Title" style={{ width: '100%' }}
+                  value={template.name} onChange={(e) => changeName(e.target.value)} />
+                {templateErrors?.name && <div className="error-msg" style={{ color: 'red' }}>
                   name is required</div>}
 
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField multiline label='Description' value={template.description}
-                  onChange={(e) =>changeDescription(e.target.value)}
-                  style={{width: '100%'}} / >
-                    {templateErrors?.description && <div className="error-msg" style={{ color: 'red' }}>
+                  onChange={(e) => changeDescription(e.target.value)}
+                  style={{ width: '100%' }} />
+                {templateErrors?.description && <div className="error-msg" style={{ color: 'red' }}>
                   description is required</div>}
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField multiline label='Category'
                   value={template.category}
-                  style={{width: '100%'}}
+                  style={{ width: '100%' }}
                   onChange={(e) => handleCategoryChange(e)} />
-                  {templateErrors?.category && <div className="error-msg" style={{ color: 'red' }}>
+                {templateErrors?.category && <div className="error-msg" style={{ color: 'red' }}>
                   category is required</div>}
 
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
                 <TextField
-                    id="standard-select-freq"
-                    select
-                    label="Frequency"
-                    value={template.frequency}
-                    style={{width: '100%'}}
-                   onChange={(e) => handleFrequencyChange(e)}
-                   >
+                  id="standard-select-freq"
+                  select
+                  label="Frequency"
+                  value={template.frequency}
+                  style={{ width: '100%' }}
+                  onChange={(e) => handleFrequencyChange(e)}
+                >
                   {
-                   frequencyList.map(freq => {
+                    frequencyList.map(freq => {
                       return (
                         <MenuItem key={freq} value={freq} >
                           {freq}
@@ -344,7 +370,7 @@ const Template = (props) => {
                   }
                 </TextField>
                 {templateErrors?.frequency && <div className="error-msg" style={{ color: 'red' }}>
-                frequency is required</div>}
+                  frequency is required</div>}
 
               </Grid>
               <Grid item xs={12} sm={12} lg={5} md={5}>
@@ -352,12 +378,12 @@ const Template = (props) => {
                   id="standard-select-clinic"
                   select
                   label="Clinic"
-                  style={{width: '100%'}}
+                  style={{ width: '100%' }}
                   value={template.clinic}
-                 onChange={(e) => handleClinicChange(e)}
-                 >
+                  onChange={(e) => handleClinicChange(e)}
+                >
                   {
-                  clinicList.map(clinic => {
+                    clinicList.map(clinic => {
                       return (
                         <MenuItem key={clinic} value={clinic}>
                           {clinic}
@@ -367,10 +393,10 @@ const Template = (props) => {
                   }
                 </TextField>
                 {templateErrors?.clinic && <div className="error-msg" style={{ color: 'red' }}>
-                clinic is required</div>}
+                  clinic is required</div>}
 
-             </Grid>
-           </Grid>
+              </Grid>
+            </Grid>
           </CardContent>
 
           <CardActions  >
@@ -386,7 +412,7 @@ const Template = (props) => {
               </Grid>
               <Grid item xs={6} sm={6} lg={2} md={3}>
                 <Button size='medium' onClick={addSection}
-                    color="primary">Add Section</Button>
+                  color="primary">Add Section</Button>
               </Grid>
               <Grid item xs={6} sm={6} lg={2} md={3}>
                 <Button size='medium' onClick={preview}
@@ -394,7 +420,7 @@ const Template = (props) => {
               </Grid>
               <Grid item xs={6} sm={6} lg={2} md={3}>
                 <Button size='medium' variant="outlined" onClick={validate}
-                    color="primary">Save</Button>
+                  color="primary">Save</Button>
               </Grid>
               <Snackbar autoHideDuration={2000}
                 anchorOrigin={{ vertical, horizontal }}
@@ -410,10 +436,10 @@ const Template = (props) => {
 
         {
           template.sections &&
-          template.sections.map((section,index) => {
+          template.sections.map((section, index) => {
             return (
               <React.Fragment key={index}>
-                <Accordion defaultExpanded={index === 0} style={{width: '80%', marginTop: '20px'}}>
+                <Accordion defaultExpanded={index === 0} style={{ width: '80%', marginTop: '20px' }}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} >
                     <Grid
                       container
@@ -422,20 +448,20 @@ const Template = (props) => {
                       alignItems="flex-start"
                     >
                       <Grid item>
-                        Section {index+1}
+                        Section {index + 1}
                       </Grid>
                       <Grid item>
                         {section.name}
                       </Grid>
                       <Grid item>
                         <DeleteIcon onFocus={(event) => event.stopPropagation()}
-                          onClick={(event) => handleDelete(event, index)}/>
+                          onClick={(event) => handleDelete(event, index)} />
                       </Grid>
                     </Grid>
                   </AccordionSummary>
                   <AccordionDetails>
-                  <Section key={index} section={section} index={index} onChange={handleSectionChange} error={sectionErrors} questionErrors={questionErrors} />
-                </AccordionDetails>
+                    <Section key={index} section={section} index={index} onChange={handleSectionChange} error={sectionErrors} questionErrors={questionErrors} />
+                  </AccordionDetails>
                 </Accordion>
               </React.Fragment>
             )
