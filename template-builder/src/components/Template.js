@@ -18,14 +18,25 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import ApiCall from './common/ApiCall'
 import { useParams } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import { makeStyles } from '@material-ui/core/styles'
 import TokenRefresh from './common/TokenRefresh'
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import Backdrop from '@material-ui/core/Backdrop'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
   const [template, setTemplate] = useState(props.location.state.template)
+
+  const useStyles = makeStyles((theme) => ({
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
+  }))
+
+  const classes = useStyles()
 
   const onSave = props.location.state.onSave
   const [state, setState] = useState({
@@ -33,6 +44,8 @@ const Template = (props) => {
     vertical: 'top',
     horizontal: 'center',
   });
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const { vertical, horizontal, open } = state;
 
@@ -204,7 +217,7 @@ const Template = (props) => {
       category: template.category,
       frequency: template.frequency,
       template: JSON.stringify(template),
-    })
+    }, setIsLoading)
       .then(res => {
         if (res.status === 201) {
           return true
@@ -250,7 +263,7 @@ const Template = (props) => {
       frequency: template.frequency,
       description: template.description,
       template: JSON.stringify(template)
-    })
+    }, setIsLoading)
       .then(res => {
         console.log('Response from template', res)
         setTimeout(() => {
@@ -319,6 +332,10 @@ const Template = (props) => {
         justify="center"
         alignItems="center"
       >
+      <Backdrop open={isLoading} className={classes.backdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
         <Card variant="outlined" style={{ width: '80%', marginTop: '20px' }}>
           <CardContent style={{ textAlign: "center" }}>
             <Grid
