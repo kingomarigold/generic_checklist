@@ -61,7 +61,7 @@ const Question = (props) => {
     let myQuestion = {...props.question}
     let choices = []
     if (value) {
-      choices = value.split(',').map(choice => choice.trim())
+      choices = value.split(',')
     }
     myQuestion.choices = choices
     props.onChange(props.index, myQuestion)
@@ -70,6 +70,12 @@ const Question = (props) => {
   const handleChange = (value) => {
     let myQuestion = {...props.question}
     myQuestion.type = value
+    props.onChange(props.index, myQuestion)
+  }
+
+  const handleExpiryDateChange = (value) => {
+    let myQuestion = {...props.question}
+    myQuestion.expiryDate = value
     props.onChange(props.index, myQuestion)
   }
 
@@ -112,7 +118,7 @@ const Question = (props) => {
               required
               style={{width: '100%'}}
               helperText={helperText}
-              value={props.question.choices?props.question.choices.join(', '):''}
+              value={props.question.choices?props.question.choices.join(','):''}
               label='Choices'
               placeholder = 'Option 1, Option 2'
               onChange={(e) => handleMultipleChoice(e.target.value)}
@@ -120,6 +126,15 @@ const Question = (props) => {
                {props.error && props.error[props.sectionIndex][props.index]?.choices && <div className="error-msg" style={{ color: 'red' }}> choices are required</div>}
           </Grid>
         }
+        <Grid item xs={12} sm={12} lg={5} md={5}>
+          <TextField
+            type='date'
+            style={{width: '100%'}}
+            helperText='Enter date after which this question should not be shown'
+            value={props.question.expiryDate}
+            onChange={(e) => handleExpiryDateChange(e.target.value)}
+          />
+        </Grid>
       </Grid>
     </React.Fragment>
   );
