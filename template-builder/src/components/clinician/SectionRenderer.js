@@ -5,6 +5,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import QuestionRenderer from './QuestionRenderer'
+import moment from 'moment'
 
 const SectionRenderer = (props) => {
   console.log("props",props)
@@ -44,7 +45,8 @@ const SectionRenderer = (props) => {
           >
           {
             props.section.questions &&
-            props.section.questions.map((question, index) => {
+            props.section.questions.filter(question => !question.expiryDate || moment(question.expiryDate).isAfter(moment()))
+            .map((question, index) => {
               return (
                 <React.Fragment key={'frag_'+index}>
                   <hr  key={'hr_' + index}  style={{width: '100%', height: '1px', marginTop: '20px', backgroundColor: 'grey', border: 'none'}}/>
