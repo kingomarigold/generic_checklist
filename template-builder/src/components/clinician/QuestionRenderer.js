@@ -125,6 +125,21 @@ console.log(props,"ques")
     )
   }
 
+  const renderDate = () => {
+    return (
+      <TextField
+         label="Enter date here"
+         type="date"
+         style={{width: '100%'}}
+         value={props.question.value}
+         InputLabelProps={{
+           shrink: true,
+         }}
+         onChange={(e) => handleInputChange(e.target.value)}
+       />
+   )
+  }
+
   const renderAnswer = () => {
     return (
       <React.Fragment>
@@ -147,6 +162,10 @@ console.log(props,"ques")
       {
         props.question.type === '5' &&
         renderTextArea()
+      }
+      {
+        props.question.type === '6' &&
+        renderDate()
       }
       </React.Fragment>
     )
