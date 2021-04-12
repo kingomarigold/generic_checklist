@@ -16,7 +16,9 @@ import Divider from '@material-ui/core/Divider';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import UserTemplates from './UserTemplates'
-
+import Backdrop from '@material-ui/core/Backdrop'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import TokenRefresh from '../common/TokenRefresh'
 const useStyles = makeStyles((theme) => ({
   card: {
     height: 150,
@@ -35,12 +37,14 @@ const ClinicianDashboard = (props) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [dashboards, setDashboards] = useState([])
 
+  const [isLoading, setIsLoading] = useState(false)
   const classes = useStyles();
 /*
   const handleTemplateChange = (value) => {
     let myTemplate = templates.find(template => template.name === value)
     setSelectedTemplate(JSON.parse(JSON.stringify(myTemplate)))
   } */
+  
 
   const fillTemplate = () => {
     if (selectedTemplate) {
@@ -48,37 +52,83 @@ const ClinicianDashboard = (props) => {
     }
   }
 
-  const getTemplatesList=()=>{
+  const getTemplatesList=(attemptRefresh)=>{
 
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_URI,
       'GET',
-      params)
-    .then(res => res.json())
+      params,setIsLoading)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        }
+        else {
+          return new Promise((resolve, reject) => {
+            resolve(null)
+          })
+        }
+      })
     .then(json => {
+      if (json) {
       console.log(json)
       setTemplates(json)
+      } 
+      else {
+        if (attemptRefresh) {
+          console.log('Refreshing Token ')
+          TokenRefresh()
+          .then(res => {
+            console.log('Refreshed token with response: ', res)
+            if (res) {
+              getTemplatesList(false)
+            }
+          })
+        }
+      }
     })
   }
 
-  const getDashboardCountList= ()=>{
+  const getDashboardCountList= (attemptRefresh)=>{
 
     let params = {}
     ApiCall(process.env.REACT_APP_BASE_URL + process.env.REACT_APP__USER_TEMPLATE_DASHBOARDS_URI,
       'GET',
-      params)
-    .then(res => res.json())
+      params,setIsLoading)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        }
+        else {
+          return new Promise((resolve, reject) => {
+            resolve(null)
+          })
+        }
+      })
     .then(json => {
+      if (json) {
       console.log(json)
       setDashboards(json)
+      }
+      else {
+        if (attemptRefresh) {
+          console.log('Refreshing Token ')
+          TokenRefresh()
+          .then(res => {
+            console.log('Refreshed token with response: ', res)
+            if (res) {
+              getDashboardCountList(false)
+            }
+          })
+        }
+      }
     })
   }
 
 
 
   useEffect(() => {
-    getTemplatesList();
-    getDashboardCountList();
+    getTemplatesList(true);
+    getDashboardCountList(true);
 
   }, [])
   return (
@@ -90,6 +140,10 @@ const ClinicianDashboard = (props) => {
       justify="space-around"
       alignItems="center"
     >
+      
+      <Backdrop open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       <Grid container justify="center" style={{ marginTop: '10px', marginBottom: '10px'}}>
           {dashboards.map((item,i) => (
             <Grid key={i} item >

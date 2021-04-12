@@ -148,7 +148,7 @@ const Template = (props) => {
       section.questions.forEach((ques, idx) => {
         questionValues.forEach(values => {
 
-          if (values == "choices" ? (ques[values].length < 1 && ques.type < 3) : !ques[values]) {
+          if (values == "choices" ? (ques[values].length < 1 && ques.type <= 3) : !ques[values]) {
 
             if (quesErrors[index]) {
               if (quesErrors[index][idx]) {
@@ -201,7 +201,7 @@ const Template = (props) => {
   const save = () => {
     template.id = template.id ? template.id : id;
     if (template.id) {
-      update(template.id)
+      update(template.id,true)
     } else {
       create(true)
     }
@@ -252,7 +252,7 @@ const Template = (props) => {
       })
   }
 
-  const update = (templateId) => {
+  const update = (templateId,attemptRefresh) => {
     const uri = process.env.REACT_APP_BASE_URL + process.env.REACT_APP__TEMPLATE_URI_SAVE + "/" + templateId
     // console.log('UPDATE API', uri);
     ApiCall(uri, 'PUT', {
@@ -264,15 +264,38 @@ const Template = (props) => {
       description: template.description,
       template: JSON.stringify(template)
     }, setIsLoading)
-      .then(res => {
-        console.log('Response from template', res)
+    .then(res => {
+      if (res.status !== 403) {
+        return true
+      }
+      else {
+        return new Promise((resolve, reject) => {
+          resolve(null)
+        })
+      }
+    })
+      .then(json => {
+        if (json) {
         setTimeout(() => {
           history.push('/admin')
         }, 3000)
         const newState = { vertical: 'top', horizontal: 'right' }
         setState({ open: true, ...newState });
-
+      }
+      else {
+        if (attemptRefresh) {
+          console.log('Refreshing Token ')
+          TokenRefresh()
+            .then(res => {
+              console.log('Refreshed token with response: ', res)
+              if (res) {
+                update(templateId,false)
+              }
+            })
+        }
+      }
       })
+    
   }
 
   const goBack = () => {
