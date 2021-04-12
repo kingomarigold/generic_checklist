@@ -1,5 +1,6 @@
 package com.test.templatebuilderserver.web.resource;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +28,10 @@ import com.test.templatebuilderserver.config.TokenProvider;
 import com.test.templatebuilderserver.dto.LoginDTO;
 import com.test.templatebuilderserver.util.TokenFetcher;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @RestController
 @RequestMapping("/")
 public class LoginController {
@@ -36,7 +41,8 @@ public class LoginController {
 
 	@Autowired
 	AuthenticationManagerBuilder authenticationManagerBuilder;
-
+	
+	
 	@PostMapping(value = "login")
 	@CrossOrigin
 	public ResponseEntity<AuthResponse> login(@Validated @RequestBody LoginDTO credentials) {
@@ -65,24 +71,14 @@ public class LoginController {
 
 	}
 
+	@Getter	
+	@NoArgsConstructor
+	@AllArgsConstructor	
 	static class AuthResponse {
-		private String idToken;
-		private String authorities;
-
-		AuthResponse(String idToken, String authorities) {
-			this.idToken = idToken;
-			this.authorities = authorities;
-		}
-
 		@JsonProperty("id_token")
-		String getIdToken() {
-			return idToken;
-		}
+		private String idToken;
 		
 		@JsonProperty("roles")
-		String getAuthorities() {
-			return authorities;
-		}
-
+		private String authorities;
 	}
 }

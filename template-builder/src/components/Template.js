@@ -24,6 +24,13 @@ import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import Backdrop from '@material-ui/core/Backdrop'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { getFrequencies, calculateDueDate } from './common/DateUtil'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
+import ListItemText from '@material-ui/core/ListItemText'
+import Checkbox from '@material-ui/core/Checkbox'
+import InputLabel from '@material-ui/core/InputLabel'
+import Chip from '@material-ui/core/Chip'
 
 const Template = (props) => {
   const [newTemplate, setNewTemplate] = useState(props.location.state.template.name === '')
@@ -213,7 +220,7 @@ const Template = (props) => {
     ApiCall(uri, 'POST', {
       name: template.name,
       description: template.description,
-      clinic: template.clinic,
+      clinics: template.clinics,
       category: template.category,
       frequency: template.frequency,
       template: JSON.stringify(template),
@@ -258,7 +265,7 @@ const Template = (props) => {
     ApiCall(uri, 'PUT', {
       id: template.id,
       name: template.name,
-      clinic: template.clinic,
+      clinics: template.clinics,
       category: template.category,
       frequency: template.frequency,
       description: template.description,
@@ -298,9 +305,6 @@ const Template = (props) => {
     setTemplate(myTemplate)
     //setCategory(event.target.value);
   };
-
-  const frequencyList = ['"1" a Month', '"3" a Month', '"1" a Quarter', '"1" a Year']
-
   //const [selectedFrequency, setFrequency] = useState('');
 
   const handleFrequencyChange = (event) => {
@@ -317,8 +321,9 @@ const Template = (props) => {
   //const [selectedClinic, setClinic] = useState('');
 
   const handleClinicChange = (event) => {
+    console.log('Event target is: ', event.target)
     const myTemplate = { ...template }
-    myTemplate.clinic = event.target.value
+    myTemplate.clinics = event.target.value
     setNewTemplate(false)
     setTemplate(myTemplate)
     //setClinic(event.target.value);
@@ -377,7 +382,7 @@ const Template = (props) => {
                   onChange={(e) => handleFrequencyChange(e)}
                 >
                   {
-                    frequencyList.map(freq => {
+                    getFrequencies().map(freq => {
                       return (
                         <MenuItem key={freq} value={freq} >
                           {freq}
@@ -390,28 +395,44 @@ const Template = (props) => {
                   frequency is required</div>}
 
               </Grid>
+            </Grid>
+            <hr style={{marginTop: '20px', marginBottom: '10px'}}></hr>
+            <h3>Clinic Association</h3>
+            <Grid container
+              direction="row"
+              align="center"
+              justify="center">
               <Grid item xs={12} sm={12} lg={5} md={5}>
-                <TextField
+                <InputLabel id="demo-mutiple-checkbox-label">Clinics</InputLabel>
+                <Select
                   id="standard-select-clinic"
-                  select
-                  label="Clinic"
+                  multiple
+                  label="Clinics"
                   style={{ width: '100%' }}
-                  value={template.clinic}
+                  value={template.clinics}
+                  input={<Input />}
+                  renderValue={(selected) => (
+                    <div >
+                      {selected.map((value) => (
+                        <Chip key={value} label={value}  />
+                      ))}
+                    </div>
+                  )}
                   onChange={(e) => handleClinicChange(e)}
                 >
                   {
                     clinicList.map(clinic => {
                       return (
                         <MenuItem key={clinic} value={clinic}>
-                          {clinic}
+                          <Checkbox checked={template.clinics.indexOf(clinic) > -1} />
+                          <ListItemText primary={clinic} />
                         </MenuItem>
                       )
                     })
                   }
-                </TextField>
-                {templateErrors?.clinic && <div className="error-msg" style={{ color: 'red' }}>
-                  clinic is required</div>}
-
+                </Select>
+                {templateErrors?.clinics && <div className="error-msg" style={{ color: 'red' }}>
+                  at least one clinic is required</div>}
               </Grid>
             </Grid>
           </CardContent>

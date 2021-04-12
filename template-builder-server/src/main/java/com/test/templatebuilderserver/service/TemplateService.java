@@ -23,7 +23,7 @@ public class TemplateService {
 	@Transactional
 	public Long save(Template template) {
 		return templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getName(),
-				template.getClinic(), template.getDescription(), template.getCategory(), template.getFrequency(),
+				template.getClinics(), template.getDescription(), template.getCategory(), template.getFrequency(),
 				ClobProxy.generateProxy(template.getTemplate()))).getId();
 	}
 
@@ -32,7 +32,7 @@ public class TemplateService {
 		Template retVal = null;
 		Optional<com.test.templatebuilderserver.entity.Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
-			retVal = new Template(template.get().getId(), template.get().getName(), template.get().getClinic(),
+			retVal = new Template(template.get().getId(), template.get().getName(), template.get().getClinics(),
 					template.get().getDescription(), template.get().getCategory(), template.get().getFrequency(),
 					ClobToStringConvertUtility.clobToString(template.get().getData()));
 		}
@@ -48,7 +48,7 @@ public class TemplateService {
 		Optional<com.test.templatebuilderserver.entity.Template> existingTemplate = templateRepository.findById(id);
 		if (existingTemplate.isPresent()) {
 			templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getId(),
-					template.getName(), template.getClinic(), template.getDescription(), template.getCategory(),
+					template.getName(), template.getClinics(), template.getDescription(), template.getCategory(),
 					template.getFrequency(), ClobProxy.generateProxy(template.getTemplate())));
 			retVal = template;
 		}
@@ -57,7 +57,7 @@ public class TemplateService {
 
 	private List convertToDtos(List<com.test.templatebuilderserver.entity.Template> all) {
 		List retVal = new ArrayList();
-		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(), template.getClinic(),
+		all.forEach(template -> retVal.add(new Template(template.getId(), template.getName(), template.getClinics(),
 				template.getDescription(), template.getCategory(), template.getFrequency(),
 				ClobToStringConvertUtility.clobToString(template.getData()))));
 		return retVal;

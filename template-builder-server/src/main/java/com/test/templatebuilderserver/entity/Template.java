@@ -11,8 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "template")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor	
 public class Template {
 
 	@Id
@@ -22,8 +31,7 @@ public class Template {
 
 	private String name;
 
-
-	private String clinic;
+	private String clinics;
 
 	private String frequency;
 
@@ -35,42 +43,22 @@ public class Template {
 	@Column(name="description")
 	private String description;
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Template() {
-		super();
-	}
-
-	public Template( String name, String clinic, String description,String category,  String frequency, Clob data
+	public Template( String name, String clinics, String description,String category,  String frequency, Clob data
 			) {
 		super();
 		this.name = name;
-		this.clinic = clinic;
+		this.clinics = clinics;
 		this.frequency = frequency;
 		this.category = category;
 		this.data = data;
 		this.description = description;
 	}
 	
-	public Template(Long id,String name, String clinic, String description,  String category, String frequency, Clob data) {
+	public Template(Long id,String name, String clinics, String description,  String category, String frequency, Clob data) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.clinic = clinic;
+		this.clinics = clinics;
 		this.frequency = frequency;
 		this.category = category;
 		this.data = data;
@@ -83,45 +71,5 @@ public class Template {
 		this.name = name;
 		this.data = type;
 		this.description = description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Clob getData() {
-		return data;
-	}
-
-	public void setData(Clob data) {
-		this.data = data;
-	}
-
-	public String getClinic() {
-		return clinic;
-	}
-
-	public void setClinic(String clinic) {
-		this.clinic = clinic;
-	}
-
-	public String getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
 	}
 }

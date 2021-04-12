@@ -30,6 +30,8 @@ public class TokenProvider {
 	private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
 	private static final String AUTHORITIES_KEY = "auth";
+	
+	private static final String CLINICS = "clinics";
 
 	private Key key;
 

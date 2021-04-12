@@ -47,6 +47,9 @@ const ApiCall = (url, method, params, loadingCallback)  => {
   .catch(err => {
     callLoadingCallback(loadingCallback, false)
     console.log('Error occured: ', err)
+    return new Promise((resolve, reject) => {
+      resolve(null)
+    })
   })
 }
 

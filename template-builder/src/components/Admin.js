@@ -58,7 +58,7 @@ const Admin = (props) => {
 
 
   const addTemplate = () => {
-    history.push('/admin/template', {template:{name: '', id: '', sections: []}})
+    history.push('/admin/template', {template:{name: '', id: '', sections: [], clinics: []}})
   }
 
   let userName = localStorage.getItem('userName')

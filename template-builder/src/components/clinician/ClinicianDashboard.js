@@ -69,7 +69,6 @@ const ClinicianDashboard = (props) => {
       params)
     .then(res => res.json())
     .then(json => {
-      console.log(json)
       setDashboards(json)
     })
   }
