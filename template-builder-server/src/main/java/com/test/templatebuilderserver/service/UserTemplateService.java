@@ -40,16 +40,16 @@ public class UserTemplateService {
 
 	LocalDateTime getDueDate(String frequency, LocalDateTime date) {
 
-		if (frequency.equals("\"1\" a Week")) {
-			date = date.plusWeeks(1);
-		} else if (frequency.equals("\"1\" a Month")) {
-			date = date.plusMonths(1);
-		} else if (frequency.equals("\"1\" a Quarter")) {
-			date = date.plusMonths(3);
-		} else if (frequency.equals("\"1\" a Half")) {
-			date = date.plusMonths(6);
-		} else if (frequency.equals("\"1\" a Year")) {
-			date = date.plusMonths(12);
+		if (frequency.equals("Weekly")) {
+			date = date.minusDays(date.getDayOfWeek().getValue()).plusWeeks(1).plusDays(5);
+		} else if (frequency.equals("Monthly")) {
+			date = date.plusMonths(2).withDayOfMonth(1).minusDays(1);
+		} else if (frequency.equals("Quarterly")) {
+			date = date.withDayOfMonth(1).minusMonths(date.getMonthValue()%3).plusMonths(7).minusDays(1);
+		} else if (frequency.equals("Biannual")) {
+			date = date.getMonthValue() > 6? date.plusYears(1).withDayOfMonth(1).withMonth(1).minusDays(1): date.plusYears(1).withMonth(7).minusDays(1);
+		} else if (frequency.equals("Annual")) {
+			date = date.plusYears(2).withMonth(1).withDayOfMonth(1).minusDays(1);
 		}
 
 		return date;

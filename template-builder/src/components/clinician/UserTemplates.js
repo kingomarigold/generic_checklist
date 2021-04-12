@@ -8,9 +8,10 @@ import Paper from '@material-ui/core/Paper'
 import { Link } from 'react-router-dom';
 import {Grid,Button,} from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
-import { IconButton } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { IconButton } from '@material-ui/core'
+import EditIcon from '@material-ui/icons/Edit'
 import React, { useEffect, useState } from 'react'
+import moment from 'moment'
 
 const UserTemplates = (props) => {
 
@@ -52,8 +53,8 @@ return (
                 <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row">{p.name}</TableCell>
                 <TableCell component="th" scope="row"> {p.description} </TableCell>
-                <TableCell component="th" scope="row"> </TableCell>
-                <TableCell component="th" scope="row"></TableCell>
+                <TableCell component="th" scope="row"> {moment(p.updatedDateTime).format('MM/DD/YYYY')}</TableCell>
+                <TableCell component="th" scope="row"> {moment(p.dueDateTime).format('MM/DD/YYYY')}</TableCell>
                 <TableCell component="th">
                   <IconButton onClick={() => fillTemplate(p)}>
                     <EditIcon color="secondary" />
