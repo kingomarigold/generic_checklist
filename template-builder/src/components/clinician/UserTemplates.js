@@ -38,6 +38,7 @@ return (
           <TableCell >Category</TableCell>
           <TableCell >Name</TableCell>
           <TableCell >Description</TableCell>
+          <TableCell >Frequency</TableCell>
           <TableCell >Last Updated date</TableCell>
           <TableCell >Due date</TableCell>
           <TableCell >Actions</TableCell>
@@ -53,8 +54,9 @@ return (
                 <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row">{p.name}</TableCell>
                 <TableCell component="th" scope="row"> {p.description} </TableCell>
-                <TableCell component="th" scope="row"> {moment(p.updatedDateTime).format('MM/DD/YYYY')}</TableCell>
-                <TableCell component="th" scope="row"> {moment(p.dueDateTime).format('MM/DD/YYYY')}</TableCell>
+                <TableCell component="th" scope="row"> {JSON.parse(p.template).frequency} </TableCell>
+                <TableCell component="th" scope="row"> {p.updatedDateTime}</TableCell>
+                <TableCell component="th" scope="row"> {p.dueDateTime}</TableCell>
                 <TableCell component="th">
                   <IconButton onClick={() => fillTemplate(p)}>
                     <EditIcon color="secondary" />

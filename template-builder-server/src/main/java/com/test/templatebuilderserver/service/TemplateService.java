@@ -19,9 +19,13 @@ public class TemplateService {
 
 	@Autowired
 	TemplateRepository templateRepository;
+	
+	@Autowired
+	UserTemplateService userTemplateService;
 
 	@Transactional
 	public Long save(Template template) {
+		userTemplateService.createInitialTemplate("1001", template);
 		return templateRepository.save(new com.test.templatebuilderserver.entity.Template(template.getName(),
 				template.getClinic(), template.getDescription(), template.getCategory(), template.getFrequency(),
 				ClobProxy.generateProxy(template.getTemplate()))).getId();

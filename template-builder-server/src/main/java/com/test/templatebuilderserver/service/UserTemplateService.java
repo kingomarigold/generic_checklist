@@ -23,10 +23,8 @@ public class UserTemplateService {
 	@Autowired
 	UserTemplateRepository userTemplateRepository;
 
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-	@Autowired
-	TemplateService templateService;
 
 	@Transactional
 	public Long save(String userId, UserTemplate template) {
@@ -36,6 +34,30 @@ public class UserTemplateService {
 		return userTemplateRepository.save(new com.test.templatebuilderserver.entity.UserTemplate(userId,
 				template.getName(), template.getDescription(), ClobProxy.generateProxy(template.getTemplate()),
 				template.getStatus(), template.getCategory(), date, date, dueDate)).getId();
+	}
+	
+	public Long createInitialTemplate(String userId, Template template) {
+		LocalDateTime date = LocalDateTime.now();
+		LocalDateTime dueDate = getIntialDueDate(template.getFrequency());
+		return userTemplateRepository.save(new com.test.templatebuilderserver.entity.UserTemplate(userId,
+				template.getName(), template.getDescription(), ClobProxy.generateProxy(template.getTemplate()),
+				"Todo", template.getCategory(), date, null, dueDate)).getId();
+	}
+	
+	LocalDateTime getIntialDueDate(String frequency) {
+		LocalDateTime retVal = LocalDateTime.now();
+		if (frequency.equals("Weekly")) {
+			retVal = retVal.minusDays(retVal.getDayOfWeek().getValue()).plusDays(5);
+		} else if (frequency.equals("Monthly")) {
+			retVal = retVal.plusMonths(1).withDayOfMonth(1).minusDays(1);
+		} else if (frequency.equals("Quarterly")) {
+			retVal = retVal.withDayOfMonth(1).minusMonths(retVal.getMonthValue()%3).plusMonths(4).minusDays(1);
+		} else if (frequency.equals("Biannual")) {
+			retVal = retVal.getMonthValue() > 6? retVal.plusYears(1).withDayOfMonth(1).withMonth(1).minusDays(1): retVal.withMonth(7).minusDays(1);
+		} else if (frequency.equals("Annual")) {
+			retVal = retVal.plusYears(1).withMonth(1).withDayOfMonth(1).minusDays(1);
+		}
+		return retVal;
 	}
 
 	LocalDateTime getDueDate(String frequency, LocalDateTime date) {
@@ -47,7 +69,7 @@ public class UserTemplateService {
 		} else if (frequency.equals("Quarterly")) {
 			date = date.withDayOfMonth(1).minusMonths(date.getMonthValue()%3).plusMonths(7).minusDays(1);
 		} else if (frequency.equals("Biannual")) {
-			date = date.getMonthValue() > 6? date.plusYears(1).withDayOfMonth(1).withMonth(1).minusDays(1): date.plusYears(1).withMonth(7).minusDays(1);
+			date = date.getMonthValue() <= 6? date.plusYears(1).withDayOfMonth(1).withMonth(1).minusDays(1): date.plusYears(1).withMonth(7).minusDays(1);
 		} else if (frequency.equals("Annual")) {
 			date = date.plusYears(2).withMonth(1).withDayOfMonth(1).minusDays(1);
 		}
@@ -71,22 +93,21 @@ public class UserTemplateService {
 	}
 
 	public List getAll(String userId) {
-		return convertToDtos(userTemplateRepository.getAll(userId));
+		return convertToDtos(userTemplateRepository.getAll(userId, new String[]{"Todo", "inprogress"}));
 	}
 
 	public List<Dashboard> getDashboardCount(String userId) {
-		List<Object[]> statusCount = userTemplateRepository.getDashboardCount((userId));
-		Long todo = (long) templateService.getAll().size();
-
+		LocalDateTime currTime = LocalDateTime.now();
+		List<Object[]> statusCount = userTemplateRepository.getDashboardCount(userId, currTime);
+		
 		List<Dashboard> dashboards = new ArrayList<Dashboard>();
-		dashboards.add(new Dashboard("Todo", todo, "primary"));
 		for (Object[] result : statusCount) {
 			String status = (String) result[0];
 			Long count = (Long) result[1];
 			dashboards.add(new Dashboard(status, count, getStatusColor(status)));
 		}
-		
-		dashboards.add(new Dashboard("Overdue", 0L, "error"));
+		Long overdueCount = userTemplateRepository.getOverdueCount(userId, currTime);
+		dashboards.add(new Dashboard("Overdue", overdueCount, "error"));
 		return dashboards;
 	}
 
@@ -128,7 +149,8 @@ public class UserTemplateService {
 		list.forEach(template -> retVal.add(new UserTemplate(template.getId(), template.getName(),
 				ClobToStringConvertUtility.clobToString(template.getData()), template.getDescription(),
 				template.getUserId(), template.getStatus(), template.getCategory(),
-				template.getCreatedDateTime().format(formatter), template.getUpdatedDateTime().format(formatter),
+				template.getCreatedDateTime().format(formatter), 
+				template.getUpdatedDateTime() != null? template.getUpdatedDateTime().format(formatter): null,
 				(template.getDueDateTime() != null ? template.getDueDateTime().format(formatter) : null), "")));
 		return retVal;
 	}

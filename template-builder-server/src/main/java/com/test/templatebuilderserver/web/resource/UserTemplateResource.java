@@ -59,21 +59,7 @@ public class UserTemplateResource {
 
 	@GetMapping("/{id}/templates")
 	public ResponseEntity getAll(@PathVariable("id") String userId) {
-		Map<String, Object> templatesMap = new LinkedHashMap<String, Object>();
-
-		List<UserTemplate> tempaltes = userTemplateService.getAll(userId);
-		System.out.println("User tempaltes list :" + tempaltes.size());
-		for (UserTemplate template : tempaltes) {
-			templatesMap.put(template.getName(), template);
-		}
-		List<Template> defaultTempaltes = templateService.getAll();
-		System.out.println("Default tempaltes list :" + defaultTempaltes.size());
-		for (Template template : defaultTempaltes) {
-			if (!templatesMap.containsKey(template.getName())) {
-				templatesMap.put(template.getName(), template);
-			}
-		}
-		return ResponseEntity.ok(templatesMap.values());
+		return ResponseEntity.ok(userTemplateService.getAll(userId));
 	}
 
 	@PutMapping("/{id}/template/{templateId}")
