@@ -85,7 +85,8 @@ public class UserTemplateService {
 					ClobToStringConvertUtility.clobToString(template.get().getData()), template.get().getDescription(),
 					template.get().getUserId(), template.get().getStatus(), template.get().getCategory(),
 					template.get().getCreatedDateTime().format(formatter),
-					template.get().getUpdatedDateTime().format(formatter), (template.get().getDueDateTime() != null
+					template.get().getUpdatedDateTime()!=null ? template.get().getUpdatedDateTime().format(formatter): null,
+							(template.get().getDueDateTime() != null
 							? template.get().getDueDateTime().format(formatter) : null),
 					"");
 		}
@@ -93,7 +94,7 @@ public class UserTemplateService {
 	}
 
 	public List getAll(String userId) {
-		return convertToDtos(userTemplateRepository.getAll(userId, new String[]{"Todo", "inprogress"}));
+		return convertToDtos(userTemplateRepository.getAll(userId, new String[]{"Todo", "inprogress","done"}));
 	}
 
 	public List<Dashboard> getDashboardCount(String userId) {
@@ -123,20 +124,16 @@ public class UserTemplateService {
 
 	public UserTemplate update(Long id, String userId, UserTemplate template, UserTemplate existingData) {
 		LocalDateTime date = LocalDateTime.now();
-		System.out.println("Date time " + date);
-		LocalDateTime createdDateTime = LocalDateTime.parse(existingData.getCreatedDateTime(), formatter);
-
-		LocalDateTime dueDateTime = LocalDateTime.parse(existingData.getDueDateTime(), formatter);
-		/*
-		 * if (existingData.getDueDateTime() != null) { dueDateTime =
-		 * LocalDateTime.parse(existingData.getDueDateTime(), formatter); } else
-		 * { dueDateTime = getDueDate(template.getFrequency(),
-		 * LocalDateTime.parse(existingData.getCreatedDateTime(), formatter)); }
-		 */
-
-		if (date.isAfter(dueDateTime)) {
-			dueDateTime = getDueDate(template.getFrequency(), date);
+		Optional<com.test.templatebuilderserver.entity.UserTemplate> existingTemplate = userTemplateRepository.findById(id);
+		LocalDateTime createdDateTime = date;
+		LocalDateTime dueDateTime = getDueDate(template.getFrequency(), date);
+		if (existingTemplate.isPresent()) {
+			createdDateTime = existingTemplate.get().getCreatedDateTime();
+			if (!"done".equals(template.getStatus())) {
+				dueDateTime = existingTemplate.get().getDueDateTime();
+			}
 		}
+		
 		userTemplateRepository.save(new com.test.templatebuilderserver.entity.UserTemplate(id, userId,
 				template.getName(), template.getDescription(), ClobProxy.generateProxy(template.getTemplate()),
 				template.getStatus(), template.getCategory(), createdDateTime, date, dueDateTime));
