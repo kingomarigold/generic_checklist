@@ -8,7 +8,7 @@ import { logout, userName } from './user/UserSlice'
 
 
 import { makeStyles } from '@material-ui/core/styles';
-const Header = (props) => {
+const Header = React.memo((props) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const currentUserName = useSelector(userName)
@@ -53,6 +53,6 @@ const Header = (props) => {
       <AppBar style={{width: '100%'}} position='static'>{displayDesktop()}</AppBar>
     </header>
   );
-}
+})
 
 export default Header
