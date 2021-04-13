@@ -12,6 +12,8 @@ import { IconButton } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
+import WarningIcon from '@material-ui/icons/Warning'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 
 const UserTemplates = (props) => {
 
@@ -26,6 +28,14 @@ const editTemplate  = (id,template) => {
 
 const fillTemplate = (p) => {
     history.push('/template', {template:JSON.parse(p.template), userTemplateId: p.id, isDefault:(p.userId===undefined)})
+}
+
+const isDueDateClose = (p) => {
+    return moment(p.dueDateTime).isBefore(moment().add(7, 'days'))
+}
+
+const isComplete = (p) => {
+  return p.status === 'done'
 }
 
 return (
@@ -50,6 +60,14 @@ return (
             return (
               <TableRow key={index} >
                 <TableCell component="th" scope="row">
+                  {
+                    isDueDateClose(p)
+                    && <WarningIcon style={{color: 'orange'}}/>
+                  }
+                  {
+                    isComplete(p)
+                    && <ThumbUpIcon style={{ color: 'green' }}/>
+                  }
                 </TableCell>
                 <TableCell component="th" scope="row"> {p.category} </TableCell>
                 <TableCell component="th" scope="row">{p.name}</TableCell>
